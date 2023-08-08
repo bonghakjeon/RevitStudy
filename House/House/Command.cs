@@ -118,6 +118,8 @@ namespace House
                 CreateDoor(doc, wall4, doors);
             }
 
+            // TODO : 메시지 박스 구현 (2023.08.08 jbh)
+            // 참고 URL - https://stackoverflow.com/questions/1252613/handling-cancel-button-in-yes-no-cancel-messagebox-in-formclosing-method
             System.Windows.Forms.MessageBox.Show("창문을 만드려면 벽을 2번 클릭하세요.", "안내", System.Windows.Forms.MessageBoxButtons.OK);
 
             FamilySymbol windows = GetSymbol(doc, "미닫이", "1000x1200mm");
