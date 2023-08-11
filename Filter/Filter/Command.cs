@@ -83,8 +83,6 @@ namespace Filter
             //            Level 타입의 객체를 모두 Element로 받아서(ToElements()) levels2 list에 Element 추가해야 한다.
             IList<Element> levels2 = collector2.OfCategory(BuiltInCategory.OST_Levels).OfClass(typeof(Level)).ToElements();
 
-            
-
             // list levels 안에 존재하는 요소들(element)에 접근하기 (반복문 foreach 사용)
             foreach (Level element in levels2)
             {
