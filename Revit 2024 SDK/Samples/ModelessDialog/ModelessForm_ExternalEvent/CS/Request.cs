@@ -69,7 +69,7 @@ namespace Revit.SDK.Samples.ModelessForm_ExternalEvent.CS
 
        /// TODO : Request.cs에 호출 이름 입력 (열거 목록에 추가) (2023.08.11 jbh)
        /// <summary>
-       /// "CreateTest"
+       /// "CreateTest" request
        /// </summary>
        CreateTest = 9
    }

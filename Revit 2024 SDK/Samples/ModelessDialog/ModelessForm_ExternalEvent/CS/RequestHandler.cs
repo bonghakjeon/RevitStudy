@@ -57,7 +57,7 @@ namespace Revit.SDK.Samples.ModelessForm_ExternalEvent.CS
 
 
         /// <summary>
-        ///   The top method of the event handler.
+        ///  The top method of the event handler. (메서드 "Execute"은 Request 핸들러(또는 이벤트 메서드)를 의미한다. )
         /// </summary>
         /// <remarks>
         ///   This is called by Revit after the corresponding
@@ -65,7 +65,16 @@ namespace Revit.SDK.Samples.ModelessForm_ExternalEvent.CS
         ///   and Revit reached the time at which it could call
         ///   the event's handler (i.e. this object)
         /// </remarks>
-        /// 
+        /// 메서드 실행 순서 
+        /// 1 단계 : ModelessForm_ExternalEvent 프로젝트 파일 -> "Application.cs" 메서드 "OnStartup" 실행 -> 리본 메뉴 등록 메서드 "CreateRibbonSamplePanel" 실행 -> 리소스에 등록된 이미지 파일 Convert 메서드 "convertFromBitmap" 실행 
+        /// 2 단계 : Revit 응용 프로그램 실행 -> 1 단계에서 생성된 리본 메뉴 -> 버튼 "ModelessForm" 클릭 
+        /// 3 단계 : ModelessForm_ExternalEvent 프로젝트 파일 -> "Command.cs" 메서드 "Execute" 실행 -> Application.thisApp.ShowForm(commandData.Application); 실행 
+        /// 4 단계 : "Application.cs" 소스파일 이동 -> 메서드 "ShowForm" 실행 ->  클래스 "ModelessForm" 폼 객체 "m_MyForm" 생성 -> RequestHandler, ExternalEvent 이벤트 객체 생성 
+        /// 5 단계 : 윈폼 팝업화면 "ModelessForm" 출력 -> 버튼 클릭 (예) Left / Right -> ModelessForm.cs 비하인드 코드 이동 -> 이벤트 메서드 "btnFlipLeft_Click" 실행 -> 메서드 "MakeRequest( RequestId.FlipLeftRight );" 실행 
+        /// 6 단계 : 메서드 "MakeRequest( RequestId.FlipLeftRight );" 실행 -> Request.cs Enum 구조체 멤버 중 메서드 파라미터 "FlipLeftRight" 값 "2" 찾기 ->  값 "2" 찾았으면 다음 단계 진행 
+        /// 7 단계 : 메서드 "MakeRequest( RequestId.FlipLeftRight );" 실행후 ->  소스파일 "RequestHandler.cs" 이동 -> 실제 실행하는 메서드 "Execute" 실행 -> switch ~ case문 이동 -> case RequestId.FlipLeftRight: 경우 
+        ///          ->  메서드 "ModifySelectedDoors(uiapp, "Flip door Hand", e => e.flipHand());" 실행  -> 명령(Command) 실행 후 폼 복귀("ModelessForm.cs" 이동) -> 메서드 "WakeUp" 실행 -> 메서드 "EnableCommands" 실행 -> 폼 화면 "ModelessForm"이 종료되지 않고 계속해서 화면에 출력되며 살아 있게 된다.
+        /// 마지막 단계 : 명령(Command) 실행 결과 Revit 응용 프로그램에 활성화된 문서(doc)에 모델링 된 문(Door)에서 -> 문(Door)이 왼쪽 -> 오른쪽 또는 문(Door)이 오른쪽 -> 왼쪽으로 방향 변환 완료 
         public void Execute(UIApplication uiapp)
         {
             try
@@ -116,6 +125,11 @@ namespace Revit.SDK.Samples.ModelessForm_ExternalEvent.CS
                             ModifySelectedDoors(uiapp, "Rotate door", FlipHandAndFace);
                             break;
                         }
+                    // TODO: 메서드 "Execute" -> switch ~ case문 로직 -> RequestId.CreateTest 추가 예정 (2023.08.11 jbh)
+                    //case RequestId.CreateTest:
+                    //    {
+                    //        ModifySelectedDoors(uiapp, "", );
+                    //    }
                     default:
                         {
                             // some kind of a warning here should
@@ -126,6 +140,7 @@ namespace Revit.SDK.Samples.ModelessForm_ExternalEvent.CS
             }
             finally
             {
+                // 메서드 "ModifySelectedDoors" 실행 완료 -> finally 문 이동 -> 메서드 "Application.thisApp.WakeFormUp();" 호출 
                 Application.thisApp.WakeFormUp();
             }
 
