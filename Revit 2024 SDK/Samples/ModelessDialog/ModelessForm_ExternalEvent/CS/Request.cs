@@ -65,7 +65,13 @@ namespace Revit.SDK.Samples.ModelessForm_ExternalEvent.CS
        /// <summary>
        /// "Rotate" request
        /// </summary>
-       Rotate = 8
+       Rotate = 8,
+
+       /// TODO : Request.cs에 호출 이름 입력 (열거 목록에 추가) (2023.08.11 jbh)
+       /// <summary>
+       /// "CreateTest"
+       /// </summary>
+       CreateTest = 9
    }
 
    /// <summary>

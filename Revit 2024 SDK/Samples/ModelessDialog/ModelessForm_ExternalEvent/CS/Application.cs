@@ -78,6 +78,7 @@ namespace Revit.SDK.Samples.ModelessForm_ExternalEvent.CS
             return Result.Succeeded;
         }
 
+        // TODO : 리본 메뉴 등록 메서드 "CreateRibbonSamplePanel" 추가 (2023.08.11 jbh)
         /// <summary>
         /// 리본 메뉴 등록
         /// </summary>
@@ -119,6 +120,7 @@ namespace Revit.SDK.Samples.ModelessForm_ExternalEvent.CS
             }
         }
 
+        // TODO : 리소스에 등록된 이미지 파일 Convert 메서드 "convertFromBitmap" 추가 (2023.08.11 jbh)
         /// <summary>
         /// 리소스에 등록된 이미지 파일(.png, .jpg 등등...)을 BitmapSource으로 convert 해주는 메서드 
         /// </summary>
