@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33529.622
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnIdlingEvent", "OnIdlingEvent\OnIdlingEvent.csproj", "{3230B939-C098-4E15-96D9-83CDCD0193A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3230B939-C098-4E15-96D9-83CDCD0193A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3230B939-C098-4E15-96D9-83CDCD0193A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3230B939-C098-4E15-96D9-83CDCD0193A2}.Debug|x64.ActiveCfg = Debug|x64
+		{3230B939-C098-4E15-96D9-83CDCD0193A2}.Debug|x64.Build.0 = Debug|x64
+		{3230B939-C098-4E15-96D9-83CDCD0193A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3230B939-C098-4E15-96D9-83CDCD0193A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3230B939-C098-4E15-96D9-83CDCD0193A2}.Release|x64.ActiveCfg = Release|x64
+		{3230B939-C098-4E15-96D9-83CDCD0193A2}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {86B880C0-D716-4A77-B270-F9C0D4CECF70}
+	EndGlobalSection
+EndGlobal
