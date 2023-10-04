@@ -21,7 +21,7 @@
     
     <Grid Background="Blue">
         <StackPanel Orientation="Vertical" Margin="0,150,0,150">
-            <TextBlock Margin="0,0,0,0" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Hello Stylet!" />
+            <TextBlock Margin="0,0,0,0" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Hello WPF!" />
 
             <StackPanel Orientation="Horizontal" Width="200">
                 <!--<Button Margin="0,30,0,0" Height="50" Width="100" Command="{s:Action DoSomething}" CommandParameter="Hello">Click me</Button>-->
