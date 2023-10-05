@@ -67,7 +67,7 @@ namespace TestIronPython
         /// <param name="elements"></param>
         /// <returns></returns>
         public Result Execute(ExternalCommandData commandData,
-          ref string message, Autodesk.Revit.DB.ElementSet elements)
+          ref string message, ElementSet elements)
         {
             //var engine = Python.CreateEngine();
             //var scope  = engine.CreateScope();
@@ -86,9 +86,9 @@ namespace TestIronPython
                 using (Transaction transaction = new Transaction(doc))
                 {
                     // transaction.Start(start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
-                    transaction.Start(start);  // 해당 "House" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
+                    transaction.Start(start);  // 해당 "TestIronPython" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
 
-                    MessageBox.Show("WPF Stylet 테스트");
+                    MessageBox.Show("C# WPF 테스트");
 
                     // TODO : Revit 2024 SDK - SDKSamples.sln 솔루션 파일 -> 프로젝트 파일 "DockableDialogs" -> 소스 파일 ExternalCommandRegisterPage.cs 참고해서 
                     //        테스트 화면 "ShellV.xaml" 출력하도록 로직 구현 (2023.10.4 jbh)
@@ -119,7 +119,7 @@ namespace TestIronPython
                     //var source = engine.CreateScriptSourceFromFile(path);
                     //source.Execute(scope);
 
-                    transaction.Commit();      // 해당 "House" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
+                    transaction.Commit();      // 해당 "TestIronPython" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 }
 
                 return Result.Succeeded;
@@ -131,4 +131,68 @@ namespace TestIronPython
             }   
         }
     }
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    public class ParameterCommand : IExternalCommand
+    {
+        #region 프로퍼티 
+
+        /// <summary>
+        /// Start
+        /// </summary>
+        public const string start = "Start";
+
+        #endregion 프로퍼티 
+
+        /// <summary>
+        /// 명령 클래스(ParameterCommand) 안의 실행 메서드 "Execute"
+        /// </summary>
+        /// <param name="commandData"></param>
+        /// <param name="message"></param>
+        /// <param name="elements"></param>
+        /// <returns></returns>
+        public Result Execute(ExternalCommandData commandData,
+          ref string message, ElementSet elements)
+        {
+            //var engine = Python.CreateEngine();
+            //var scope  = engine.CreateScope();
+
+            try
+            {
+                // 메서드 "Execute" 실행시 실행되는 코드 
+                UIApplication uiapp = commandData.Application;
+                Document doc = uiapp.ActiveUIDocument.Document;
+
+                //Autodesk.Revit.ApplicationServices.Application app = commandData.Application.Application;
+                //Document doc = commandData.Application.ActiveUIDocument.Document;
+                // 현재 문서(doc)에서 어떤 클릭을 하거나 Dynamo의 Selection (해당 문서에서 어떤걸 가져 오는 것 ) 같은 기능들이 모여있는 객체 "uidoc"
+                UIDocument uidoc = commandData.Application.ActiveUIDocument;
+
+                using (Transaction transaction = new Transaction(doc))
+                {
+                    // transaction.Start(start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                    transaction.Start(start);  // 해당 "TestIronPython" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
+
+                    MessageBox.Show("C# WPF 매개변수 생성 테스트");
+
+
+                    // TODO : Revit 2024 SDK - SDKSamples.sln 솔루션 파일 -> 프로젝트 파일 "DockableDialogs" -> 소스 파일 ExternalCommandRegisterPage.cs 참고해서 
+                    //        테스트 화면 "ShellV.xaml" 출력하도록 로직 구현 (2023.10.4 jbh)
+                    // ShellV shellV = new ShellV();
+                    // shellV.ShowDialog();
+
+                    transaction.Commit();      // 해당 "TestIronPython" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
+                }
+
+                return Result.Succeeded;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return Result.Failed;
+            }
+        }
+    }
+
 }
