@@ -2,15 +2,18 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Reflection;
 using System.Threading.Tasks;
 
-using RevitBoxSeumteo.Common.CommandBase;
 using RevitBoxSeumteo.Views.Windows;
+using RevitBoxSeumteo.Common.CommandBase;
+using RevitBoxSeumteo.Common.LogManager;
 
 namespace RevitBoxSeumteo
 {
@@ -37,6 +40,12 @@ namespace RevitBoxSeumteo
         /// <returns></returns>
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.10 jbh)
+            // 참고 URL - https://slaner.tistory.com/73
+            // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
+            // 참고 3 URL - https://stackoverflow.com/questions/44153/can-you-use-reflection-to-find-the-name-of-the-currently-executing-method
+            var currentMethod = MethodBase.GetCurrentMethod();
+
             try
             {
                 // 메서드 "Execute" 실행시 실행되는 코드 
@@ -59,6 +68,8 @@ namespace RevitBoxSeumteo
                     //        테스트 화면 "SeumteoV.xaml" 출력 하도록 로직 구현 (2023.10.6 jbh)
                     SeumteoV seumteoV = new SeumteoV();
                     seumteoV.ShowDialog();
+
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "세움터 매개변수 관리 화면 출력");
 
                     transaction.Commit();   // 해당 "RevitBoxSeumteo" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 }
