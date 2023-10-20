@@ -16,10 +16,22 @@ namespace RevitBoxSeumteo.Commands
     {
         #region 프로퍼티 
 
+        // TODO : 반환형 void 메소드 타입 프로퍼티 "AsyncMethodType" 필요시 사용 예정(2023.10.18 jbh)
+        /// <summary>
+        /// 반환형 void 메소드 타입
+        /// </summary>
+        // public const string MethodType = "void";
+
+        
         /// <summary>
         /// 비동기 메소드 타입
         /// </summary>
-        public const string asyncMethod = "Async";
+        public const string AsyncMethodType = "async";
+
+        /// <summary>
+        /// 메소드 타입
+        /// </summary>
+        public string _methodType { get; set; }
 
         // Action은 반환 타입이 void인 메소드를 위해 특별히 설계된 제네릭 델리게이트 의미
         // 참고 URL - https://blog.joe-brothers.com/csharp-delegate-func-action/
@@ -31,22 +43,26 @@ namespace RevitBoxSeumteo.Commands
 
         public event EventHandler CanExecuteChanged;
 
+
+
         #endregion 프로퍼티 
 
         #region 생성자
 
         // 반환 타입이 void인 메소드와 바인딩하는 "ButtonCommand" 생성자
-        public ButtonCommand(Action<object> executeMethod, Func<object, bool> canexecuteMethod)
+        public ButtonCommand(string MethodType, Action<object> executeMethod, Func<object, bool> canexecuteMethod)
         {
-            this._executeMethod = executeMethod;
+            this._methodType       = MethodType;
+            this._executeMethod    = executeMethod;
             this._canexecuteMethod = canexecuteMethod;
         }
 
         // 비동기 메소드(async)와 바인딩하는 "ButtonCommand" 생성자
-        public ButtonCommand(Func<object, Task> executeAsyncMethod, Func<object, bool> canexecuteMethod)
+        public ButtonCommand(string asyncMethodType, Func<object, Task> executeAsyncMethod, Func<object, bool> canexecuteMethod)
         {
+            this._methodType         = asyncMethodType;
             this._executeAsyncMethod = executeAsyncMethod;
-            this._canexecuteMethod = canexecuteMethod;
+            this._canexecuteMethod   = canexecuteMethod;
         }
 
         #endregion 생성자
@@ -60,9 +76,9 @@ namespace RevitBoxSeumteo.Commands
 
         public void Execute(object parameter)
         {
-            var methodType = parameter.ToString();
+            // var methodType = parameter.ToString();
             // 비동기 메소드인 경우 
-            if (methodType.Equals(asyncMethod)) _executeAsyncMethod(parameter);
+            if (_methodType.Equals(AsyncMethodType)) _executeAsyncMethod(parameter);
             // 반환 타입이 void인 메소드인 경우
             else _executeMethod(parameter);
         }

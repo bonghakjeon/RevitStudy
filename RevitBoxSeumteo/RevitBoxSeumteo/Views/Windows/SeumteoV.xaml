@@ -34,7 +34,7 @@
                         <TextBlock x:Name="PropertyValueBox" Text="속성값 필터 :" Margin="50,0,0,0" Width="80" Height="20"/>
                         <ComboBox Margin="10,0,0,0" Width="100" Height="20"/>
 
-                        <Button Command="{Binding SearchCommand}" CommandParameter="Async" Margin="110,0,10,0" Width="80" Height="20">검색</Button>
+                        <Button Command="{Binding SearchCommand}" CommandParameter="" Margin="110,0,10,0" Width="80" Height="20">검색</Button>
                     </DockPanel>
                     
                     <!--  TODO : 에버노트 자료 "[개발_업무] [UniBizBO_UniBizSM_모든_전체_페이지_뷰모델_사용되는_메서드_InitControl_SetParamBackup_SetParam2InitControlParam_기능_역할_설명_자료_오류_해결_방법] 2023_03_23" 참고해서 ComboBox 구현하기 (2023.10.10 jbh) -->       
@@ -58,8 +58,89 @@
                 </StackPanel>
             </Border>
 
+            <!--  ListView 영역  -->
             <Border Height="311" DockPanel.Dock="Top" BorderBrush="Blue" BorderThickness="5">
-                <ListView />
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="내용" Margin="10,10,0,0" Width="25" Height="20" HorizontalAlignment="Left"/>
+
+                    <!--  TODO : ListView 영역 안 여백(Padding) 설정 (2023.10.18 jbh) -->
+                    <!--  참고 URL - https://forum.dotnetdev.kr/t/listview/5423/2  -->
+                    <ListView x:Name="ParamListView"
+                              ItemsSource="{Binding}">
+                        <ListView.Resources>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                            <!--  TODO : GridView 속성 "GridViewColumnHeader" 사용해서 스타일 구현 (Width = "Auto") (2023.09.22 jbh) -->
+                            <!--  참고 URL - https://icodebroker.tistory.com/entry/CWPF-GridView-%EC%97%98%EB%A6%AC%EB%A8%BC%ED%8A%B8-ColumnHeaderContainerStyleColumnHeaderTemplate-%EC%86%8D%EC%84%B1-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0  -->
+                            <Style x:Key="ColumnHeaderContainerStyleKey" TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="Width" Value="Auto" />
+                            </Style>
+                        </ListView.Resources>
+                        <!--  ListView - GridView 영역  -->
+                        <ListView.View>
+                            <GridView ColumnHeaderContainerStyle="{StaticResource ColumnHeaderContainerStyleKey}">
+                                <GridView.Columns>
+                                    <GridViewColumn Header="">
+                                        <GridViewColumn.CellTemplate>
+                                            <!--  TODO : GridView -> GridViewColumn -> DataTemplate 영역 안에 StackPanel 구현 (하나의 셀 안에 데이터 멀티 바인딩) (2023.09.21 jbh)  -->
+                                            <!--  참고 URL - https://icodebroker.tistory.com/entry/CWPF-GridViewColumn-%EC%97%98%EB%A6%AC%EB%A8%BC%ED%8A%B8-HeaderTemplateCellTemplate-%EC%86%8D%EC%84%B1-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0  -->
+
+                                            <!--  TODO : GridView -> GridViewColumn -> DataTemplate 영역 속성 "DataType" 바인딩 대상 (예) FileView 설정 필요시 사용 예정 (2023.10.5 jbh) -->
+                                            <!--  참고 URL - https://yeko90.tistory.com/entry/c-wpf-DataTemplate  -->
+                                            <!--  <DataTemplate DataType="{x:Type vm:FileView}">  -->
+                                            <DataTemplate>
+                                                
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="카테고리">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="ID">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="레벨">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="패밀리">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="유형">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="속성 값">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </StackPanel>
             </Border>
 
             <Border Height="60" DockPanel.Dock="Bottom" BorderBrush="Green" BorderThickness="5">
@@ -70,10 +151,10 @@
                             <CheckBox Margin="0,10,0,10" VerticalAlignment="Center" />
                             <TextBlock Text="선택 객체로 이동" FontSize="16" VerticalAlignment="Center" />
                         </StackPanel>
-                        <Button Command="{Binding }" CommandParameter="" Margin="0,0,10,0" Width="80" Height="30">내보내기</Button>
-                        <Button Command="{Binding }" CommandParameter="" Margin="0,0,10,0" Width="80" Height="30">가져오기</Button>
-                        <Button Command="{Binding }" CommandParameter="" Margin="0,0,10,0" Width="80" Height="30">일괄변경</Button>
-                        <Button Command="{Binding }" CommandParameter="" Margin="0,0,10,0" Width="80" Height="30">종료</Button>
+                        <Button Command="{Binding ExportCommand}" CommandParameter="" Margin="0,0,10,0" Width="80" Height="30">내보내기</Button>
+                        <Button Command="{Binding ImportCommand}" CommandParameter="" Margin="0,0,10,0" Width="80" Height="30">가져오기</Button>
+                        <Button Command="{Binding ChangeCommand}" CommandParameter="" Margin="0,0,10,0" Width="80" Height="30">일괄변경</Button>
+                        <Button Command="{Binding ExitCommand}" Margin="0,0,10,0" Width="80" Height="30">종료</Button>
                     </DockPanel>
                 </StackPanel>
             </Border>

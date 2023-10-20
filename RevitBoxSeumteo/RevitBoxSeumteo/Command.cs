@@ -69,7 +69,7 @@ namespace RevitBoxSeumteo
                     SeumteoV seumteoV = new SeumteoV();
                     seumteoV.ShowDialog();
 
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "세움터 매개변수 관리 화면 출력");
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "세움터 매개변수 관리 화면 종료");
 
                     transaction.Commit();   // 해당 "RevitBoxSeumteo" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 }

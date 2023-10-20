@@ -44,7 +44,7 @@ namespace RevitBoxSeumteo
                 Ribbon.CreateRibbonControl(application);   // 리본 메뉴 등록
 
                 // TODO : 추후 Logger.cs -> static 메서드 "ConfigureLogger" 구현 예정(2023.10.16 jbh)
-                // Logger.ConfigureLogger();
+                Logger.ConfigureLogger();
 
                 return Result.Succeeded;
             }

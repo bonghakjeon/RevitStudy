@@ -90,6 +90,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Commands\ButtonCommand.cs" />
+    <Compile Include="Common\AISParam\AISParamHelper.cs" />
     <Compile Include="Common\CommandBase\CommandHelper.cs" />
     <Compile Include="Common\LogManager\Logger.cs" />
     <Compile Include="Common\RibbonBase\Ribbon.cs" />
