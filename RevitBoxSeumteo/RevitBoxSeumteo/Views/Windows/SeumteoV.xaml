@@ -90,49 +90,49 @@
                                             <!--  참고 URL - https://yeko90.tistory.com/entry/c-wpf-DataTemplate  -->
                                             <!--  <DataTemplate DataType="{x:Type vm:FileView}">  -->
                                             <DataTemplate>
-                                                
+                                                <!--  TODO : ComboBox에 바인딩할 객체 구현 후 XAML 코드 구현 예정 (2023.10.26 jbh) -->
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="카테고리">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-
+                                                <!--  TODO : ComboBox에 바인딩할 객체 구현 후 XAML 코드 구현 예정 (2023.10.26 jbh) -->
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="ID">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-
+                                                <!--  TODO : ComboBox에 바인딩할 객체 구현 후 XAML 코드 구현 예정 (2023.10.26 jbh) -->
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="레벨">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-
+                                                <!--  TODO : ComboBox에 바인딩할 객체 구현 후 XAML 코드 구현 예정 (2023.10.26 jbh) -->
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="패밀리">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-
+                                                <!--  TODO : ComboBox에 바인딩할 객체 구현 후 XAML 코드 구현 예정 (2023.10.26 jbh) -->
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="유형">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-
+                                                <!--  TODO : ComboBox에 바인딩할 객체 구현 후 XAML 코드 구현 예정 (2023.10.26 jbh) -->
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="속성 값">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-
+                                                <!--  TODO : ComboBox에 바인딩할 객체 구현 후 XAML 코드 구현 예정 (2023.10.26 jbh) -->
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

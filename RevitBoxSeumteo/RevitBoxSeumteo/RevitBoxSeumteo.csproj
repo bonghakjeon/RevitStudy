@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -96,13 +98,18 @@
     <Compile Include="Common\RibbonBase\Ribbon.cs" />
     <Compile Include="Common\RibbonBase\RibbonHelper.cs" />
     <Compile Include="Common\SeumteoBase\SeumteoHelper.cs" />
+    <Compile Include="Converters\BitmapConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\SplashScreen\SplashScreenBoardVM.cs" />
     <Compile Include="ViewModels\Windows\SeumteoVM.cs" />
+    <Compile Include="Views\SplashScreen\SplashScreenBoardV.xaml.cs">
+      <DependentUpon>SplashScreenBoardV.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\SeumteoV.xaml.cs">
       <DependentUpon>SeumteoV.xaml</DependentUpon>
     </Compile>
@@ -118,14 +125,23 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\SplashScreen\SplashScreenBoardV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Windows\SeumteoV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controls\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\SeumteoLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SeumteoBtn.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 // TODO: 클래스 "BitmapSource" 사용하기 위해 using문 "System.Windows.Media.Imaging" 추가 (2023.10.6 jbh)
 using System.Windows.Media.Imaging;
+using RevitBoxSeumteo.Converters;
 
 namespace RevitBoxSeumteo.Common.RibbonBase
 {
@@ -65,10 +66,10 @@ namespace RevitBoxSeumteo.Common.RibbonBase
                 // 리본 버튼 "테스트 AIS 템플릿" 아이콘(이미지) 등록(셋팅) 
                 // House 프로젝트 파일 -> 참조 -> PresentationCore.dll 파일 추가  
                 // 리본 버튼 "테스트 AIS 템플릿" 아이콘 이미지 사이즈 (32 X 32) - 기존 Revit에 존재하는 다른 리본 탭 안에 속하는 버튼들 사이즈도 32 X 32 이기 때문
-                // TODO : 세움터 리본 버튼 아이콘 이미지 파일(SeumteoLogo.png) 사이즈 (32 X 17) 설정 및 리소스 추가 (2023.10.6 jbh)
-                pushButton.LargeImage = ConvertFromBitmap(RevitBoxSeumteo.Properties.Resources.SeumteoLogo);     // 아이콘 셋팅
-                pushButton.Image = ConvertFromBitmap(RevitBoxSeumteo.Properties.Resources.SeumteoLogo);          // 아이콘 셋팅 
-                pushButton.ToolTip = "테스트 - 세움터";                                                          // 툴팁 셋팅 
+                // TODO : 세움터 리본 버튼 아이콘 이미지 파일(SeumteoBtn.png) 사이즈 (32 X 17) 설정 및 리소스 추가 (2023.10.6 jbh)
+                pushButton.LargeImage = BitmapConverter.ConvertFromBitmap(RevitBoxSeumteo.Properties.Resources.SeumteoBtn);     // 아이콘 셋팅
+                pushButton.Image      = BitmapConverter.ConvertFromBitmap(RevitBoxSeumteo.Properties.Resources.SeumteoBtn);     // 아이콘 셋팅 
+                pushButton.ToolTip    = "테스트 - 세움터";                                                                      // 툴팁 셋팅 
             }
             catch (Exception e)
             {
@@ -81,26 +82,8 @@ namespace RevitBoxSeumteo.Common.RibbonBase
 
         #endregion CreateRibbonControl
 
-        #region convertFromBitmap
+        #region Sample
 
-        // TODO : static 메서드 "CreateRibbonControl"에서 메서드 "ConvertFromBitmap" 호출하기 위해 메서드 "ConvertFromBitmap"을 static 메서드로 구현 (2023.10.6 jbh) 
-        // 참고 URL - https://blog.naver.com/PostView.naver?blogId=anakt&logNo=222370700059&parentCategoryNo=&categoryNo=&viewDate=&isShowPopularPosts=false&from=postView
-        // TODO : 클래스 "BitmapSource", "Bitmap" 사용하기 위해 using문 "System.Windows.Media.Imaging" 추가 (2023.10.6 jbh)
-        /// <summary>
-        /// 리소스에 등록된 이미지 파일(.png, .jpg 등등...)을 BitmapSource으로 convert 해주는 메서드 
-        /// </summary>
-        /// <param name="bitmap"></param>
-        /// <returns></returns>
-        private static BitmapSource ConvertFromBitmap(Bitmap bitmap)
-        {
-            // RevitBoxSeumteo 프로젝트 파일 -> 참조 -> WindowsBase.dll 파일 추가  
-            return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                bitmap.GetHbitmap(),
-                IntPtr.Zero,
-                Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
-        }
-
-        #endregion convertFromBitmap
+        #endregion Sample
     }
 }

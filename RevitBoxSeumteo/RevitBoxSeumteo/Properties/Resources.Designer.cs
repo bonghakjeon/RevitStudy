@@ -63,6 +63,16 @@ namespace RevitBoxSeumteo.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
         /// </summary>
+        internal static System.Drawing.Bitmap SeumteoBtn {
+            get {
+                object obj = ResourceManager.GetObject("SeumteoBtn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
         internal static System.Drawing.Bitmap SeumteoLogo {
             get {
                 object obj = ResourceManager.GetObject("SeumteoLogo", resourceCulture);

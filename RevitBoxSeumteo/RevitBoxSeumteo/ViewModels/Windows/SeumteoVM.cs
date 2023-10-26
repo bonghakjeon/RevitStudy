@@ -150,7 +150,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                // Log.Error(LogHelper.GetMethodPath(currentMethod) + e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
                 MessageBox.Show(e.Message);
                 return;
             }
@@ -183,6 +183,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         private async Task SearchAsync(object obj)
         {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.10 jbh)
+            // 참고 URL - https://slaner.tistory.com/73
+            // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
+            // 참고 3 URL - https://stackoverflow.com/questions/44153/can-you-use-reflection-to-find-the-name-of-the-currently-executing-method
+            var currentMethod = MethodBase.GetCurrentMethod();
+
             try
             {
                 MessageBox.Show("검색 기능 구현 예정");
@@ -192,8 +198,9 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                // Log.Error(LogHelper.GetMethodPath(currentMethod) + e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
                 MessageBox.Show(e.Message);
+                // return;
             }
             return;
         }
@@ -204,6 +211,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         public async Task ExportExcelAsync(object obj)
         {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.10 jbh)
+            // 참고 URL - https://slaner.tistory.com/73
+            // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
+            // 참고 3 URL - https://stackoverflow.com/questions/44153/can-you-use-reflection-to-find-the-name-of-the-currently-executing-method
+            var currentMethod = MethodBase.GetCurrentMethod();
+
             try
             {
                 MessageBox.Show("엑셀 내보내기 구현 예정");
@@ -213,7 +226,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                // Log.Error(LogHelper.GetMethodPath(currentMethod) + e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
                 MessageBox.Show(e.Message);
                 return;
             }
@@ -225,6 +238,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         public async Task ImportExcelAsync(object obj)
         {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.10 jbh)
+            // 참고 URL - https://slaner.tistory.com/73
+            // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
+            // 참고 3 URL - https://stackoverflow.com/questions/44153/can-you-use-reflection-to-find-the-name-of-the-currently-executing-method
+            var currentMethod = MethodBase.GetCurrentMethod();
+
             try
             {
                 MessageBox.Show("엑셀 가져오기 구현 예정");
@@ -234,7 +253,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                // Log.Error(LogHelper.GetMethodPath(currentMethod) + e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
                 MessageBox.Show(e.Message);
                 return;
             }
@@ -246,6 +265,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         public async Task ChangeDataAsync(object obj)
         {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.10 jbh)
+            // 참고 URL - https://slaner.tistory.com/73
+            // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
+            // 참고 3 URL - https://stackoverflow.com/questions/44153/can-you-use-reflection-to-find-the-name-of-the-currently-executing-method
+            var currentMethod = MethodBase.GetCurrentMethod();
+
             try
             {
                 MessageBox.Show("일괄변경 구현 예정");
@@ -255,7 +280,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                // Log.Error(LogHelper.GetMethodPath(currentMethod) + e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
                 MessageBox.Show(e.Message);
                 return;
             }
@@ -267,6 +292,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         private void Exit(object obj)
         {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.10 jbh)
+            // 참고 URL - https://slaner.tistory.com/73
+            // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
+            // 참고 3 URL - https://stackoverflow.com/questions/44153/can-you-use-reflection-to-find-the-name-of-the-currently-executing-method
+            var currentMethod = MethodBase.GetCurrentMethod();
+
             try
             {
                 MessageBox.Show("종료 구현 예정");
@@ -275,7 +306,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                // Log.Error(LogHelper.GetMethodPath(currentMethod) + e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
                 MessageBox.Show(e.Message);
                 return;
             }
