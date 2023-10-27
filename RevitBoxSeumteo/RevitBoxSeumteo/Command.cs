@@ -129,6 +129,10 @@ namespace RevitBoxSeumteo
 
                     MessageBox.Show("C# WPF 매개변수 생성 테스트");
 
+                    // TODO : 버튼 "테스트 AIS 매개변수 생성" 클릭시 ProgressBar가 화면에 출력되면서 매개변수가 생성 처리될 수 있도록
+                    //        화면 ParameterCreateV.xaml 화면 및 뷰모델(ParameterCreateVM.cs) 구현하기 (2023.10.27 jbh)
+                    // 참고 URL - http://ojc.asia/bbs/board.php?bo_table=WPF&wr_id=40
+
                     transaction.Commit();      // 해당 "RevitBoxSeumteo" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 }
 
