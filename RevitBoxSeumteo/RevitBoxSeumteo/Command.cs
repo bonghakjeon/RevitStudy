@@ -111,6 +111,9 @@ namespace RevitBoxSeumteo
         /// <returns></returns>
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.30 jbh)
+            var currentMethod = MethodBase.GetCurrentMethod();
+
             try
             {
                 // 메서드 "Execute" 실행시 실행되는 코드 
@@ -129,9 +132,14 @@ namespace RevitBoxSeumteo
 
                     MessageBox.Show("C# WPF 매개변수 생성 테스트");
 
+
                     // TODO : 버튼 "테스트 AIS 매개변수 생성" 클릭시 ProgressBar가 화면에 출력되면서 매개변수가 생성 처리될 수 있도록
-                    //        화면 ParameterCreateV.xaml 화면 및 뷰모델(ParameterCreateVM.cs) 구현하기 (2023.10.27 jbh)
+                    //        화면 ParamsCreateV.xaml 화면 및 뷰모델(ParamsCreateVM.cs) 구현하기 (2023.10.27 jbh)
                     // 참고 URL - http://ojc.asia/bbs/board.php?bo_table=WPF&wr_id=40
+                    ParamsCreateV paramsCreateV = new ParamsCreateV();
+                    paramsCreateV.ShowDialog();
+
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "세움터 매개변수 생성 화면 종료");
 
                     transaction.Commit();      // 해당 "RevitBoxSeumteo" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 }

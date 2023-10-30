@@ -106,9 +106,13 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\SplashScreen\SplashScreenBoardVM.cs" />
+    <Compile Include="ViewModels\Windows\ParamsCreateVM.cs" />
     <Compile Include="ViewModels\Windows\SeumteoVM.cs" />
     <Compile Include="Views\SplashScreen\SplashScreenBoardV.xaml.cs">
       <DependentUpon>SplashScreenBoardV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\ParamsCreateV.xaml.cs">
+      <DependentUpon>ParamsCreateV.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\SeumteoV.xaml.cs">
       <DependentUpon>SeumteoV.xaml</DependentUpon>
@@ -129,6 +133,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Windows\ParamsCreateV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Windows\SeumteoV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -142,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\SeumteoBtn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\SeumteoParams.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
