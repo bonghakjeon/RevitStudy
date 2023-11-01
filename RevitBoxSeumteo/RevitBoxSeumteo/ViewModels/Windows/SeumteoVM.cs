@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using RevitBoxSeumteo.Commands;
+using RevitBoxSeumteo.Common.AISParam;
 using RevitBoxSeumteo.Common.LogManager;
 
 namespace RevitBoxSeumteo.ViewModels.Windows
@@ -48,12 +49,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         /// <summary>
         /// 반환형 void 메소드 타입
         /// </summary>
-        public const string MethodType = "void";
+        // public const string MethodType = "void";
 
         /// <summary>
         /// 비동기 메소드 타입
         /// </summary>
-        public const string AsyncMethodType = "async";
+        // public const string AsyncMethodType = "async";
 
         // TODO : ICommand 클래스 객체 "DoSomethingCommand" 필요시 싱글톤 패턴으로 구현 예정 (2023.10.10 jbh)
         /// <summary>
@@ -99,14 +100,14 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         public SeumteoVM()
         {
-            DoSomethingCommand = new ButtonCommand(MethodType, DoSomething, CanExecuteMethod);
-            ShowMessageCommand = new ButtonCommand(MethodType, ShowMessageBox, CanExecuteMethod);
-            SearchCommand      = new ButtonCommand(AsyncMethodType, SearchAsync, CanExecuteMethod);
+            DoSomethingCommand = new ButtonCommand(AISParamsHelper.MethodType, DoSomething, CanExecuteMethod);
+            ShowMessageCommand = new ButtonCommand(AISParamsHelper.MethodType, ShowMessageBox, CanExecuteMethod);
+            SearchCommand      = new ButtonCommand(AISParamsHelper.AsyncMethodType, SearchAsync, CanExecuteMethod);
             // SearchCommand = new ButtonCommand(Search, CanExecuteMethod);
-            ExportCommand      = new ButtonCommand(AsyncMethodType, ExportExcelAsync, CanExecuteMethod);
-            ImportCommand      = new ButtonCommand(AsyncMethodType, ImportExcelAsync, CanExecuteMethod);
-            ChangeCommand      = new ButtonCommand(AsyncMethodType, ChangeDataAsync, CanExecuteMethod);
-            ExitCommand        = new ButtonCommand(MethodType, Exit, CanExecuteMethod);
+            ExportCommand      = new ButtonCommand(AISParamsHelper.AsyncMethodType, ExportExcelAsync, CanExecuteMethod);
+            ImportCommand      = new ButtonCommand(AISParamsHelper.AsyncMethodType, ImportExcelAsync, CanExecuteMethod);
+            ChangeCommand      = new ButtonCommand(AISParamsHelper.AsyncMethodType, ChangeDataAsync, CanExecuteMethod);
+            ExitCommand        = new ButtonCommand(AISParamsHelper.MethodType, Exit, CanExecuteMethod);
 
             SeumteoTypeCreate();
         }
@@ -329,5 +330,9 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         }
 
         #endregion TEST
+
+        #region Sample
+
+        #endregion Sample
     }
 }
