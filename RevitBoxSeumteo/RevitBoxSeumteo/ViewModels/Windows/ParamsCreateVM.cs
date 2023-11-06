@@ -14,6 +14,7 @@ using RevitBoxSeumteo.Commands;
 using RevitBoxSeumteo.Common.AISParam;
 using RevitBoxSeumteo.Converters;
 using RevitBoxSeumteo.Common.LogManager;
+using RevitBoxSeumteoNet;
 
 namespace RevitBoxSeumteo.ViewModels.Windows
 {
@@ -23,7 +24,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
     // 참고 3 URL - https://stackoverflow.com/questions/14262220/wpf-progressbar-with-value-databinding
     // 참고 4 URL - https://afsdzvcx123.tistory.com/entry/WPF-WPF-ProgressBar-%EC%BB%A8%ED%8A%B8%EB%A1%A4-MVVM-%ED%8C%A8%ED%84%B4%EC%9C%BC%EB%A1%9C-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
     // 참고 5 URL - https://www.codeproject.com/Questions/5292748/Open-new-progressbar-window-in-WPF-with-MVVM-patte
-    public class ParamsCreateVM :INotifyPropertyChanged
+    public class ParamsCreateVM :BindableBase
     {
         #region 프로퍼티
 
@@ -57,11 +58,42 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         /// <summary>
         /// 백그라운드 워커 
         /// </summary>
-        private BackgroundWorker ThreadParamsCreate = null;
+        //private BackgroundWorker ThreadParamsCreate = null;
+        private BackgroundWorker worker;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //
+        //public double CurrentProgress { get; set; }
 
-        public double CurrentProgress { get; set; }
+        /// <summary>
+        /// isLoading
+        /// </summary>
+        public bool IsLoading 
+        {
+            get 
+            {
+                return isLoading;
+            } 
+            set
+            {
+                isLoading = value;
+                Changed();
+            } 
+        }
+
+        private bool isLoading = false;
+
+        public int Percent
+        {
+            get { return _Percent; }
+            set
+            {
+                _Percent = value;
+                Changed();
+            }
+        }
+
+        private int _Percent = 0;
 
         #endregion 프로퍼티
 
@@ -75,6 +107,17 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             TitleParamsCreate = AISParamsHelper.Title_매개변수생성;
             TxtParamsCreate = AISParamsHelper.Text_매개변수생성클릭;
             BtnParamsCreate = AISParamsHelper.Btn_매개변수생성;
+
+            // 백그라운드 워커 초기화
+            // worker = new BackgroundWorker();
+            // worker.WorkerReportsProgress = true;
+            // worker.ProgressChanged += (sender, args) =>
+            // {
+            //     int visibilitySetting = args.ProgressPercentage;
+            //     IsLoading = visibilitySetting == 0 ? false : true;
+            // };
+            // worker.DoWork += ParamsCreateDoWork;
+            // worker.RunWorkerAsync();
 
 
             // 백그라운드 워커 초기화
@@ -128,16 +171,30 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                 // TODO : ProgressBar 뷰모델에서 구현하기 (2023.11.02 jbh)
                 // 참고 URL - https://afsdzvcx123.tistory.com/entry/WPF-WPF-ProgressBar-%EC%BB%A8%ED%8A%B8%EB%A1%A4-MVVM-%ED%8C%A8%ED%84%B4%EC%9C%BC%EB%A1%9C-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
 
-                ThreadParamsCreate = new BackgroundWorker()
+                // 백그라운드 워커 초기화
+                worker = new BackgroundWorker();
+                worker.WorkerReportsProgress = true;
+                worker.ProgressChanged += (sender, args) =>
                 {
-                    WorkerReportsProgress = true,
-                    WorkerSupportsCancellation = true,
+                    int visibilitySetting = args.ProgressPercentage;
+                    IsLoading = visibilitySetting == 0 ? false : true;
                 };
+                worker.DoWork += ParamsCreateDoWork;
+                //worker.ProgressChanged += ProgressChanged;
+                worker.RunWorkerCompleted += RunWorkerCompleted;
+                worker.RunWorkerAsync();
 
-                ThreadParamsCreate.DoWork += ParamsCreateDoWork;
-                ThreadParamsCreate.ProgressChanged += ProgressChanged;
-                ThreadParamsCreate.RunWorkerCompleted += RunWorkerCompleted;
-                ThreadParamsCreate.RunWorkerAsync();
+
+                //ThreadParamsCreate = new BackgroundWorker()
+                //{
+                //    WorkerReportsProgress = true,
+                //    WorkerSupportsCancellation = true,
+                //};
+                //
+                //ThreadParamsCreate.DoWork += ParamsCreateDoWork;
+                //ThreadParamsCreate.ProgressChanged += ProgressChanged;
+                //ThreadParamsCreate.RunWorkerCompleted += RunWorkerCompleted;
+                //ThreadParamsCreate.RunWorkerAsync();
 
                 // for (Percentage = 0; Percentage <= 100; Percentage++)
                 // {
@@ -167,12 +224,16 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         /// <param name="e"></param>
         private void ParamsCreateDoWork(object sender, DoWorkEventArgs e)
         {
+            worker.ReportProgress(1);//shows progress bar
+            Thread.Sleep(1500);     //load data
+            worker.ReportProgress(0);//hides progress bar
+
             for (int i = 0; i <= 100; i++)
             {
-                // Percentage += 1;
+                Percent += 1;
                 Thread.Sleep(100);                      // 0.1초
-                ThreadParamsCreate.ReportProgress(i);   // 값을 ReportProgress 매개변수로 전달
-                
+                worker.ReportProgress(i);               // 값을 ReportProgress 매개변수로 전달
+
                 // Wait(100);
             }
 
@@ -183,12 +244,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             //    // Wait(100);
             //}
 
-            // for (Percentage = 0; Percentage <= 100; Percentage++)
-            // {
-            //     // ThreadParamsCreate.ReportProgress(i);   // 값을 ReportProgress 매개변수로 전달
-            //     Thread.Sleep(100);                      // 0.1초
-            //     // Wait(100);
-            // }
+            //for (Percentage = 0; Percentage <= 100; Percentage++)
+            //{
+            //    // ThreadParamsCreate.ReportProgress(i);   // 값을 ReportProgress 매개변수로 전달
+            //    Thread.Sleep(100);                      // 0.1초
+            //                                            // Wait(100);
+            //}
         }
 
         #endregion ParamsCreateDoWork
@@ -198,9 +259,16 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         private void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // throw new NotImplementedException();
-            CurrentProgress = e.ProgressPercentage;
+            // CurrentProgress = e.ProgressPercentage;
+            //for (int i = 0; i <= 100; i++)
+            //{
+            //    Percent += 1;
+            //    Thread.Sleep(100);                      // 0.1초
+            //    // worker.ReportProgress(i);   // 값을 ReportProgress 매개변수로 전달
 
-            
+            //    // Wait(100);
+            //}
+
 
         }
 
@@ -217,7 +285,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         {
 
             // throw new NotImplementedException();
-            // Percentage = 100;
+            MessageBox.Show("작업 완료!!");
         }
 
         #endregion 

@@ -154,5 +154,11 @@
   <ItemGroup>
     <Resource Include="Resources\SeumteoParams.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RevitBoxSeumteoNet\RevitBoxSeumteoNet.csproj">
+      <Project>{8de45533-c3e2-4c5d-8856-4755652282ab}</Project>
+      <Name>RevitBoxSeumteoNet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

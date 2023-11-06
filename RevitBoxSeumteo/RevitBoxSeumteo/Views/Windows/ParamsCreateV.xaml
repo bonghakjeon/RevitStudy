@@ -12,6 +12,9 @@
         WindowStartupLocation="CenterScreen" 
         Title="{Binding TitleParamsCreate}"
         d:DesignHeight="450" d:DesignWidth="800">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter" />
+    </Window.Resources>
     <!--  TODO : 윈도우 닫기 버튼 및 화면 이름 출력 필요 없을시 아래 WindowStyle="None" 사용 예정 (2023.10.30 jbh) -->
     <!--  WindowStyle="None"  -->
     <Window.DataContext>
@@ -31,7 +34,10 @@
                     <!--  TODO : ProgressBar 구현 예정 (2023.11.02 jbh)  -->
                     <!--  참고 URL - https://m.blog.naver.com/zxc123cvb/221310634763  -->
                     <!--  참고 2 URL - https://www.codeproject.com/Questions/5292748/Open-new-progressbar-window-in-WPF-with-MVVM-patte  -->
-                    <ProgressBar Margin="0,10,0,0" Width="500" Height="25" Value="{Binding CurrentProgress, Mode=OneWay}"/>
+                    <!--  <ProgressBar Margin="0,10,0,0" Width="500" Height="25" Value="{Binding CurrentProgress, Mode=OneWay}"/>  -->
+                    <ProgressBar Margin="0,10,0,0" Width="500" Height="25" 
+                                 Visibility="{Binding Path=IsLoading, Converter={StaticResource boolToVisibilityConverter}}"
+                                 Value="{Binding Percent, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Margin="0,10,0,0" Width="150" Height="25" Command="{Binding ParamsCreateCommand}" Content="{Binding BtnParamsCreate}"/>
                 </StackPanel>
             </Border>
