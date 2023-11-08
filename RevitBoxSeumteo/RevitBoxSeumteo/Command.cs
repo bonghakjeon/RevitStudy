@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using RevitBoxSeumteo.Views.Windows;
 using RevitBoxSeumteo.Common.CommandBase;
 using RevitBoxSeumteo.Common.LogManager;
+using System.Windows.Controls;
+using RevitBoxSeumteo.ViewModels.Windows;
 
 namespace RevitBoxSeumteo
 {
@@ -67,7 +69,8 @@ namespace RevitBoxSeumteo
                     // TODO : Revit 2024 SDK - SDKSamples.sln 솔루션 파일 -> 프로젝트 파일 "DockableDialogs" -> 소스 파일 ExternalCommandRegisterPage.cs 참고해서 
                     //        테스트 화면 "SeumteoV.xaml" 출력 하도록 로직 구현 (2023.10.6 jbh)
                     SeumteoV seumteoV = new SeumteoV();
-                    seumteoV.ShowDialog();
+                    // seumteoV.ShowDialog();
+                    seumteoV.Show();
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + "세움터 매개변수 관리 화면 종료");
 
@@ -76,10 +79,10 @@ namespace RevitBoxSeumteo
 
                 return Result.Succeeded;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // TODO : 오류 메시지 로그 기록으로 남길 수 있도록 LogManager.cs 추후 구현 예정 (2023.10.6 jbh)
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
                 return Result.Failed;
             }
             finally
@@ -137,7 +140,19 @@ namespace RevitBoxSeumteo
                     //        화면 ParamsCreateV.xaml 화면 및 뷰모델(ParamsCreateVM.cs) 구현하기 (2023.10.27 jbh)
                     // 참고 URL - http://ojc.asia/bbs/board.php?bo_table=WPF&wr_id=40
                     ParamsCreateV paramsCreateV = new ParamsCreateV();
-                    paramsCreateV.ShowDialog();
+                    // paramsCreateV.ShowDialog();
+                    paramsCreateV.Show();
+
+                    // ParamsCreateVM paramsCreateVM = new ParamsCreateVM();
+
+                    // UserControl userControl = new UserControl { Content = paramsCreateV, DataContext = };
+
+                    // TODO : 아래 Window 객체 생성 코드 사용시 오류 메시지 출력 "WPF 지정한 요소가 이미 다른 요소의 논리자식입니다. 먼저 이 연결을 끊으십시오. -"되서 사용 안함(2023.11.07 jbh)
+                    // 참고 URL - https://noteofdeveloper.tistory.com/83
+                    // TODO : Window 객체 "window" 생성 -> 화면 뷰 "paramsCreateV" 출력 및 뷰모델 "paramsCreateVM" 연동 하도록 구현 (2023.11.07 jbh)
+                    // 참고 URL - https://www.c-sharpcorner.com/article/use-of-user-controls-in-wpf/
+                    // 참고 2 URL - https://yeko90.tistory.com/entry/c-wpf-DataContext%EB%9E%80-%EC%99%9C
+                    // Window paramsCreateWindow = new Window { Content = paramsCreateV, DataContext = paramsCreateVM };
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + "세움터 매개변수 생성 화면 종료");
 
@@ -146,10 +161,10 @@ namespace RevitBoxSeumteo
 
                 return Result.Succeeded;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // TODO : 오류 메시지 로그 기록으로 남길 수 있도록 LogManager.cs 추후 구현 예정 (2023.10.6 jbh)
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
                 return Result.Failed;
             }
             finally

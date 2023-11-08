@@ -71,9 +71,9 @@ namespace RevitBoxSeumteo.Common.RibbonBase
                 pushButton.Image      = BitmapConverter.ConvertFromBitmap(RevitBoxSeumteo.Properties.Resources.SeumteoBtn);     // 아이콘 셋팅 
                 pushButton.ToolTip    = "테스트 - 세움터";                                                                      // 툴팁 셋팅 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
                 // TODO : 오류 발생시 예외처리 throw 구현 (2023.10.6 jbh)
                 // 참고 URL - https://devlog.jwgo.kr/2009/11/27/thrownthrowex/
                 throw;

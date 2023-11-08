@@ -147,12 +147,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                 // 참고 2 URL - https://learn.microsoft.com/ko-kr/dotnet/csharp/fundamentals/exceptions/creating-and-throwing-exceptions
                 // throw new Exception();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
-                MessageBox.Show(e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -168,12 +168,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         //        MessageBox.Show("검색 기능 구현 예정");
         //        return;
         //    }
-        //    catch (Exception e)
+        //    catch (Exception ex)
         //    {
         //        // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
         //        // 참고할 프로젝트 파일 - "CobimUtil"
-        //        // Log.Error(LogHelper.GetMethodPath(currentMethod) + e.Message);
-        //        MessageBox.Show(e.Message);
+        //        // Log.Error(LogHelper.GetMethodPath(currentMethod) + ex.Message);
+        //        MessageBox.Show(ex.Message);
         //    }
         //    return;
         //}
@@ -195,12 +195,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                 MessageBox.Show("검색 기능 구현 예정");
                 return;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
-                MessageBox.Show(e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + ex.Message);
+                MessageBox.Show(ex.Message);
                 // return;
             }
             return;
@@ -223,12 +223,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                 MessageBox.Show("엑셀 내보내기 구현 예정");
                 return;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
-                MessageBox.Show(e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -250,12 +250,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                 MessageBox.Show("엑셀 가져오기 구현 예정");
                 return;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
-                MessageBox.Show(e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -277,12 +277,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                 MessageBox.Show("일괄변경 구현 예정");
                 return;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
-                MessageBox.Show(e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -303,12 +303,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             {
                 MessageBox.Show("종료 구현 예정");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // TODO : 추후 로그 클래스(Logger.cs) 및 에러 로그(Error) 구현 예정 (2023.10.11 jbh)  
                 // 참고할 프로젝트 파일 - "CobimUtil"
-                Log.Error(Logger.GetMethodPath(currentMethod) + e.Message);
-                MessageBox.Show(e.Message);
+                Log.Error(Logger.GetMethodPath(currentMethod) + ex.Message);
+                MessageBox.Show(ex.Message);
                 return;
             }
         }

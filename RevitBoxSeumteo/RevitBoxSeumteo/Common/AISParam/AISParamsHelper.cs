@@ -22,35 +22,42 @@ namespace RevitBoxSeumteo.Common.AISParam
 
         #endregion 메소드 타입
 
-        #region Title
 
-        public const string Title_매개변수생성 = "AIS_매개변수 생성";
+
+        #region ParamsCreateV
+
+        #region 공통 
+
+        // Title, Button 공통 
+        public const string 매개변수생성     = "AIS 매개변수 생성";
+
+        #endregion 공통
+
+        #region Title
 
         #endregion Title
 
         #region Text
 
-        #region ParamsCreateV
+        public const string 매개변수생성클릭 = "버튼 AIS 매개변수 생성을 클릭하세요.";
 
-        public const string Text_매개변수생성클릭 = "버튼 AIS 매개변수 생성을 클릭하세요.";
-
-        #endregion ParamsCreateV
+        public const string 매개변수생성중   = "AIS 매개변수 생성 중...";
 
         #endregion Text
 
         #region Button
 
-        #region ParamsCreateV
-
-        #endregion ParamsCreateV
-
-        public const string Btn_매개변수생성 = "AIS 매개변수 생성";
+        
 
         #endregion Button
 
         #region Message
 
         #endregion Message
+
+        #endregion ParamsCreateV
+
+
 
         #region 공통 - 속성값
 

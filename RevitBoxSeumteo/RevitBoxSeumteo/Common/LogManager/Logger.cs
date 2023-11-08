@@ -104,7 +104,7 @@ namespace RevitBoxSeumteo.Common.LogManager
                 //Log.Error($"Error name = {System.Reflection.Assembly.GetEntryAssembly().GetName().Name}");
                 //Log.Fatal($"Fatal name = {System.Reflection.Assembly.GetEntryAssembly().GetName().Name}");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -158,11 +158,11 @@ namespace RevitBoxSeumteo.Common.LogManager
                 
                 return fullMethodPath;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 fullMethodPath = "[" + currentLoggerMethod.DeclaringType.FullName + " | " + currentLoggerMethod.Name + "] : ";
                 // var loggerPath = MethodBase.GetCurrentMethod().DeclaringType.FullName;
-                Log.Error(fullMethodPath + Logger.errorMessage + e.Message);
+                Log.Error(fullMethodPath + Logger.errorMessage + ex.Message);
                 throw;
 
             }

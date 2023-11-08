@@ -51,10 +51,10 @@ namespace RevitBoxSeumteo
 
                 return Result.Succeeded;
             }
-            catch(Exception e)
+            catch(Exception ex)
             {
                 // TODO : 오류 메시지 로그 기록으로 남길 수 있도록 LogManager.cs 추후 구현 예정 (2023.10.6 jbh)
-                MessageBox.Show(e.Message);
+                MessageBox.Show(ex.Message);
                 return Result.Failed;
             }
         }

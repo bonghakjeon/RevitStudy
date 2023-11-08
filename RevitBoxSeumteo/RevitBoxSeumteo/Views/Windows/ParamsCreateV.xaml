@@ -35,9 +35,19 @@
                     <!--  참고 URL - https://m.blog.naver.com/zxc123cvb/221310634763  -->
                     <!--  참고 2 URL - https://www.codeproject.com/Questions/5292748/Open-new-progressbar-window-in-WPF-with-MVVM-patte  -->
                     <!--  <ProgressBar Margin="0,10,0,0" Width="500" Height="25" Value="{Binding CurrentProgress, Mode=OneWay}"/>  -->
-                    <ProgressBar Margin="0,10,0,0" Width="500" Height="25" 
+                    <!--<ProgressBar Margin="0,10,0,0" Width="500" Height="25" 
                                  Visibility="{Binding Path=IsLoading, Converter={StaticResource boolToVisibilityConverter}}"
-                                 Value="{Binding Percent, UpdateSourceTrigger=PropertyChanged}"/>
+                                 Value="{Binding Percent, UpdateSourceTrigger=PropertyChanged}"/>-->
+
+                    <!--  TODO : ProgressBar 속성 Value에 바인딩할 프로퍼티 ProgressRate 필요시 사용 예정 (2023.11.08 jbh)  -->
+                    <!--  Value="{Binding ProgressRate, UpdateSourceTrigger=PropertyChanged}"  -->
+                    <ProgressBar x:Name="ParamsCreate"    
+                                 IsIndeterminate="True" 
+                                 Margin="0,10,0,0"
+                                 Width="500" 
+                                 Height="25"  
+                                 VerticalContentAlignment="Center"  
+                                 Visibility="{Binding Path=IsLoading, Converter={StaticResource boolToVisibilityConverter}}"/>
                     <Button Margin="0,10,0,0" Width="150" Height="25" Command="{Binding ParamsCreateCommand}" Content="{Binding BtnParamsCreate}"/>
                 </StackPanel>
             </Border>
