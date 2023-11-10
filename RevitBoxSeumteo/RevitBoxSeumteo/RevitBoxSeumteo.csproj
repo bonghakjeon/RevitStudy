@@ -105,6 +105,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\HiddenVmAttribute.cs" />
+    <Compile Include="Services\Page\IPage.cs" />
+    <Compile Include="Services\Page\PageBase.cs" />
     <Compile Include="ViewModels\SplashScreen\SplashScreenBoardVM.cs" />
     <Compile Include="ViewModels\Windows\ParamsCreateVM.cs" />
     <Compile Include="ViewModels\Windows\SeumteoVM.cs" />
