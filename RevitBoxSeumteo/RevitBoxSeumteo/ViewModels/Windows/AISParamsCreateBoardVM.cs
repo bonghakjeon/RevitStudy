@@ -56,11 +56,13 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         /// </summary>
         public ICommand ParamsCreateCommand { get; set; }
 
+        // TODO : 필요시 아래 주석친 코드 사용 예정 (2023.11.13 jbh)
         /// <summary>
         /// AISParamsCreateBoardV.xaml 비트맵 이미지(BitmapSource)
         /// </summary>
-        public BitmapSource ParamsSource { get; set; }
+        // public BitmapSource ParamsSource { get; set; }
 
+        // TODO : 필요시 아래 주석친 코드 사용 예정 (2023.11.13 jbh)
         /// <summary>
         /// Title - AIS_매개변수 생성
         /// </summary>
@@ -78,6 +80,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         //}
         //private string _TitleParamsCreate = string.Empty;
 
+        // TODO : 필요시 아래 주석친 코드 사용 예정 (2023.11.13 jbh)
         /// <summary>
         /// Text - 버튼 AIS 매개변수 생성을 클릭하세요. / AIS 매개변수 생성 중...
         /// </summary>
@@ -95,7 +98,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         //}
         //private string _TxtParamsCreate = string.Empty;
 
-
+        // TODO : 필요시 아래 주석친 코드 사용 예정 (2023.11.13 jbh)
         /// <summary>
         /// Button - AIS 매개변수 생성
         /// </summary>
@@ -244,6 +247,8 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             try
             {
                 this.SelectedData = pItem;
+
+                // TODO : 필요시 아래 주석친 코드 사용 예정 (2023.11.13 jbh)
                 //ParamsSource      = this.SelectedData.ParamsSource;
                 //TitleParamsCreate = this.SelectedData.TitleParamsCreate;
                 //TxtParamsCreate   = this.SelectedData.TxtParamsCreate;
