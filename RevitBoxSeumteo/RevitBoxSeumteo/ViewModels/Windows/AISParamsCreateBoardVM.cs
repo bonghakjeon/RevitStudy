@@ -64,54 +64,54 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         /// <summary>
         /// Title - AIS_매개변수 생성
         /// </summary>
-        public string TitleParamsCreate 
-        { 
-            get
-            {
-                return _TitleParamsCreate;
-            }
-            set
-            {
-                _TitleParamsCreate = value;
-                Changed();
-            }
-        }
-        private string _TitleParamsCreate = string.Empty;
+        //public string TitleParamsCreate 
+        //{ 
+        //    get
+        //    {
+        //        return _TitleParamsCreate;
+        //    }
+        //    set
+        //    {
+        //        _TitleParamsCreate = value;
+        //        Changed();
+        //    }
+        //}
+        //private string _TitleParamsCreate = string.Empty;
 
         /// <summary>
         /// Text - 버튼 AIS 매개변수 생성을 클릭하세요. / AIS 매개변수 생성 중...
         /// </summary>
-        public string TxtParamsCreate 
-        { 
-            get
-            {
-                return _TxtParamsCreate;
-            }
-            set
-            {
-                _TxtParamsCreate = value;
-                Changed();
-            }
-        }
-        private string _TxtParamsCreate = string.Empty;
+        //public string TxtParamsCreate 
+        //{ 
+        //    get
+        //    {
+        //        return _TxtParamsCreate;
+        //    }
+        //    set
+        //    {
+        //        _TxtParamsCreate = value;
+        //        Changed();
+        //    }
+        //}
+        //private string _TxtParamsCreate = string.Empty;
 
 
         /// <summary>
         /// Button - AIS 매개변수 생성
         /// </summary>
-        public string BtnParamsCreate 
-        { 
-            get
-            {
-                return _BtnParamsCreate;
-            } 
-            set
-            {
-                _BtnParamsCreate = value;
-                Changed();
-            }
-        }
-        private string _BtnParamsCreate = string.Empty;
+        //public string BtnParamsCreate 
+        //{ 
+        //    get
+        //    {
+        //        return _BtnParamsCreate;
+        //    } 
+        //    set
+        //    {
+        //        _BtnParamsCreate = value;
+        //        Changed();
+        //    }
+        //}
+        //private string _BtnParamsCreate = string.Empty;
 
 
         /// <summary>
@@ -244,10 +244,10 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             try
             {
                 this.SelectedData = pItem;
-                ParamsSource      = this.SelectedData.ParamsSource;
-                TitleParamsCreate = this.SelectedData.TitleParamsCreate;
-                TxtParamsCreate   = this.SelectedData.TxtParamsCreate;
-                BtnParamsCreate   = this.SelectedData.BtnParamsCreate;
+                //ParamsSource      = this.SelectedData.ParamsSource;
+                //TitleParamsCreate = this.SelectedData.TitleParamsCreate;
+                //TxtParamsCreate   = this.SelectedData.TxtParamsCreate;
+                //BtnParamsCreate   = this.SelectedData.BtnParamsCreate;
             }
             catch (Exception ex)
             {
@@ -341,7 +341,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
                 // int count = (int)e.Argument;
 
-                TxtParamsCreate = AISParamsHelper.매개변수생성중;
+                this.SelectedData.TxtParamsCreate = AISParamsHelper.매개변수생성중;
 
                 for (int i = 1; i <= 100; i++)
                 {
@@ -423,7 +423,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                     MessageBox.Show("작업 완료!!");
                     // TODO : Progress 처리 진행율 프로퍼티 "ProgressRate" 필요시 사용 예정 (2023.11.08 jbh)
                     // ProgressRate = 0;
-                    TxtParamsCreate = AISParamsHelper.매개변수생성클릭;
+                    this.SelectedData.TxtParamsCreate = AISParamsHelper.매개변수생성클릭;
                 }
             }
             catch (Exception ex)
