@@ -67,10 +67,10 @@ namespace RevitBoxSeumteo
                     MessageBox.Show("C# WPF 테스트");
 
                     // TODO : Revit 2024 SDK - SDKSamples.sln 솔루션 파일 -> 프로젝트 파일 "DockableDialogs" -> 소스 파일 ExternalCommandRegisterPage.cs 참고해서 
-                    //        테스트 화면 "SeumteoV.xaml" 출력 하도록 로직 구현 (2023.10.6 jbh)
-                    SeumteoV seumteoV = new SeumteoV();
-                    // seumteoV.ShowDialog();
-                    seumteoV.Show();
+                    //        테스트 화면 "AISParamsBoardV.xaml" 출력 하도록 로직 구현 (2023.10.6 jbh)
+                    AISParamsBoardV AISParamsBoardV = new AISParamsBoardV();
+                    // AISParamsBoardV.ShowDialog();
+                    AISParamsBoardV.Show();
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + "세움터 매개변수 관리 화면 종료");
 
@@ -137,22 +137,22 @@ namespace RevitBoxSeumteo
 
 
                     // TODO : 버튼 "테스트 AIS 매개변수 생성" 클릭시 ProgressBar가 화면에 출력되면서 매개변수가 생성 처리될 수 있도록
-                    //        화면 ParamsCreateV.xaml 화면 및 뷰모델(ParamsCreateVM.cs) 구현하기 (2023.10.27 jbh)
+                    //        화면 AISParamsCreateBoardV.xaml 화면 및 뷰모델(AISParamsCreateBoardVM.cs) 구현하기 (2023.10.27 jbh)
                     // 참고 URL - http://ojc.asia/bbs/board.php?bo_table=WPF&wr_id=40
-                    ParamsCreateV paramsCreateV = new ParamsCreateV();
-                    // paramsCreateV.ShowDialog();
-                    paramsCreateV.Show();
+                    AISParamsCreateBoardV AISParamsCreateBoardV = new AISParamsCreateBoardV();
+                    // AISParamsCreateBoardV.ShowDialog();
+                    AISParamsCreateBoardV.Show();
 
-                    // ParamsCreateVM paramsCreateVM = new ParamsCreateVM();
+                    // AISParamsCreateBoardVM AISParamsCreateBoardVM = new AISParamsCreateBoardVM();
 
-                    // UserControl userControl = new UserControl { Content = paramsCreateV, DataContext = };
+                    // UserControl userControl = new UserControl { Content = AISParamsCreateBoardV, DataContext = };
 
                     // TODO : 아래 Window 객체 생성 코드 사용시 오류 메시지 출력 "WPF 지정한 요소가 이미 다른 요소의 논리자식입니다. 먼저 이 연결을 끊으십시오. -"되서 사용 안함(2023.11.07 jbh)
                     // 참고 URL - https://noteofdeveloper.tistory.com/83
-                    // TODO : Window 객체 "window" 생성 -> 화면 뷰 "paramsCreateV" 출력 및 뷰모델 "paramsCreateVM" 연동 하도록 구현 (2023.11.07 jbh)
+                    // TODO : Window 객체 "window" 생성 -> 화면 뷰 "AISParamsCreateBoardV" 출력 및 뷰모델 "AISParamsCreateBoardVM" 연동 하도록 구현 (2023.11.07 jbh)
                     // 참고 URL - https://www.c-sharpcorner.com/article/use-of-user-controls-in-wpf/
                     // 참고 2 URL - https://yeko90.tistory.com/entry/c-wpf-DataContext%EB%9E%80-%EC%99%9C
-                    // Window paramsCreateWindow = new Window { Content = paramsCreateV, DataContext = paramsCreateVM };
+                    // Window paramsCreateWindow = new Window { Content = AISParamsCreateBoardV, DataContext = AISParamsCreateBoardVM };
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + "세움터 매개변수 생성 화면 종료");
 

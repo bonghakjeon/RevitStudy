@@ -24,7 +24,7 @@ namespace RevitBoxSeumteo.Common.AISParam
 
 
 
-        #region ParamsCreateV
+        #region AISParamsCreateBoardV
 
         #region 공통 
 
@@ -55,7 +55,7 @@ namespace RevitBoxSeumteo.Common.AISParam
 
         #endregion Message
 
-        #endregion ParamsCreateV
+        #endregion AISParamsCreateBoardV
 
 
 

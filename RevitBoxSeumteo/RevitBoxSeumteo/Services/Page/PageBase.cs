@@ -75,7 +75,7 @@ namespace RevitBoxSeumteo.Services.Page
 
     // TODO : 아래 abstract 클래스 PageBase 구현 예정 (2023.11.10 jbh)
     [HiddenVm]
-    public abstract class PageBase : BindableBase, IPage // Screen
+    public abstract class PageBase  : BindableBase, IPage // BindableBase, Screen
     {
        
     }

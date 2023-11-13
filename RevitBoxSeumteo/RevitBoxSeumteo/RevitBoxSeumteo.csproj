@@ -99,6 +99,7 @@
     <Compile Include="Common\RibbonBase\RibbonHelper.cs" />
     <Compile Include="Common\SeumteoBase\SeumteoHelper.cs" />
     <Compile Include="Converters\BitmapConverter.cs" />
+    <Compile Include="Models\RevitBoxBase\AISParams\AISParamsView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -109,16 +110,16 @@
     <Compile Include="Services\Page\IPage.cs" />
     <Compile Include="Services\Page\PageBase.cs" />
     <Compile Include="ViewModels\SplashScreen\SplashScreenBoardVM.cs" />
-    <Compile Include="ViewModels\Windows\ParamsCreateVM.cs" />
-    <Compile Include="ViewModels\Windows\SeumteoVM.cs" />
+    <Compile Include="ViewModels\Windows\AISParamsCreateBoardVM.cs" />
+    <Compile Include="ViewModels\Windows\AISParamsBoardVM.cs" />
     <Compile Include="Views\SplashScreen\SplashScreenBoardV.xaml.cs">
       <DependentUpon>SplashScreenBoardV.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Windows\ParamsCreateV.xaml.cs">
-      <DependentUpon>ParamsCreateV.xaml</DependentUpon>
+    <Compile Include="Views\Windows\AISParamsCreateBoardV.xaml.cs">
+      <DependentUpon>AISParamsCreateBoardV.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Windows\SeumteoV.xaml.cs">
-      <DependentUpon>SeumteoV.xaml</DependentUpon>
+    <Compile Include="Views\Windows\AISParamsBoardV.xaml.cs">
+      <DependentUpon>AISParamsBoardV.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -136,11 +137,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Windows\ParamsCreateV.xaml">
+    <Page Include="Views\Windows\AISParamsCreateBoardV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Windows\SeumteoV.xaml">
+    <Page Include="Views\Windows\AISParamsBoardV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
