@@ -25,6 +25,7 @@ namespace RevitBoxSeumteo.Services.Page
         // public Type DataType => dataType ?? typeof(TData);
         // private Type dataType;
 
+        // TODO : 데이터 타입 프로퍼티 "DataType" 필요시 사용 예정
         /// <summary>
         /// 데이터 타입
         /// </summary>

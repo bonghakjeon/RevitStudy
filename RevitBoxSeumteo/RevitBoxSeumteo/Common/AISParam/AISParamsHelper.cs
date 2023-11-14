@@ -62,22 +62,22 @@ namespace RevitBoxSeumteo.Common.AISParam
         #region 공통 - 속성값
 
         /// <summary>
-        /// 개요, 건축, 대지(배치)
+        /// 분야 - 개요, 건축, 대지(배치)
         /// 매개변수
         /// 개요 - AIS_연면적제외, AIS_용적률제외, AIS_바닥면적제외
         /// 건축 - AIS_비상용승강기, AIS_피난용승강기, AIS_특별피난계단, AIS_피난계단, AIS_배연창
         /// 대지(배치) - AIS_실사용
-        /// 속성값 - Yes
+        /// 속성값 - Yes (BOOL)
         /// </summary>
         public const string Yes = "Yes";
 
         /// <summary>
-        /// 개요, 건축, 대지(배치)
+        /// 분야 - 개요, 건축, 대지(배치)
         /// 매개변수
         /// 개요 - AIS_연면적제외, AIS_용적률제외, AIS_바닥면적제외
         /// 건축 - AIS_비상용승강기, AIS_피난용승강기, AIS_특별피난계단, AIS_피난계단, AIS_배연창
         /// 대지(배치) - AIS_실사용
-        /// 속성값 - No
+        /// 속성값 - No (BOOL)
         /// </summary>
         public const string No = "No";
 
@@ -194,9 +194,9 @@ namespace RevitBoxSeumteo.Common.AISParam
 
         #region 건축 
 
-        #region 매개변수 
-
         #region 카테고리 - 룸
+
+        #region 매개변수 
 
         /// <summary>
         /// AIS_건축분류코드 - 타입 코드(string)
@@ -263,24 +263,98 @@ namespace RevitBoxSeumteo.Common.AISParam
         /// </summary>
         public const string AIS_천장번호 = "AIS_천장번호";
 
+        #endregion 매개변수
+
+        #region 속성값
+
+        /// <summary>
+        /// 매개변수 AIS_건축분류코드 속성값 - 기능분류체계
+        /// </summary>
+        public const string 기능분류체계 = "기능분류체계";
+
+
+        /// <summary>
+        /// 매개변수 AIS_바닥마감 속성값 - 바닥마감재
+        /// </summary>
+        public const string 바닥마감재 = "바닥마감재";
+
+        /// <summary>
+        /// 매개변수 AIS_바닥번호 속성값 - 바닥마감상세번호
+        /// </summary>
+        public const string 바닥마감상세번호 = "바닥마감상세번호";
+
+
+        /// <summary>
+        /// 매개변수 AIS_걸레받이마감 속성값 - 걸레받이마감재
+        /// </summary>
+        public const string 걸레받이마감재 = "걸레받이마감재";
+
+        /// <summary>
+        /// 매개변수 AIS_걸레받이번호 속성값 - 걸레받이마감상세번호
+        /// </summary>
+        public const string 걸레받이마감상세번호 = "걸레받이마감상세번호";
+
+        /// <summary>
+        /// 매개변수 AIS_벽마감 속성값 - 벽마감재
+        /// </summary>
+        public const string 벽마감재 = "벽마감재";
+
+        /// <summary>
+        /// 매개변수 AIS_벽번호 속성값 - 벽마감상세번호
+        /// </summary>
+        public const string 벽마감상세번호 = "벽마감상세번호";
+
+        /// <summary>
+        /// 매개변수 AIS_천장마감 속성값 - 천장마감재
+        /// </summary>
+        public const string 천장마감재 = "천장마감재";
+
+        /// <summary>
+        /// 매개변수 AIS_천장번호 속성값 - 천장마감상세번호
+        /// </summary>
+        public const string 천장마감상세번호 = "천장마감상세번호";
+
+        #endregion 속성값
 
         #endregion 카테고리 - 룸
 
         #region 카테고리 - 문
+
+        #region 매개변수 
 
         /// <summary>
         /// AIS_방화등급 - 타입 문자(char)
         /// </summary>
         public const string AIS_방화등급 = "AIS_방화등급";
 
+        #endregion 매개변수 
+
+        #region 속성값
+
+        /// <summary>
+        /// 매개변수 AIS_방화등급 - 속성값
+        /// </summary>
+        public const string 갑 = "갑";
+
+        /// <summary>
+        /// 매개변수 AIS_방화등급 - 속성값
+        /// </summary>
+        public const string 을 = "을";
+
+        #endregion 속성값
+
         #endregion 카테고리 - 문
 
         #region 카테고리 - 창
+
+        #region 매개변수
 
         /// <summary>
         /// AIS_배연창 - 타입 bool
         /// </summary>
         public const string AIS_배연창 = "AIS_배연창";
+
+        #endregion 매개변수
 
         #endregion 카테고리 - 창
 
@@ -293,82 +367,11 @@ namespace RevitBoxSeumteo.Common.AISParam
 
         #endregion 카테고리 - 주차
 
-        #endregion 매개변수 
-
-        #region 속성값
-
-        #region 카테고리 - 룸
-
-        /// <summary>
-        /// 매개변수 AIS_건축분류코드 속성값 - 기능분류체계
-        /// </summary>
-        public const string 기능분류체계 = "기능분류체계";
-
-        /// <summary>
-        /// 매개변수 AIS_바닥마감 - 속성값
-        /// </summary>
-        public const string 바닥마감재 = "바닥마감재";
-
-        /// <summary>
-        /// 매개변수 AIS_바닥번호 - 속성값
-        /// </summary>
-        public const string 바닥마감상세번호 = "바닥마감상세번호";
-
-
-        /// <summary>
-        /// 매개변수 AIS_걸레받이마감 - 속성값
-        /// </summary>
-        public const string 걸레받이마감재 = "걸레받이마감재";
-
-        /// <summary>
-        /// 매개변수 AIS_걸레받이번호 - 속성값
-        /// </summary>
-        public const string 걸레받이마감상세번호 = "걸레받이마감상세번호";
-
-        /// <summary>
-        /// 매개변수 AIS_벽마감 - 속성값
-        /// </summary>
-        public const string 벽마감재 = "벽마감재";
-
-        /// <summary>
-        /// 매개변수 AIS_벽번호 - 속성값
-        /// </summary>
-        public const string 벽마감상세번호 = "벽마감상세번호";
-
-        /// <summary>
-        /// 매개변수 AIS_천장마감 - 속성값
-        /// </summary>
-        public const string 천장마감재 = "천장마감재";
-
-        /// <summary>
-        /// 매개변수 AIS_천장번호 - 속성값
-        /// </summary>
-        public const string 천장마감상세번호 = "천장마감상세번호";
-
-        #endregion 카테고리 - 룸
-
-        #region 카테고리 - 문
-
-        /// <summary>
-        /// 매개변수 AIS_방화등급 - 속성값
-        /// </summary>
-        public const string 갑 = "갑";
-
-        /// <summary>
-        /// 매개변수 AIS_방화등급 - 속성값
-        /// </summary>
-        public const string 을 = "을";
-
-
-        #endregion 카테고리 - 문
-
-
-
-        #endregion 속성값
-
         #endregion 건축
 
         #region 대지(배치)
+
+        #region 카테고리 - 면적
 
         #region 매개변수 
 
@@ -382,16 +385,6 @@ namespace RevitBoxSeumteo.Common.AISParam
         /// </summary>
         public const string AIS_실사용 = "AIS_실사용";
 
-        /// <summary>
-        /// AIS_공구상면적 - 타입 실수(double)
-        /// </summary>
-        public const string AIS_공구상면적 = "AIS_공구상면적";
-
-        /// <summary>
-        /// AIS_대지주차구획 - 타입 문자(char)
-        /// </summary>
-        public const string AIS_대지주차구획 = "AIS_대지주차구획";
-
         #endregion 매개변수 
 
         #region 속성값
@@ -402,6 +395,34 @@ namespace RevitBoxSeumteo.Common.AISParam
         public const string S = "S";
 
         #endregion 속성값
+
+        #endregion 카테고리 - 면적
+
+        #region 카테고리 - 프로젝트정보
+
+        #region 매개변수 
+
+        /// <summary>
+        /// AIS_공구상면적 - 타입 실수(double)
+        /// </summary>
+        public const string AIS_공구상면적 = "AIS_공구상면적";
+
+        #endregion 매개변수 
+
+        #endregion 카테고리 - 프로젝트정보
+
+        #region 카테고리 - 주차
+
+        #region 매개변수 
+
+        /// <summary>
+        /// AIS_대지주차구획 - 타입 문자(char)
+        /// </summary>
+        public const string AIS_대지주차구획 = "AIS_대지주차구획";
+
+        #endregion 매개변수
+
+        #endregion 카테고리 - 주차
 
         #endregion 대지(배치)
     }
