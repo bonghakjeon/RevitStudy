@@ -92,14 +92,12 @@
     <Compile Include="Application.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Commands\ButtonCommand.cs" />
-    <Compile Include="Common\AISParam\AISParamsHelper.cs" />
     <Compile Include="Common\CommandBase\CommandHelper.cs" />
     <Compile Include="Common\LogManager\Logger.cs" />
     <Compile Include="Common\RibbonBase\Ribbon.cs" />
     <Compile Include="Common\RibbonBase\RibbonHelper.cs" />
     <Compile Include="Common\SeumteoBase\SeumteoHelper.cs" />
     <Compile Include="Converters\BitmapConverter.cs" />
-    <Compile Include="Models\RevitBoxBase\AISParams\AISParamsView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -159,6 +157,10 @@
     <Resource Include="Resources\SeumteoParams.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RevitBox.Data.Models\RevitBox.Data.Models.csproj">
+      <Project>{6560496a-4b97-4b85-a08e-48dfc1e63d4f}</Project>
+      <Name>RevitBox.Data.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RevitBoxSeumteoNet\RevitBoxSeumteoNet.csproj">
       <Project>{8de45533-c3e2-4c5d-8856-4755652282ab}</Project>
       <Name>RevitBoxSeumteoNet</Name>

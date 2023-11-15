@@ -11,12 +11,13 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using RevitBoxSeumteo.Commands;
-using RevitBoxSeumteo.Common.AISParam;
+// using RevitBoxSeumteo.Common.AISParam;
 using RevitBoxSeumteo.Converters;
 using RevitBoxSeumteo.Common.LogManager;
 using RevitBoxSeumteoNet;
 using RevitBoxSeumteo.Services.Page;
-using RevitBoxSeumteo.Models.RevitBoxBase.ParamsCreate;
+using RevitBox.Data.Models.RevitBoxBase.AISParams;
+using RevitBox.Data.Models.Common.AISParam;
 
 namespace RevitBoxSeumteo.ViewModels.Windows
 {
@@ -30,7 +31,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
     {
         #region 프로퍼티
 
-        // TODO : 필요시 프로퍼티 AISParamsView 클래스 객체 "Item" 수정 예정 (2023.11.13 jbh)
+        // TODO : 필요시 프로퍼티 AISParamsView 클래스 객체 "Item" 수정 후 사용 예정 (2023.11.13 jbh)
         /// <summary>
         /// AISParamsView 클래스 객체 - 싱글톤 패턴 
         /// </summary>
@@ -60,7 +61,14 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         /// <summary>
         /// AISParamsCreateBoardV.xaml 비트맵 이미지(BitmapSource)
         /// </summary>
-        // public BitmapSource ParamsSource { get; set; }
+        public BitmapSource ParamsSource { get; set; }
+
+
+        /// <summary>
+        /// Visibility -  버튼 AIS 매개변수 생성
+        /// </summary>
+        public Visibility AISParamsVisible { get => _AISParamsVisible; set { _AISParamsVisible = value; NotifyOfPropertyChange(); } }
+        private Visibility _AISParamsVisible = Visibility.Collapsed;
 
         // TODO : 필요시 아래 주석친 코드 사용 예정 (2023.11.13 jbh)
         /// <summary>
@@ -144,6 +152,23 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         }
         private bool _IsLoading = false;
 
+        /// <summary>
+        /// 매개변수 생성 완료 여부 
+        /// </summary>
+        public bool IsCompleted
+        {
+            get
+            {
+                return _IsCompleted;
+            }
+            set
+            {
+                _IsCompleted = value;
+                Changed();
+            }
+        }
+        private bool _IsCompleted = false;
+
         // TODO : Progress 처리 진행율 프로퍼티 "ProgressRate" 필요시 사용 예정 (2023.11.08 jbh)
         /// <summary>
         /// Progress 처리 진행율
@@ -169,14 +194,15 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         public AISParamsCreateBoardVM()
         {
             ParamsCreateCommand = new ButtonCommand(AISParamsHelper.AsyncMethodType, ParamsCreateAsync, CanExecuteMethod);
-            //ParamsSource = BitmapConverter.ConvertFromBitmap(RevitBoxSeumteo.Properties.Resources.SeumteoParams);
+            ParamsSource        = BitmapConverter.ConvertFromBitmap(RevitBoxSeumteo.Properties.Resources.SeumteoParams);
+            AISParamsVisible    = Visibility.Visible;   // 화면 활성화 될 때, 버튼 "AIS 매개변수 생성" 보임 처리 
 
             //TitleParamsCreate = AISParamsHelper.매개변수생성;
             //TxtParamsCreate   = AISParamsHelper.매개변수생성클릭;
             //BtnParamsCreate   = AISParamsHelper.매개변수생성;
 
-            // TODO : 필요시 메서드 "InitSetting" 수정 예정 (2023.11.13 jbh)
-            InitSetting(Item);
+            // TODO : 필요시 메서드 "RegisterData" 수정 예정 (2023.11.13 jbh)
+            RegisterData(Item);
 
 
             // TODO : ProgressBar 뷰모델에서 구현하기 (2023.11.02 jbh)
@@ -239,14 +265,32 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         #region InitSetting
 
-        private void InitSetting(AISParamsView pItem)
+        // TODO : 추후 메서드 "RegisterData" 로직 필요시 수정 예정 (2023.11.15 jbh)
+        /// <summary>
+        /// 데이터 등록 
+        /// </summary>
+        /// <param name="pItem"></param>
+        private void RegisterData(AISParamsView pItem)
         {
+            // AISParamsView AISDatas = (AISParamsView) null;
+
             // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.10 jbh)
             var currentMethod = MethodBase.GetCurrentMethod();
 
             try
             {
+                // AISParamsView 데이터 모델에서 데이터 가져와서 메서드 파라미터 "pItem"에 추가 
+                pItem.SelectData();
+                // AISDatas.SelectData();
+
+                // PageBase.cs에 속한 프로퍼티 "SelectedData"에 AISParamsView 데이터 모델에서 가져온 데이터 클래스 객체 "pItem" 할당
                 this.SelectedData = pItem;
+
+                // AISParamsView 클래스 객체 "AISDatas"에 가져온 데이터("pItem") 추가하기 
+                // AISDatas.PutData(pItem);
+
+                // PageBase.cs에 속한 프로퍼티 "SelectedData"에 AISParamsView 데이터 모델에서 가져온 데이터 클래스 객체 "AISDatas" 할당
+                // this.SelectedData = AISDatas;
 
                 // TODO : 필요시 아래 주석친 코드 사용 예정 (2023.11.13 jbh)
                 //ParamsSource      = this.SelectedData.ParamsSource;
@@ -347,16 +391,30 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                 // int count = (int)e.Argument;
 
                 this.SelectedData.TxtParamsCreate = AISParamsHelper.매개변수생성중;
+                AISParamsVisible = Visibility.Hidden;  // 매개변수 생성 작업 시작하면 버튼 "AIS 매개변수 생성" 숨김 처리 
 
-                for (int i = 1; i <= 100; i++)
+                // 매개변수 생성 시작
+                if (!IsCompleted)
                 {
-                    Thread.Sleep(200);          // load data (0.2초 간격)
-                    // TODO : Progress 처리 진행율 프로퍼티 "ProgressRate" 필요시 사용 예정 (2023.11.08 jbh)
-                    // ProgressRate += 1;
-                    Worker.ReportProgress(i);   // shows progress bar (값을 ReportProgress 매개변수로 전달)
+                    for (int i = 1; i <= 100; i++)
+                    {
+                        Thread.Sleep(200);          // load data (0.2초 간격)
+                                                    // TODO : Progress 처리 진행율 프로퍼티 "ProgressRate" 필요시 사용 예정 (2023.11.08 jbh)
+                                                    // ProgressRate += 1;
+                        Worker.ReportProgress(i);   // shows progress bar (값을 ReportProgress 매개변수로 전달)
+                    }
+
+                    Worker.ReportProgress(0);       // hides progress bar
+                }
+                // 매개변수 생성 완료된 경우 
+                else
+                {
+                    this.SelectedData.TxtParamsCreate = AISParamsHelper.매개변수생성완료;
+                    MessageBox.Show("매개변수 생성이 완료되었습니다.\r\n다음 작업을 이어서 진행하세요.");
                 }
 
-                Worker.ReportProgress(0);       // hides progress bar
+
+                
 
                 // for (int i = 0; i <= 100; i++)
                 // {
@@ -428,7 +486,9 @@ namespace RevitBoxSeumteo.ViewModels.Windows
                     MessageBox.Show("작업 완료!!");
                     // TODO : Progress 처리 진행율 프로퍼티 "ProgressRate" 필요시 사용 예정 (2023.11.08 jbh)
                     // ProgressRate = 0;
+                    IsCompleted = true;
                     this.SelectedData.TxtParamsCreate = AISParamsHelper.매개변수생성클릭;
+                    AISParamsVisible = Visibility.Visible;   // 매개변수 생성 완료시, 버튼 "AIS 매개변수 생성" 보임 처리 
                 }
             }
             catch (Exception ex)

@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using RevitBoxSeumteo.Commands;
-using RevitBoxSeumteo.Common.AISParam;
 using RevitBoxSeumteo.Common.LogManager;
 using RevitBoxSeumteo.Services.Page;
-using RevitBoxSeumteo.Models.RevitBoxBase.ParamsCreate;
+using RevitBox.Data.Models.Common.AISParam;
+using RevitBox.Data.Models.RevitBoxBase.AISParams;
+// using RevitBoxSeumteo.Models.RevitBoxBase.ParamsCreate;
 
 namespace RevitBoxSeumteo.ViewModels.Windows
 {
