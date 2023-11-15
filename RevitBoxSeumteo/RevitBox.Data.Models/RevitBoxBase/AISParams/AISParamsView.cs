@@ -86,20 +86,26 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
         // 참고 URL - https://m.blog.naver.com/goldrushing/221230210966
 
         /// <summary>
-        /// 멀티 콤보박스 좌측 매개변수 항목
+        /// 멀티 콤보박스 좌측 AIS 매개변수 항목
         /// </summary>
-        //public class AIS_Left
-        //{
-
-        //}
+        public class AISParams_Type
+        {
+            /// <summary>
+            /// 시퀀스(자동증가)
+            /// </summary>
+            
+            /// <summary>
+            /// 분류 코드 
+            /// </summary>
+        }
 
         /// <summary>
-        /// 멀티 콤보박스 우측 속성값 항목 
+        /// 멀티 콤보박스 우측 AIS 매개변수 속성값 항목 
         /// </summary>
-        //public class AIS_Right
-        //{
+        public class AISParams_Value
+        {
 
-        //}
+        }
 
         #endregion AISParamsBoardVM
 
