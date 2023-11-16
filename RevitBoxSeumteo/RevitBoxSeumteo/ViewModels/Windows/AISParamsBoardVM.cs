@@ -12,6 +12,7 @@ using RevitBoxSeumteo.Common.LogManager;
 using RevitBoxSeumteo.Services.Page;
 using RevitBox.Data.Models.Common.AISParam;
 using RevitBox.Data.Models.RevitBoxBase.AISParams;
+using static RevitBox.Data.Models.RevitBoxBase.AISParams.AISParamsView;
 // using RevitBoxSeumteo.Models.RevitBoxBase.ParamsCreate;
 
 namespace RevitBoxSeumteo.ViewModels.Windows
@@ -48,6 +49,79 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         /// 종료 Command
         /// </summary>
         public ICommand ExitCommand { get; set; }
+
+        /// <summary>
+        /// TestData
+        /// </summary>
+        public TestData Data
+        {
+            get
+            {
+                // 싱글톤 패턴 
+                if (_Data == null)
+                {
+                    _Data = new TestData();
+                }
+                return _Data;
+            }
+            set => _Data = value;
+        }
+        private TestData _Data;
+
+        /// <summary>
+        /// ComboBox - AIS 매개변수 타입 
+        /// </summary>
+        public List<AISParams_Type> ParamsTypeList { get => Data.GetAllDivTypes(); set { _ParamsTypeList = value; NotifyOfPropertyChange(); } }
+        private List<AISParams_Type> _ParamsTypeList = new List<AISParams_Type>();
+
+        /// <summary>
+        /// ComboBox - AIS 매개변수 타입에서 선택된 값을 담을 프로퍼티
+        /// </summary>
+        public AISParams_Type SelectedParamsType 
+        { 
+            get => _SelectedParamsType; 
+            set 
+            {
+                _SelectedParamsType = value; 
+                NotifyOfPropertyChange("SelectedParamsType");
+
+                ParamsValueList = Data.FindSubDivValues(SelectedParamsType.DivCode);
+                NotifyOfPropertyChange("ParamsValueList");
+            } 
+        }
+        private AISParams_Type _SelectedParamsType;
+
+        /// <summary>
+        /// ComboBox - AIS 매개변수 속성값
+        /// </summary>
+        public List<AISParams_Value> ParamsValueList { get => _ParamsValueList; set { _ParamsValueList = value; NotifyOfPropertyChange("ParamsValueList"); } }
+        private List<AISParams_Value> _ParamsValueList = new List<AISParams_Value>();
+
+        /// <summary>
+        /// ComboBox - AIS 매개변수 속성값에서 선택된 값을 담을 프로퍼티
+        /// </summary>
+        public AISParams_Value SelectedParamsValue
+        { 
+            get => _SelectedParamsValue; 
+            set 
+            {
+                _SelectedParamsValue = value; 
+                NotifyOfPropertyChange("SelParamsValue"); 
+                if (_SelectedParamsValue != null)
+                {
+                    SeletedText = string.Format("[{0} : {1}]", _SelectedParamsValue.SubDivCode, _SelectedParamsValue.SubDivName);
+                }
+                else
+                {
+                    SeletedText = String.Empty;
+                }
+                NotifyOfPropertyChange("SeletedText");
+            } 
+        }
+        private AISParams_Value _SelectedParamsValue;
+
+
+        public string SeletedText { get; set; }
 
         /// <summary>
         /// 반환형 void 메소드 타입

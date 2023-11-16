@@ -27,12 +27,34 @@
                 <StackPanel Height="40" Orientation="Horizontal" HorizontalAlignment="Right">
                     <DockPanel Margin="0,5,0,5">
                         <!--  TODO : Text="카테고리 :" 문자열 값 수정 불가 처리 하기 위해 TextBox 대신 TextBlock으로 구현 (2023.10.16 jbh) -->
-                        <TextBlock x:Name="CategoryBox" Text="카테고리 :" Width="60" Height="20"/>
-                        <ComboBox Margin="10,0,0,0" Width="100" Height="20"/>
+                        <TextBlock Text="카테고리 :" Width="60" Height="20" />
+                        <ComboBox x:Name="ParamsType" 
+                                  Margin="10,0,0,0" 
+                                  Width="100" 
+                                  Height="20"
+                                  ItemsSource="{Binding ParamsTypeList}"
+                                  DisplayMemberPath="DivName"
+                                  SelectedValuePath="DivCode"
+                                  SelectedItem="{Binding SelectedParamsType}" />
 
                         <!--  TODO : Text="속성값 필터 :" 문자열 값 수정 불가 처리 하기 위해 TextBox 대신 TextBlock으로 구현 (2023.10.16 jbh) -->
-                        <TextBlock x:Name="PropertyValueBox" Text="속성값 필터 :" Margin="50,0,0,0" Width="80" Height="20"/>
-                        <ComboBox Margin="10,0,0,0" Width="100" Height="20"/>
+                        <TextBlock Text="속성값 필터 :" Margin="50,0,0,0" Width="80" Height="20"/>
+                        <ComboBox x:Name="ParamsValue" 
+                                  Margin="10,0,0,0" 
+                                  Width="100" 
+                                  Height="20" 
+                                  ItemsSource="{Binding ParamsValueList}" 
+                                  DisplayMemberPath="SubDivName"
+                                  SelectedValuePath="SubDivCode"
+                                  SelectedItem="{Binding SelectedParamsValue}"/>
+
+                        <TextBlock Margin="10,0,0,0" 
+                                   Width="110" 
+                                   VerticalAlignment="Center"
+                                   Text="{Binding SeletedText}"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   TextAlignment="Center" />
 
                         <Button Command="{Binding SearchCommand}" CommandParameter="" Margin="110,0,10,0" Width="80" Height="20">검색</Button>
                     </DockPanel>

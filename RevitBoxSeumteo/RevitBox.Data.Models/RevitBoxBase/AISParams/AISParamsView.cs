@@ -84,7 +84,6 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
 
         // TODO : 멀티 콤보박스 구현시 콤보박스에 사용할 프로퍼티 구현 예정 (2023.11.14 jbh)
         // 참고 URL - https://m.blog.naver.com/goldrushing/221230210966
-
         /// <summary>
         /// 멀티 콤보박스 좌측 AIS 매개변수 항목
         /// </summary>
@@ -93,10 +92,22 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
             /// <summary>
             /// 시퀀스(자동증가)
             /// </summary>
-            
+            public int Seq { get; set; }
+
             /// <summary>
-            /// 분류 코드 
+            /// AIS 매개변수 타입 분류 코드 
             /// </summary>
+            public string DivCode { get; set; }
+
+            /// <summary>
+            /// AIS 매개변수 타입 분류 명
+            /// </summary>
+            public string DivName { get; set; }
+
+            /// <summary>
+            /// 정렬 순서 
+            /// </summary>
+            public int OrderIdx { get; set; }
         }
 
         /// <summary>
@@ -104,7 +115,32 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
         /// </summary>
         public class AISParams_Value
         {
+            /// <summary>
+            /// 시퀀스(자동증가)
+            /// </summary>
+            public int Seq { get; set; }
 
+            /// <summary>
+            /// AIS 매개변수 타입 분류 코드 
+            /// </summary>
+            public string DivCode { get; set; }
+
+            /// <summary>
+            /// AIS 매개변수에 속하는 
+            /// 속성값 소 분류 코드 
+            /// </summary>
+            public string SubDivCode { get; set; }
+
+            /// <summary>
+            /// AIS 매개변수에 속하는 
+            /// 속성값 소 분류 코드명
+            /// </summary>
+            public string SubDivName { get; set; }
+
+            /// <summary>
+            /// 정렬 순서 
+            /// </summary>
+            public int OrderIdx { get; set; }
         }
 
         #endregion AISParamsBoardVM
@@ -175,9 +211,12 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
         /// </summary>
         public void SelectData()
         {
+            // AISParamsCreateBoardVM 전용 프로퍼티 
             this.TitleParamsCreate = AISParamsHelper.매개변수생성;
             this.TxtParamsCreate   = AISParamsHelper.매개변수생성클릭;
             this.BtnParamsCreate   = AISParamsHelper.매개변수생성;
+
+            
         }
 
         #endregion SelectData
