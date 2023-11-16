@@ -68,6 +68,8 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         }
         private TestData _Data;
 
+        // TODO : 멀티 콤보박스(Multi ComboBox) 수정 예정 (2023.11.16 jbh)  
+        // 참고 URL - https://m.blog.naver.com/goldrushing/221230210966  
         /// <summary>
         /// ComboBox - AIS 매개변수 타입 
         /// </summary>
@@ -203,6 +205,8 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         #region SeumteoTypeCreate
 
+        // TODO : 멀티 콤보박스 리스트 생성 메서드 "SeumteoTypeCreate" 수정 예정 (2023.11.16 jbh)
+        // 참고 URL - https://m.blog.naver.com/goldrushing/221230210966  
         /// <summary>
         /// 카테고리, 속성값 필터 ComboBox 바인딩 객체 리스트 생성 
         /// </summary>

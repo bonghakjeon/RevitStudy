@@ -8,6 +8,8 @@ using RevitBoxSeumteoNet;
 
 namespace RevitBox.Data.Models.RevitBoxBase.AISParams
 {
+    // TODO : 멀티 콤보박스(Multi ComboBox) 관련 테스트 클래스(Test) 구현 (필요 없을시 추후 삭제 예정) (2023.11.16 jbh)  
+    // 참고 URL - https://m.blog.naver.com/goldrushing/221230210966  
     public class TestData : BindableBase
     {
         /// <summary>

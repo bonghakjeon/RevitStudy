@@ -82,7 +82,7 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
 
         #region AISParamsBoardVM
 
-        // TODO : 멀티 콤보박스 구현시 콤보박스에 사용할 프로퍼티 구현 예정 (2023.11.14 jbh)
+        // TODO : 멀티 콤보박스(Multi ComboBox) 구현시 콤보박스에 사용할 프로퍼티 구현 예정 (2023.11.14 jbh)
         // 참고 URL - https://m.blog.naver.com/goldrushing/221230210966
         /// <summary>
         /// 멀티 콤보박스 좌측 AIS 매개변수 항목
