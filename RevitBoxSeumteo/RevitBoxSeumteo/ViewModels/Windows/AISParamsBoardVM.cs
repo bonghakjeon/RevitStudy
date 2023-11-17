@@ -68,13 +68,32 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         }
         private TestData _Data;
 
+        // TODO : IList<T>와 List<T> 차이 확인 후 IList<T> 프로퍼티 구현 (2023.11.17 jbh)
+        // 참고 URL - https://stackoverflow.com/questions/12369570/difference-between-ilistt-and-listt
         // TODO : 멀티 콤보박스(Multi ComboBox) 수정 예정 (2023.11.16 jbh)  
         // 참고 URL - https://m.blog.naver.com/goldrushing/221230210966  
         /// <summary>
         /// ComboBox - AIS 매개변수 타입 
         /// </summary>
-        public List<AISParams_Type> ParamsTypeList { get => Data.GetAllDivTypes(); set { _ParamsTypeList = value; NotifyOfPropertyChange(); } }
-        private List<AISParams_Type> _ParamsTypeList = new List<AISParams_Type>();
+        public IList<AISParams_Type> ParamsTypeList 
+        {
+            get 
+            {
+                // 싱글톤 패턴 
+                if (_ParamsTypeList == null)
+                {
+                    _ParamsTypeList = new List<AISParams_Type>();
+                }
+                return Data.GetAllDivTypes();
+            }
+            set => _ParamsTypeList = value;
+            //set 
+            //{ 
+            //    _ParamsTypeList = value; 
+            //    NotifyOfPropertyChange(); 
+            //} 
+        }
+        private IList<AISParams_Type> _ParamsTypeList;
 
         /// <summary>
         /// ComboBox - AIS 매개변수 타입에서 선택된 값을 담을 프로퍼티
@@ -93,11 +112,30 @@ namespace RevitBoxSeumteo.ViewModels.Windows
         }
         private AISParams_Type _SelectedParamsType;
 
+        // TODO : IList<T>와 List<T> 차이 확인 후 IList<T> 프로퍼티 구현 (2023.11.17 jbh)
+        // 참고 URL - https://stackoverflow.com/questions/12369570/difference-between-ilistt-and-listt
         /// <summary>
         /// ComboBox - AIS 매개변수 속성값
         /// </summary>
-        public List<AISParams_Value> ParamsValueList { get => _ParamsValueList; set { _ParamsValueList = value; NotifyOfPropertyChange("ParamsValueList"); } }
-        private List<AISParams_Value> _ParamsValueList = new List<AISParams_Value>();
+        public IList<AISParams_Value> ParamsValueList 
+        {
+            get 
+            { 
+                // 싱글톤 패턴 
+                if (_ParamsValueList == null)
+                {
+                    _ParamsValueList = new List<AISParams_Value>();
+                }
+                return _ParamsValueList;
+            }
+            set => _ParamsValueList = value;
+            //set 
+            //{ 
+            //    _ParamsValueList = value; 
+            //    NotifyOfPropertyChange("ParamsValueList"); 
+            //} 
+        }
+        private IList<AISParams_Value> _ParamsValueList;
 
         /// <summary>
         /// ComboBox - AIS 매개변수 속성값에서 선택된 값을 담을 프로퍼티
@@ -188,7 +226,7 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             ChangeCommand      = new ButtonCommand(AISParamsHelper.AsyncMethodType, ChangeDataAsync, CanExecuteMethod);
             ExitCommand        = new ButtonCommand(AISParamsHelper.MethodType, Exit, CanExecuteMethod);
 
-            SeumteoTypeCreate();
+            ComboBoxListCreate();
         }
 
         #endregion 생성자 
@@ -205,12 +243,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
 
         #region SeumteoTypeCreate
 
-        // TODO : 멀티 콤보박스 리스트 생성 메서드 "SeumteoTypeCreate" 수정 예정 (2023.11.16 jbh)
+        // TODO : 멀티 콤보박스 리스트 생성 메서드 "ComboBoxListCreate" 수정 예정 (2023.11.16 jbh)
         // 참고 URL - https://m.blog.naver.com/goldrushing/221230210966  
         /// <summary>
         /// 카테고리, 속성값 필터 ComboBox 바인딩 객체 리스트 생성 
         /// </summary>
-        private void SeumteoTypeCreate()
+        private void ComboBoxListCreate()
         {
             // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2023.10.10 jbh)
             // 참고 URL - https://slaner.tistory.com/73
@@ -222,6 +260,12 @@ namespace RevitBoxSeumteo.ViewModels.Windows
             {
                 MessageBox.Show("카테고리, 속성값 필터 ComboBox 바인딩 리스트 구현 예정");
                 Log.Information(Logger.GetMethodPath(currentMethod) + "카테고리, 속성값 필터 ComboBox 바인딩 리스트 구현 예정");
+
+                ParamsTypeList.Clear();
+                ParamsValueList.Clear();
+
+                ParamsTypeList = Data.AISParamsTypeCreate();
+                ParamsValueList = Data.AISParamsValueCreate();
 
                 // TODO : 테스트 코드 - 강제로 오류 발생하도록 Exception 생성 하도록 구현 (필요시 사용) (2023.10.19 jbh)
                 // 참고 URL - https://morm.tistory.com/187

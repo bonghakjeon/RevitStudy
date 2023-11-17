@@ -20,7 +20,7 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
     /// RevitBox 세움터 
     /// AIS 매개변수 데이터 모델
     /// </summary>
-    public class AISParamsView : T_AISParams<AISParamsView>
+    public class AISParamsView : TAISParams<AISParamsView>
     {
         #region 프로퍼티 
 
