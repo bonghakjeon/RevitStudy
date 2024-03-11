@@ -36,7 +36,7 @@ namespace SimpleUpdaterExample.Common.UpdaterBase
         /// <summary>
         /// 로그(Logs) 폴더(디렉토리) 경로 
         /// </summary>
-        public static string LogDirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\AA BIM\\{AssemblyName}\\Logs";
+        public static string LogDirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\RevitBox_Updater\\{AssemblyName}\\Logs";
 
         #endregion 폴더(디렉토리) 경로 
 
