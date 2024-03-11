@@ -36,6 +36,8 @@ namespace SimpleUpdaterExample
 
             try
             {
+                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 프로그램 시작");
+
                 Logger.ConfigureLogger(UpdaterHelper.AssemblyName, UpdaterHelper.LogDirPath);   // Serilog 로그 초기 설정 
 
                 return Result.Succeeded;
