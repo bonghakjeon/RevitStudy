@@ -99,8 +99,6 @@ namespace SimpleUpdaterExample.Updater
                 PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
 
                 RegisterUpdater(pDoc, Updater_Id);                         // 업데이터 등록 
-
-                UpdaterRegistry.RemoveAllTriggers(Updater_Id);             // 지정된 UpdaterId를 사용하여 업데이터와 연결된 모든 트리거를 제거. 업데이터 등록을 취소하지 않음.
                 
                 RegisterTriggers(Updater_Id, WallCategoryFilter);          // 객체 "벽" Triggers 등록 
                 RegisterTriggers(Updater_Id, PipeCurvesCategoryFilter);    // 객체 "배관" Triggers 등록
@@ -257,7 +255,8 @@ namespace SimpleUpdaterExample.Updater
 
                 if (UpdaterRegistry.IsUpdaterRegistered(pUpdaterId, pDoc))  // Revit 문서에 해당 ID를 가진 업데이터가 등록된 경우 
                 {
-                    UpdaterRegistry.RemoveAllTriggers(pUpdaterId);          // 지정된 ID를 가진 업데이터와 연결된 모든 트리거 제거 
+                    // UpdaterRegistry.RemoveAllTriggers(Updater_Id);          // 지정된 UpdaterId를 사용하여 업데이터와 연결된 모든 트리거를 제거. 업데이터 등록을 취소하지 않음.
+                    UpdaterRegistry.RemoveAllTriggers(pUpdaterId);          // 지정된 pUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거 업데이터 등록을 취소하지 않음.
                     UpdaterRegistry.UnregisterUpdater(pUpdaterId, pDoc);    // 지정된 ID를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
                 }
 
