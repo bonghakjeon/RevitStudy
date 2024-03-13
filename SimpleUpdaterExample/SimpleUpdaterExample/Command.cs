@@ -7,7 +7,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
 using SimpleUpdaterExample.Common.LogManager;
-using SimpleUpdaterExample.Common.UpdaterBase;
+using SimpleUpdaterExample.Updater;
 
 namespace SimpleUpdaterExample
 {
@@ -54,13 +54,17 @@ namespace SimpleUpdaterExample
 
             try
             {
-                var uiapp = commandData.Application;          // 애플리케이션 객체 
-                var doc = uiapp.ActiveUIDocument.Document;  // 활성화된 Revit 문서 
-                var addInId = uiapp.ActiveAddInId;              // RevitBox 업데이트 Command 아이디
+                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 시작");
+
+                var uiapp   = commandData.Application;            // 애플리케이션 객체 
+                var doc     = uiapp.ActiveUIDocument.Document;    // 활성화된 Revit 문서 
+                var addInId = uiapp.ActiveAddInId;                // RevitBox 업데이터 Command 아이디
 
                 TaskDialog.Show("RevitBox Update...", "테스트 진행 중...");
 
                 var simpleUpdater = new SimpleUpdater(doc, addInId);
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 완료");
 
                 return Result.Succeeded;
             }

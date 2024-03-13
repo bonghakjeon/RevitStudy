@@ -89,8 +89,10 @@
     <Compile Include="App.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Common\LogManager\Logger.cs" />
-    <Compile Include="Common\UpdaterBase\SimpleUpdater.cs" />
-    <Compile Include="Common\UpdaterBase\UpdaterHelper.cs" />
+    <Compile Include="Common\ParamsManager\ParamsManager.cs" />
+    <Compile Include="Updater\SimpleUpdater.cs" />
+    <Compile Include="Updater\UpdaterHelper.cs" />
+    <Compile Include="Models\UpdaterBase\Updater\UpdaterView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

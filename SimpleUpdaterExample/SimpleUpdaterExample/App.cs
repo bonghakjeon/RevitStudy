@@ -7,7 +7,7 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.UI;
 
 using SimpleUpdaterExample.Common.LogManager;
-using SimpleUpdaterExample.Common.UpdaterBase;
+using SimpleUpdaterExample.Updater;
 
 namespace SimpleUpdaterExample
 {
