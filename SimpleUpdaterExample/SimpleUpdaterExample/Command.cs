@@ -31,6 +31,10 @@ namespace SimpleUpdaterExample
     // 참고 2 URL - https://adndevblog.typepad.com/aec/2016/02/revitapi-how-to-use-dmu-dynamic-model-update-api.html
     #region CmdSimpleUpdaterExample
 
+    // TODO : RevitBox 업데이터 구현 (2024.03.13 jbh)
+    // 참고 URL   - https://forums.autodesk.com/t5/revit-api-forum/iupdater-simple-example-needed/m-p/9893248
+    // 참고 2 URL - https://thebuildingcoder.typepad.com/blog/2012/06/documentchanged-versus-dynamic-model-updater.html
+
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     /// <summary>
