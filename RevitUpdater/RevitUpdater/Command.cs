@@ -9,7 +9,7 @@ using Autodesk.Revit.UI;
 
 using RevitUpdater.Common.LogManager;
 using RevitUpdater.Common.UpdaterBase;
-using RevitUpdater.Test;
+using RevitUpdater.UI.MEPUpdater;
 
 namespace RevitUpdater
 {
@@ -68,14 +68,15 @@ namespace RevitUpdater
                 Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 시작");
 
                 UIApplication uiapp = commandData.Application;            // 애플리케이션 객체 
-                Document doc = uiapp.ActiveUIDocument.Document;    // 활성화된 Revit 문서 
-                AddInId addInId = uiapp.ActiveAddInId;                // RevitBox 업데이터 Command 아이디
+                Document doc = uiapp.ActiveUIDocument.Document;           // 활성화된 Revit 문서 
+                AddInId addInId = uiapp.ActiveAddInId;                    // RevitBox 업데이터 Command 아이디
 
                 TaskDialog.Show("RevitBox Update...", "테스트 진행 중...");
 
                 var mepUpdater = new MEPUpdater(doc, addInId);
+                mepUpdater.ShowDialog();
 
-                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 완료");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 종료");
 
                 return Result.Succeeded;
             }

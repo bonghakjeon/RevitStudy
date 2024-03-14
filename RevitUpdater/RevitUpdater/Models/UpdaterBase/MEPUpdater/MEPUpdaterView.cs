@@ -18,7 +18,7 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
     public enum EnumExistElements : int
     {
         [Description("객체 존재 안 함.")]
-        NONE = 0,
+        NONE  = 0,
         [Description("객체 존재함.")]
         EXIST = 1
     }

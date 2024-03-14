@@ -336,7 +336,7 @@ namespace RevitUpdater.Common.ParamsManager
         /// <summary>
         /// 실시간 간섭 체크
         /// </summary>
-        public static bool ClashCheck_InRealTime(Document pDoc, Element pElement)
+        public static bool ClashCheck_InRealTime(Document rvDoc, Element pElement)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록 
 
