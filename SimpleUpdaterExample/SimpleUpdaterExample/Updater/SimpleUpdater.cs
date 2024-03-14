@@ -61,12 +61,13 @@ namespace SimpleUpdaterExample.Updater
 
         #region 생성자 
 
-        public SimpleUpdater(Document pDoc, AddInId pAddInId)
+        public SimpleUpdater(Document rvDoc, AddInId rvAddInId)
         {
-            Guid guId  = new Guid(GId);
-            Updater_Id = new UpdaterId(pAddInId, guId);
+            // Guid guId  = new Guid(GId);
+            // Updater_Id = new UpdaterId(rvAddInId, guId);
 
-            InitSetting(pDoc, Updater_Id);   // 업데이터 초기 셋팅
+            // InitSetting(rvDoc, Updater_Id);   // 업데이터 초기 셋팅
+            InitSetting(rvDoc, rvAddInId);   // 업데이터 초기 셋팅
         }
 
         #endregion 생성자 
@@ -76,7 +77,8 @@ namespace SimpleUpdaterExample.Updater
         /// <summary>
         /// 업데이터 초기 셋팅
         /// </summary>
-        private void InitSetting(Document pDoc, UpdaterId pUpdaterId)
+        //private void InitSetting(Document rvDoc, UpdaterId pUpdaterId)
+        private void InitSetting(Document rvDoc, AddInId rvAddInId)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -84,23 +86,29 @@ namespace SimpleUpdaterExample.Updater
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 시작");
 
-                // 1. 매개변수 값 입력 완료 여부 false 초기화
+                // 1. GUID 생성 
+                Guid guId = new Guid(GId);
+
+                // 2. 업데이터 아이디(Updater_Id) 객체 생성 
+                Updater_Id = new UpdaterId(rvAddInId, guId);
+
+                // 3. 매개변수 값 입력 완료 여부 false 초기화
                 IsCompleted = false;   
 
-                // 2. 객체 "벽"(BuiltInCategory.OST_Walls)만 필터링 처리 
+                // 4. 객체 "벽"(BuiltInCategory.OST_Walls)만 필터링 처리 
                 WallCategoryFilter        = new ElementCategoryFilter(BuiltInCategory.OST_Walls);
 
-                // 3. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
+                // 5. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
                 PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
 
-                // 4. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
+                // 6. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
                 PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
 
-                RegisterUpdater(pDoc, pUpdaterId);                         // 업데이터 등록 
+                RegisterUpdater(rvDoc, Updater_Id);                         // 업데이터 등록 
                 
-                RegisterTriggers(pUpdaterId, WallCategoryFilter);          // 객체 "벽" Triggers 등록 
-                RegisterTriggers(pUpdaterId, PipeCurvesCategoryFilter);    // 객체 "배관" Triggers 등록
-                RegisterTriggers(pUpdaterId, PipeFittingCategoryFilter);   // 객체 "배관 부속류" Triggers 등록
+                RegisterTriggers(Updater_Id, WallCategoryFilter);          // 객체 "벽" Triggers 등록 
+                RegisterTriggers(Updater_Id, PipeCurvesCategoryFilter);    // 객체 "배관" Triggers 등록
+                RegisterTriggers(Updater_Id, PipeFittingCategoryFilter);   // 객체 "배관 부속류" Triggers 등록
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
 
@@ -249,7 +257,7 @@ namespace SimpleUpdaterExample.Updater
         /// <summary>
         /// 업데이터 등록 
         /// </summary>
-        private void RegisterUpdater(Document pDoc, UpdaterId pUpdaterId)
+        private void RegisterUpdater(Document rvDoc, UpdaterId pUpdaterId)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -257,13 +265,13 @@ namespace SimpleUpdaterExample.Updater
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 시작");
 
-                if (UpdaterRegistry.IsUpdaterRegistered(pUpdaterId, pDoc))   // Revit 문서(pDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
+                if (UpdaterRegistry.IsUpdaterRegistered(pUpdaterId, rvDoc))   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
                 {                    
                     UpdaterRegistry.RemoveAllTriggers(pUpdaterId);           // 지정된 pUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
-                    UpdaterRegistry.UnregisterUpdater(pUpdaterId, pDoc);     // Revit 문서(pDoc)에 지정된 pUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
+                    UpdaterRegistry.UnregisterUpdater(pUpdaterId, rvDoc);     // Revit 문서(rvDoc)에 지정된 pUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
                 }
 
-                UpdaterRegistry.RegisterUpdater(this, pDoc);   // 업데이터 등록
+                UpdaterRegistry.RegisterUpdater(this, rvDoc);   // 업데이터 등록
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 완료");
 

@@ -74,7 +74,7 @@ namespace SimpleUpdaterExample
 
                 var simpleUpdater = new SimpleUpdater(doc, addInId);
 
-                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 완료");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 종료");
 
                 return Result.Succeeded;
             }
