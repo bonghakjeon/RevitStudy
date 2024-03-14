@@ -1,10 +1,10 @@
 ﻿using Serilog;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
 using SimpleUpdaterExample.Common.LogManager;
 using SimpleUpdaterExample.Models.UpdaterBase.Updater;
 using SimpleUpdaterExample.Updater;
@@ -29,7 +29,7 @@ namespace SimpleUpdaterExample.Common.ParamsManager
 
             try
             {
-                // TODO : BuiltInParameter -> ForgeTypeId 구하기 (2024.02.07 jbh)
+                // TODO : BuiltInParameter -> ForgeTypeId 구하기 (2024.03.14 jbh)
                 //        아래 URL 주소와 연동된 PDF 문서 5 Page -> "ParameterUtils.GetParameterTypeId(BuiltInParameter)" 참고
                 // 참고 URL - https://thebuildingcoder.typepad.com/files/revit_platform_api_changes_and_additions_2022.pdf
                 ForgeTypeId forgeTypeId = ParameterUtils.GetParameterTypeId(pBuiltInParam);
@@ -53,7 +53,7 @@ namespace SimpleUpdaterExample.Common.ParamsManager
         public static List<BuiltInParamView> GetBuiltInParameterList(Array pBuiltInParameters)
         {
             string builtInParamName = string.Empty;              // BuiltInParameter 매개변수 이름 
-            long builtInParamValue = 0;                          // BuiltInParameter 매개변수에 입력할 값
+            long builtInParamValue  = 0;                         // BuiltInParameter 매개변수에 입력할 값
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -61,17 +61,18 @@ namespace SimpleUpdaterExample.Common.ParamsManager
             {
                 // Revit 응용 프로그램 안에 내장된 BuiltInParameter를 가지고 Dictionary(key - builtInNames / value - builtInValues) 만들기
                 // BuiltInParameter Dictionary(key - name / value - value) 만들기
-                // 참고 URL - https://forum.dynamobim.com/t/setting-built-in-parameter-by-using-a-variable-value/49466/2
+                // 참고 URL   - https://forum.dynamobim.com/t/setting-built-in-parameter-by-using-a-variable-value/49466/2
                 // 참고 2 URL - https://chat.openai.com/c/68245284-54a5-4fa7-acff-8e90c39e1931
 
                 // BuiltInParameter
                 // 참고 URL - https://www.revitapidocs.com/2024/fb011c91-be7e-f737-28c7-3f1e1917a0e0.htm
+
                 // 배열에서 List 형변환
                 // 참고 URL - https://dongyeopblog.wordpress.com/2016/08/22/c-%EC%96%B4%EB%A0%88%EC%9D%B4%EB%A5%BC-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EB%A1%9C-%EB%B3%80%ED%99%98%ED%95%98%EA%B8%B0-system-array-to-list/
 
                 // 1 단계 : BuiltInParameter 매개변수 중 중복된 매개변수와 실제로 사용하지 않는 매개변수 목록 제거 
-                // TODO : builtInParameters에 들어있는 BuiltInParameter 값들 중 BuiltInParameter.INVALID 처럼 실제로 사용하지 않는 매개변수들을 Linq 확장 메서드 "Where()" 사용해서 매개변수 데이터 제거 (2024.02.07 jbh)
-                // TODO : builtInParameters에 들어있는 BuiltInParameter 값들이 중복 매개변수 데이터가 존재하므로 Linq 확장 메서드 "Distinct()" 사용해서 중복 매개변수 데이터 제거 (2024.02.07 jbh)
+                // TODO : pBuiltInParameters에 들어있는 BuiltInParameter 값들 중 BuiltInParameter.INVALID 처럼 실제로 사용하지 않는 매개변수들을 Linq 확장 메서드 "Where()" 사용해서 매개변수 데이터 제거 (2024.03.14 jbh)
+                // TODO : pBuiltInParameters에 들어있는 BuiltInParameter 값들 중 중복 매개변수 데이터가 존재하므로 Linq 확장 메서드 "Distinct()" 사용해서 중복 매개변수 데이터 제거 (2024.03.14 jbh)
                 // 참고 URL - https://developer-talk.tistory.com/215
                 List<BuiltInParameter> builtInParamList = pBuiltInParameters.OfType<BuiltInParameter>()
                                                                             .Where(builtInParam
@@ -117,12 +118,6 @@ namespace SimpleUpdaterExample.Common.ParamsManager
                     // test.name = string.Empty;
                     // test.name = LabelUtils.GetLabelFor(builtInParam);
                     // builtInParamData.paramName = LabelUtils.GetLabelForBuiltInParameter(forgeTypeId, LanguageType.Korean);   // BuiltInParameter 매개변수 이름 할당
-
-                    // TODO : 매개변수 값 프로퍼티 "value"의 실제 자료형은 long이지만 임시로 string으로 처리 (2024.02.13 jbh)
-                    // builtInParamData.paramValue = (long)builtInParam;   // BuiltInParameter 매개변수 값 할당 
-                    // builtInParamPack.value = builtInParam.ToString(); // BuiltInParameter 매개변수 값 자료형 long -> string 형 변환 후 할당 
-
-
                 }
 
                 return paramDatas;
@@ -134,7 +129,7 @@ namespace SimpleUpdaterExample.Common.ParamsManager
             }
         }
 
-        // TODO : BuiltInCategory 이름 리스트 가져오기 static 메서드 "builtInCategoryNameList" 필요시 오류 보완 및 구현 예정 
+        // TODO : BuiltInCategory 이름 리스트 가져오기 static 메서드 "builtInCategoryNameList" 필요시 오류(오류 원인 - "BuiltInCategory 중 중복된 것과 실제로 사용하지 않는 BuiltInCategory 목록 제거") 보완 및 구현 예정 (2024.03.14 jbh)
         /// <summary>
         /// BuiltInCategory 이름 리스트 가져오기 
         /// </summary>
@@ -148,21 +143,21 @@ namespace SimpleUpdaterExample.Common.ParamsManager
             try
             {
 
-                var test2 = LabelUtils.GetLabelFor(BuiltInCategory.OST_PipeFitting);
+                var test2 = LabelUtils.GetLabelFor(BuiltInCategory.OST_PipeFitting);   // 테스트 코드 
 
-                // Revit 응용 프로그램 안에 내장된 BuiltInParameter를 가지고 Dictionary(key - builtInNames / value - builtInValues) 만들기
-                // BuiltInParameter Dictionary(key - name / value - value) 만들기
+                // Revit 응용 프로그램 안에 내장된 BuiltInCategory를 가지고 Dictionary(key - builtInCategoryName / value - builtInCategoryValue) 만들기
+                // BuiltInCategory Dictionary(key - name / value - value) 만들기
                 // 참고 URL - https://forum.dynamobim.com/t/setting-built-in-parameter-by-using-a-variable-value/49466/2
                 // 참고 2 URL - https://chat.openai.com/c/68245284-54a5-4fa7-acff-8e90c39e1931
 
-                // BuiltInParameter
+                // (또 다른 예시) BuiltInParameter
                 // 참고 URL - https://www.revitapidocs.com/2024/fb011c91-be7e-f737-28c7-3f1e1917a0e0.htm
                 // 배열에서 List 형변환
                 // 참고 URL - https://dongyeopblog.wordpress.com/2016/08/22/c-%EC%96%B4%EB%A0%88%EC%9D%B4%EB%A5%BC-%EB%A6%AC%EC%8A%A4%ED%8A%B8%EB%A1%9C-%EB%B3%80%ED%99%98%ED%95%98%EA%B8%B0-system-array-to-list/
 
-                // 1 단계 : BuiltInParameter 매개변수 중 중복된 매개변수와 실제로 사용하지 않는 매개변수 목록 제거 
-                // TODO : builtInParameters에 들어있는 BuiltInParameter 값들 중 BuiltInParameter.INVALID 처럼 실제로 사용하지 않는 매개변수들을 Linq 확장 메서드 "Where()" 사용해서 매개변수 데이터 제거 (2024.02.07 jbh)
-                // TODO : builtInParameters에 들어있는 BuiltInParameter 값들이 중복 매개변수 데이터가 존재하므로 Linq 확장 메서드 "Distinct()" 사용해서 중복 매개변수 데이터 제거 (2024.02.07 jbh)
+                // 1 단계 : BuiltInCategory 중 중복된 것과 실제로 사용하지 않는 BuiltInCategory 목록 제거 
+                // TODO : pBuiltInCategories에 들어있는 BuiltInCategory 값들 중 BuiltInCategory.INVALID 처럼 실제로 사용하지 않는 것들을 Linq 확장 메서드 "Where()" 사용해서 데이터 제거 (2024.03.14 jbh)
+                // TODO : pBuiltInCategories에 들어있는 BuiltInCategory 값들 중 중복 데이터가 존재하므로 Linq 확장 메서드 "Distinct()" 사용해서 중복 데이터 제거 (2024.03.14 jbh)
                 // 참고 URL - https://developer-talk.tistory.com/215
                 List<string> builtInCategoryNameList = pBuiltInCategories.OfType<BuiltInCategory>()
                                                                          .Where(builtInCategory
@@ -223,9 +218,7 @@ namespace SimpleUpdaterExample.Common.ParamsManager
             catch (Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
-                // TODO : 오류 발생시 상위 호출자 예외처리 전달 throw 구현 (2024.01.29 jbh)
-                // 참고 URL - https://devlog.jwgo.kr/2009/11/27/thrownthrowex/
-                throw;
+                throw;   // TODO : 오류 발생시 상위 호출자 예외처리 전달 throw
             }
         }
 
@@ -236,20 +229,21 @@ namespace SimpleUpdaterExample.Common.ParamsManager
         {
             bool bResult = false;                                // 매개변수에 입력할 값 할당 완료 여부 false로 초기화
 
-            List<SetParamValueView> setCompletedParameters = new List<SetParamValueView>();     // 매개변수 값 할당 완료된 객체(이름, 값) 리스트 객체 생성 
+            List<SetParamInfoView> setCompletedParameters = new List<SetParamInfoView>();     // 매개변수 값 할당 완료된 객체(이름, 값) 리스트 객체 생성 
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록 
 
             try
             {
-                var targetParameters = pElementList.FindAll(element => element.LookupParameter(rvParamName) is not null)
-                                                   .Select(element => element.LookupParameter(rvParamName))
-                                                   .ToList();
+                // 1 단계 : 매개변수 리스트 구하기 
+                List<Parameter> targetParameters = pElementList.FindAll(element => element.LookupParameter(rvParamName) is not null)
+                                                               .Select(element => element.LookupParameter(rvParamName))
+                                                               .ToList();
 
-                // 매개변수가 존재하지 않는 경우 
+                // 2 단계 : 매개변수가 존재하지 않는 경우 
                 if (targetParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
-                    // TODO : 테스트 하면서 추후 값을 입력하려는 매개변수가 존재하지 않는 경우 메시지 박스 (TaskDialog.Show)로 출력할지 아니면 오류 처리 (throw new Exception)로 진행할 지 결정 후 로직 다시 수정하기 (2024.02.20 jbh)
+                    // TODO : 테스트 하면서 추후 값을 입력하려는 매개변수가 존재하지 않는 경우 메시지 박스 (TaskDialog.Show)로 출력할지 아니면 오류 처리 (throw new Exception)로 진행할 지 결정 후 로직 다시 수정하기 (2024.03.14 jbh)
                     // TaskDialog.Show(AABIMHelper.NoticeTitle, $"매개변수 {rvParamName}가 존재하지 않습니다.\r\n다시 선택하시기 바랍니다.");
                     // return;
                     throw new Exception($"Revit 문서의 모든 객체(Element)에\r\n매개변수 - {rvParamName}\r\n이/가 존재하지 않습니다.\r\n다시 확인 바랍니다.");
@@ -261,22 +255,22 @@ namespace SimpleUpdaterExample.Common.ParamsManager
                 // 유튜브
                 // 참고 URL   - https://youtu.be/5OYlS2QQMPA?si=2Q5uu_kxwEnXp-gm
                 // 참고 2 URL - https://youtu.be/_TG0hVYJ6D8?si=FSuaEYrW7t-Bou3d
-                //foreach (Element parameter in targetParameters)
+
+                // 3 단계 : foreach 문에서 리스트 "targetParameters"에 속한 요소(매개변수) 방문 
                 targetParameters.ForEach(param => {
-                                    // 매개변수의 값 자료형 찾아서 메서드 파라미터 rvParamValue를 형변환(casting) 후
-                                    // 해당 매개변수(rvParamName와 동일한 이름)에 값 입력하기
+                                    // 4 단계 : 매개변수의 값 자료형 찾아서 메서드 파라미터 rvParamValue를 형변환(casting) 및 해당 매개변수(rvParamName와 동일한 이름)에 값 입력하기
                                     switch (param.StorageType)
                                     {
-                                        case StorageType.Integer:  // "dataType": "예/아니요" 인 경우 
+                                        case StorageType.Integer:   // "dataType": "예/아니요" 인 경우 
                                             int intParamValue = Int32.Parse(rvParamValue);
                                             bResult = param.Set(intParamValue);   // 매개변수에 값 입력
-                                    
+                                            
                                             break;
                                     
-                                        case StorageType.Double:   // "dataType": "번호" 인 경우
-                                            var doubleParamValue = Double.Parse(rvParamValue);
-                                    
-                                            var unitTypeId = param.GetUnitTypeId();   // 메서드 "GetUnitTypeId" 사용해서 Revit API 내부에서 사용하는 단위 타입 아이디 (ForgeTypeId) 구하기 
+                                        case StorageType.Double:    // "dataType": "번호" 인 경우
+                                            double doubleParamValue = Double.Parse(rvParamValue);
+
+                                            ForgeTypeId unitTypeId = param.GetUnitTypeId();   // 메서드 "GetUnitTypeId" 사용해서 Revit API 내부에서 사용하는 단위 타입 아이디 (ForgeTypeId) 구하기 
                                     
                                             var convertParamValue = UnitUtils.ConvertFromInternalUnits(doubleParamValue, unitTypeId);   // Revit API 내부에서 사용하는 단위 Feet -> Millimeters 단위 변환
                                     
@@ -284,27 +278,29 @@ namespace SimpleUpdaterExample.Common.ParamsManager
                                     
                                             break;
                                     
-                                        case StorageType.String:   // "dataType": "문자" 인 경우 
+                                        case StorageType.String:    // "dataType": "문자" 인 경우 
                                             bResult = param.Set(rvParamValue);   // 매개변수에 값 입력
                                     
                                             break;
-                                            // TODO : 매개변수의 값 자료형에 "StorageType.ElementId", "StorageType.None" 추가될 경우 아래 case : 레이블 구현 예정 (2024.03.12 jbh)
-                                            //case StorageType.ElementId:   // ElementId인 경우 
-                                            //    ElementId elementId = testParam.AsElementId();
-                                            //    bResult = param.Set(elementId);
-                                            //    break;
-                                            //case StorageType.None:   // invalid인 경우 
-                                            //    // throw new Exception("invalid 값 복사 오류");
-                                            //    break;
+
+                                        // TODO : 매개변수의 값 자료형에 "StorageType.ElementId", "StorageType.None" 추가될 경우 아래 case : 레이블 구현 예정 (2024.03.12 jbh)
+                                        // case StorageType.ElementId:   // ElementId인 경우 
+                                        //     ElementId elementId = testParam.AsElementId();
+                                        //     bResult = param.Set(elementId);
+                                        //     break;
+                                        // case StorageType.None:   // invalid인 경우 
+                                        //     // throw new Exception("invalid 값 복사 오류");
+                                        //     break;
                                     }
                                     
                                     // 매개변수에 값 입력 완료한 경우 
                                     if (true == bResult)
                                     {
-                                        SetParamValueView setParameter = new SetParamValueView(rvParamName, rvParamValue);
+                                        SetParamInfoView setCompletedParameter = new SetParamInfoView(rvParamName, rvParamValue);
 
-                                        setCompletedParameters.Add(setParameter);
+                                        setCompletedParameters.Add(setCompletedParameter);
                                     }
+                                    // TODO : 추후 필요시 매개변수에 값 입력 실패한 경우 로그 및 메시지에 매개변수 값 입력 실패한 객체 이름 추가 여부 확인 후 추가 예정 (2024.03.14 jbh)
                                     // 매개변수에 값 입력 실패한 경우 
                                     else
                                     {
@@ -313,11 +309,11 @@ namespace SimpleUpdaterExample.Common.ParamsManager
                                     }
                                 });
 
-                // 매개변수에 입력한 값이 존재하지 않는 경우 (리스트 객체 "setCompletedParameters"에 데이터가 존재하지 않는 경우)
+                // 매개변수에 값 입력이 모두 실패한 경우 (리스트 객체 "setCompletedParameters"에 데이터가 존재하지 않는 경우)
                 if (setCompletedParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
-                    TaskDialog.Show(UpdaterHelper.ErrorTitle, $"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n입력할 값이 존재하지 않습니다.");
-                    return false;
+                    TaskDialog.Show(UpdaterHelper.ErrorTitle, $"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
+                    throw new Exception($"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
@@ -326,25 +322,10 @@ namespace SimpleUpdaterExample.Common.ParamsManager
                 // TaskDialog.Show(UpdaterHelper.CompletedTitle, $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
 
                 return true;
-
-                // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.03.13 jbh)
-                // TODO : 리스트 객체 "setParamNameList", "setParamValueList"에 속한 모든 요소를 메서드 "String.Join()" 사용해서 하나의 문자열로 변환 (2024.03.13 jbh)
-                // 참고 URL - https://codechacha.com/ko/csharp-convert-list-to-string/
-                // var setParamNameList = setCompletedParameters.Select(paramview => paramview.paramName).ToList();         // 값 입력 완료된 매개변수 이름 리스트 
-                // string setParamNames = String.Join(", ", setParamNameList.ToArray());
-
-                // var setParamValueList = setCompletedParameters.Select(paramview => paramview.paramValue).ToList();   // 값 입력 완료된 객체에 속한 매개변수에 입력한 값 리스트  
-                // string setParamValues = String.Join(", ", setParamValueList.ToArray());
-
-                // Log.Information(Logger.GetMethodPath(currentMethod) + $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {setParamNames}\r\n값 - {setParamValues}");
-
-                // TODO : 아래 테스트용 결과 메시지 필요시 사용 예정 (2024.02.21 jbh) 
-                //TaskDialog.Show(UpdaterHelper.CompletedTitle, $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {setParamNames}\r\n값 - {setParamValues}");
             }
             catch (Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
-                // throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
                 return false;
             }
         }

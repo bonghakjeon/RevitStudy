@@ -109,12 +109,12 @@ namespace SimpleUpdaterExample.Models.UpdaterBase.Updater
 
     #endregion BuiltInCategoryView
 
-    #region SetParamValueView
+    #region SetParamInfoView
 
     /// <summary>
     /// 입력할 값이 할당된 매개변수 정보
     /// </summary>
-    public class SetParamValueView
+    public class SetParamInfoView
     {
         #region 프로퍼티
 
@@ -132,7 +132,7 @@ namespace SimpleUpdaterExample.Models.UpdaterBase.Updater
 
         #region 생성자
 
-        public SetParamValueView(string rvParamName, string rvParamValue)
+        public SetParamInfoView(string rvParamName, string rvParamValue)
         {
             this.paramName  = rvParamName;
             this.paramValue = rvParamValue;
@@ -141,5 +141,5 @@ namespace SimpleUpdaterExample.Models.UpdaterBase.Updater
         #endregion 생성자
     }
 
-    #endregion SetParamValueView
+    #endregion SetParamInfoView
 }

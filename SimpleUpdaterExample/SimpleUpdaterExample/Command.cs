@@ -1,4 +1,5 @@
 ﻿using Serilog;
+
 using System;
 using System.Reflection;
 
@@ -25,15 +26,20 @@ namespace SimpleUpdaterExample
 
     #endregion Command
 
-    // TODO : Revit AddIn 개발 소스를 비쥬얼스튜디오 2022 버전 - .net Core 8.0을 사용하려면 Revit 2025 버전 부터 사용이 가능하므로 현 시점에서 해당 소스는 .net FrameWork 4.8에서만 구동시킬 수 있다. (2024.03.11 jbh)
+    // TODO : Revit AddIn 개발 소스를 비쥬얼스튜디오 2022 .net Core 버전(8.0)을 사용하려면 Revit 2025 버전 부터 사용이 가능하므로 현 시점에서 해당 소스는 .net FrameWork 4.8에서만 구동시킬 수 있다. (2024.03.11 jbh)
 
     // 참고 URL - https://forums.autodesk.com/t5/revit-api-forum/iupdater-simple-example-needed/m-p/9893248
     // 참고 2 URL - https://adndevblog.typepad.com/aec/2016/02/revitapi-how-to-use-dmu-dynamic-model-update-api.html
+
     #region CmdSimpleUpdaterExample
 
     // TODO : RevitBox 업데이터 구현 (2024.03.13 jbh)
     // 참고 URL   - https://forums.autodesk.com/t5/revit-api-forum/iupdater-simple-example-needed/m-p/9893248
     // 참고 2 URL - https://thebuildingcoder.typepad.com/blog/2012/06/documentchanged-versus-dynamic-model-updater.html
+
+    // RevitBox 업데이터 Command 클래스 CmdSimpleUpdaterExample class 접근 제한자 intenal 설정 (2024.03.14 jbh)
+    // 접근 제한자 internal - internal 로 선언한 변수 또는 클래스는 CmdSimpleUpdaterExample 프로젝트 내에서만 접근이 가능하고, 외부에선 접근이 불가능
+    // 참고 URL - https://slaner.tistory.com/69
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
@@ -60,9 +66,9 @@ namespace SimpleUpdaterExample
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 시작");
 
-                var uiapp   = commandData.Application;            // 애플리케이션 객체 
-                var doc     = uiapp.ActiveUIDocument.Document;    // 활성화된 Revit 문서 
-                var addInId = uiapp.ActiveAddInId;                // RevitBox 업데이터 Command 아이디
+                UIApplication uiapp   = commandData.Application;            // 애플리케이션 객체 
+                Document doc          = uiapp.ActiveUIDocument.Document;    // 활성화된 Revit 문서 
+                AddInId addInId       = uiapp.ActiveAddInId;                // RevitBox 업데이터 Command 아이디
 
                 TaskDialog.Show("RevitBox Update...", "테스트 진행 중...");
 
