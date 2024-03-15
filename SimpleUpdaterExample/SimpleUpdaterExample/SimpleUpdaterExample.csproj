@@ -97,6 +97,9 @@
     <Compile Include="Command.cs" />
     <Compile Include="Common\LogManager\Logger.cs" />
     <Compile Include="Common\ParamsManager\ParamsManager.cs" />
+    <Compile Include="Controls\Text\WaterMarkTextControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\SimpleUpdater\SimpleUpdater.cs">
       <SubType>Form</SubType>
     </Compile>
