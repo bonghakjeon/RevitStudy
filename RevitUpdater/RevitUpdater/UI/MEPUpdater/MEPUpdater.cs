@@ -101,8 +101,28 @@ namespace RevitUpdater.UI.MEPUpdater
                 // 참고 URL - https://kdsoft-zeros.tistory.com/3
                 // this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
+                // TextBox (또는 TextEdit) 컨트롤 "textParamName" 높이 조절하기 위해 속성 Properties.AutoHeight = false; 설정 
+                // 주의사항 - Properties.AutoHeight = true; 설정시 TextEdit 높이 조절 불가 
+                // 참고 URL - https://supportcenter.devexpress.com/ticket/details/q278069/sizing-the-text-area-of-a-textedit-control
+                // this.textParamName.Properties.AutoHeight = false;
+
                 // 1. Revit 문서 프로퍼티에 전달 받은 Revit 문서(rvDoc) 할당
                 RevitDoc = rvDoc;
+
+                // 2. GUID 생성 
+                Guid guId   = new Guid(GId);
+
+                // 3. 업데이터 아이디(Updater_Id) 객체 생성 
+                Updater_Id  = new UpdaterId(rvAddInId, guId);
+
+                // 4. 매개변수 값 입력 완료 여부 false 초기화
+                IsCompleted = false;
+
+                // 5. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
+                PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
+
+                // 6. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
+                PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
             }
@@ -121,13 +141,46 @@ namespace RevitUpdater.UI.MEPUpdater
 
         #region 기본 메소드
 
-        public void Execute(UpdaterData data)
+        // TODO : 콜백 함수 Execute 구현 (2024.03.11 jbh)
+        // 콜백(CallBack) 함수란? 시스템이 사용자가 요청한 처리를 하다가 특정 이벤트를 발생시켜 해당 이벤트를 처리해달라고 역으로 전달해 오는 함수
+        // 참고 URL   - https://nephrolepis.tistory.com/12
+        // 참고 2 URL - https://todaycode.tistory.com/24
+
+        /// <summary>
+        /// 콜백 함수 Execute
+        /// </summary>
+        public void Execute(UpdaterData rvData)
         {
+            string targetParamName = string.Empty;   // 값을 할당할 매개변수 이름 
+            string currentDateTime = string.Empty;   // 매개변수에 입력할 값(“현재 날짜 시간 조합 문자” )
+
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
                 TaskDialog.Show("Revit MEPUpdater", "콜백 함수 Execute 구현 예정...");
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 시작");
+
+                // 매개변수 값 입력 완료 여부 확인 
+                if (true == IsCompleted)
+                {
+                    IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
+                    return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
+                }
+
+
+
+
+
+                // targetParamName = this.textParamName.Text;
+
+
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 종료");
+
+                
+
             }
             catch (Exception ex)
             {

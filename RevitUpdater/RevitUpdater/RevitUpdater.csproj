@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\x64\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -98,6 +98,9 @@
     <Compile Include="Common\LogManager\Logger.cs" />
     <Compile Include="Common\ParamsManager\ParamsManager.cs" />
     <Compile Include="Common\UpdaterBase\UpdaterHelper.cs" />
+    <Compile Include="Controls\Text\WaterMarkTextControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Models\UpdaterBase\MEPUpdater\MEPUpdaterView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\TestMEPUpdater.cs" />
@@ -113,9 +116,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="UI\MEPUpdater\MEPUpdater.resx">
       <DependentUpon>MEPUpdater.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -74,7 +74,8 @@ namespace RevitUpdater
                 TaskDialog.Show("RevitBox Update...", "테스트 진행 중...");
 
                 var mepUpdater = new MEPUpdater(doc, addInId);
-                mepUpdater.ShowDialog();
+                // mepUpdater.ShowDialog();
+                mepUpdater.Show();
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 종료");
 
