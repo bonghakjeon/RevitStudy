@@ -144,7 +144,7 @@ namespace SimpleUpdaterExample.Updater
         /// <summary>
         /// 콜백 함수 Execute
         /// </summary>
-        public void Execute(UpdaterData pData)
+        public void Execute(UpdaterData rvData)
         {
             string builtInParamName = string.Empty;   // BuiltInParameter 매개변수 이름 
             string currentDateTime  = string.Empty;   // BuiltInParameter 매개변수에 입력할 값(“현재 날짜 시간 조합 문자” )
@@ -163,14 +163,14 @@ namespace SimpleUpdaterExample.Updater
                 }
                 
 
-                var revitDoc = pData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
+                var revitDoc = rvData.GetDocument();   // UpdaterData 클래스 객체 rvData와 연관된 Document 개체 반환
 
-                var addElementIds            = pData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
+                var addElementIds            = rvData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
                 List<Element> addElements    = addElementIds.Select(addElementId => revitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
                 List<string> addElementNames = addElementIds.Select(addElementId => revitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
 
 
-                var modElementIds            = pData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
+                var modElementIds            = rvData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
                 List<Element> modElements    = modElementIds.Select(modElementId => revitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
                 List<string> modElementNames = modElementIds.Select(modElementId => revitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
 
