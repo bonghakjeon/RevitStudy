@@ -97,6 +97,7 @@
     <Compile Include="Command.cs" />
     <Compile Include="Common\LogManager\Logger.cs" />
     <Compile Include="Common\ParamsManager\ParamsManager.cs" />
+    <Compile Include="Common\RequestHandler\RequestHandler.cs" />
     <Compile Include="Common\UpdaterBase\UpdaterHelper.cs" />
     <Compile Include="Controls\Text\WaterMarkTextControl.cs">
       <SubType>Component</SubType>
@@ -121,6 +122,8 @@
       <DependentUpon>MEPUpdater.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Interface\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

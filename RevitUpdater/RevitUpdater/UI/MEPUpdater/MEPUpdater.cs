@@ -240,8 +240,29 @@ namespace RevitUpdater.UI.MEPUpdater
             {
                 TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 등록 구현 예정...");
 
+
+
+                // TODO : Command.cs -> RevitBox 업데이터 Command 클래스 "CmdMEPUpdater" -> 콜백함수 "Execute"가 실행되어
+                //        MEPUpdater 클래스 폼 화면을 출력할 때 메서드 ".ShowDialog()"가 아닌 ".Show()"로 호출 후
+                //        MEPUpdater 폼 화면이 출력 되고 -> 버튼 "ON" 클릭시 이벤트 메서드 "btnON_Click"가 실행되면
+                //        아래 주석친 using(Transaction transaction = new Transaction(RevitDoc)) 코드 실행시 
+                //        오류 메시지 출력 "Starting a transaction from an external application running outside of API context is not allowed."
+                //        해당 오류 원인 파악 예정 (2024.03.15 jbh)
+                //        
+                //        오류 메시지 출력 원인
+                //        메서드 ".Show()" 호출해서 MEPUpdater 클래스 폼 화면을 출력할 때에는
+                //        부모 폼(Revit)과 자식 폼(MEPUpdater)이 서로 독립적이고 쓰레드 또한 개별로 갖고 있어서
+                //        자식 폼(MEPUpdater)이 부모 폼(Revit)의 쓰레드를 별도로 제어할 수 없기 때문이다.
+                //        하여 해당 오류 메시지가 출력 하지 않기 위해서는 클래스 파일 "RequestHandler.cs" 생성해서
+                //        클래스 "MEPUpdaterRequestHandler" 생성 및 인터페이스 "IExternalEventHandler" 상속 받은 후 Execute 메소드 구현 해야함. (2024.03.15 jbh)
+                // 참고 자료 - 프로젝트 파일 "RevitBox2023" -> 소스 파일 "RequestHandler.cs" 참고하기
+
+                // 참고 URL   - https://nomadcoder.tistory.com/entry/Revit-%ED%95%B4%EA%B2%B0%EB%B0%A9%EB%B2%95Starting-a-transaction-from-an-external-application-running-outside-of-API-context-is-not-allowed
+                // 참고 2 URL - https://stackoverflow.com/questions/31490990/starting-a-transaction-from-an-external-application-running-outside-of-api-conte
+
                 // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
                 // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
+                // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
                 using (Transaction transaction = new Transaction(RevitDoc))
                 {
                     // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
@@ -281,8 +302,28 @@ namespace RevitUpdater.UI.MEPUpdater
             {
                 TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 해제 구현 예정...");
 
+                // TODO : Command.cs -> RevitBox 업데이터 Command 클래스 "CmdMEPUpdater" -> 콜백함수 "Execute"가 실행되어
+                //        MEPUpdater 클래스 폼 화면을 출력할 때 메서드 ".ShowDialog()"가 아닌 ".Show()"로 호출 후
+                //        MEPUpdater 폼 화면이 출력 되고 -> 버튼 "OFF" 클릭시 이벤트 메서드 "btnOFF_Click"가 실행되면
+                //        아래 주석친 using(Transaction transaction = new Transaction(RevitDoc)) 코드 실행시 
+                //        오류 메시지 출력 "Starting a transaction from an external application running outside of API context is not allowed."
+                //        해당 오류 원인 파악 예정 (2024.03.15 jbh)
+                //        
+                //        오류 메시지 출력 원인
+                //        메서드 ".Show()" 호출해서 MEPUpdater 클래스 폼 화면을 출력할 때에는
+                //        부모 폼(Revit)과 자식 폼(MEPUpdater)이 서로 독립적이고 쓰레드 또한 개별로 갖고 있어서
+                //        자식 폼(MEPUpdater)이 부모 폼(Revit)의 쓰레드를 별도로 제어할 수 없기 때문이다.
+                //        하여 해당 오류 메시지가 출력 하지 않기 위해서는 클래스 파일 "RequestHandler.cs" 생성해서
+                //        클래스 "MEPUpdaterRequestHandler" 생성 및 인터페이스 "IExternalEventHandler" 상속 받은 후 Execute 메소드 구현 해야함. (2024.03.15 jbh)
+                // 참고 자료 - 프로젝트 파일 "RevitBox2023" -> 소스 파일 "RequestHandler.cs" 참고하기
+
+                // 참고 URL   - https://nomadcoder.tistory.com/entry/Revit-%ED%95%B4%EA%B2%B0%EB%B0%A9%EB%B2%95Starting-a-transaction-from-an-external-application-running-outside-of-API-context-is-not-allowed
+                // 참고 2 URL - https://stackoverflow.com/questions/31490990/starting-a-transaction-from-an-external-application-running-outside-of-api-conte
+
+
                 // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
                 // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
+                // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
                 using (Transaction transaction = new Transaction(RevitDoc))
                 {
                     // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
