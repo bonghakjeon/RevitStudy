@@ -91,6 +91,11 @@ namespace RevitUpdater.Common.UpdaterBase
         /// </summary>
         public const string GId = "d42d28af-d2cd-4f07-8873-e7cfb61903d8";
 
+        /// <summary>
+        /// 객체 타입 - Element
+        /// </summary>
+        public const string ElementType = "Element";
+
         #endregion MEPUpdater
 
         #region RequestHandler

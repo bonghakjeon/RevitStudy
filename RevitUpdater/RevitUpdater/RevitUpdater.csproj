@@ -97,6 +97,7 @@
     <Compile Include="Command.cs" />
     <Compile Include="Common\Converters\WavConverter.cs" />
     <Compile Include="Common\LogBase\Logger.cs" />
+    <Compile Include="Common\Managers\CategoryManager.cs" />
     <Compile Include="Common\Managers\FormManager.cs" />
     <Compile Include="Common\Managers\ParamsManager.cs" />
     <Compile Include="Common\Managers\UpdaterManager.cs" />

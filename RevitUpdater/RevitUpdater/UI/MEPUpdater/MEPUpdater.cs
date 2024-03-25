@@ -17,7 +17,6 @@ using RevitUpdater.Common.UpdaterBase;
 using RevitUpdater.Models.UpdaterBase.MEPUpdater;
 
 using DevExpress.XtraEditors;
-using System.Collections;
 
 namespace RevitUpdater.UI.MEPUpdater
 {
@@ -43,6 +42,22 @@ namespace RevitUpdater.UI.MEPUpdater
         /// Revit 문서 
         /// </summary>
         private Document RevitDoc { get; set; }
+
+        /// <summary>
+        /// Revit 문서 안에 포함된 객체(Element)를 검색 및 필터링
+        /// 참고 URL - https://www.revitapidocs.com/2024/263cf06b-98be-6f91-c4da-fb47d01688f3.htm
+        /// </summary>
+        private FilteredElementCollector Collector { get; set; }
+
+        /// <summary>
+        /// Revit 문서 안에 포함된 객체(Element) 리스트 
+        /// </summary>
+        private List<Element> ElementList { get; set; } = new List<Element>();
+
+        /// <summary>
+        /// Geometry Element Options
+        /// </summary>
+        private Options GeometryOpt { get; set; }
 
         /// <summary>
         /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러 프로퍼티 
@@ -134,19 +149,37 @@ namespace RevitUpdater.UI.MEPUpdater
                 // 4. Revit 문서 프로퍼티 "RevitDoc" 할당 
                 RevitDoc    = rvUIApp.ActiveUIDocument.Document;    // 활성화된 Revit 문서 
 
-                // 5. GUID 생성 
+                // 5. Revit 문서 안에 포함된 객체(Element)를 검색 및 필터링
+                Collector   = new FilteredElementCollector(RevitDoc).WhereElementIsNotElementType();
+
+                // 6. Revit 문서 프로퍼티(RevitDoc) 안에 포함된 객체(Element) 목록을 리스트 프로퍼티 "ElementList" 에 할당 
+                // TODO : ElementList 초기화(Clear) 필요시 사용 예정 (2024.03.25 jbh)
+                // ElementList.Clear();  
+                ElementList = Collector.ToList();
+
+
+                // 7. GeometryOpt Element Options 프로퍼티 "GeometryOpt" 할당
+                // 참고 URL - https://thebuildingcoder.typepad.com/blog/2016/04/stable-reference-string-magic-voodoo.html
+                GeometryOpt = rvUIApp.Application.Create.NewGeometryOptions();
+                GeometryOpt.DetailLevel       = ViewDetailLevel.Fine;
+                GeometryOpt.ComputeReferences = true;           // 각 Geometry 객체에 대해 GeometryObject.Reference 속성을 활성화하도록 Revit을 설정
+
+
+                CategoryDataCreate(ElementList, GeometryOpt);   // LookUpEdit 컨트롤(lookUpEditCategory)에 데이터 생성 및 출력 
+
+                // 8. GUID 생성 
                 Guid guId   = new Guid(GId);
 
-                // 6. 업데이터 아이디(Updater_Id) 객체 생성 
+                // 9. 업데이터 아이디(Updater_Id) 객체 생성 
                 Updater_Id  = new UpdaterId(rvAddInId, guId);
 
-                // 7. 매개변수 값 입력 완료 여부 false 초기화
+                // 10. 매개변수 값 입력 완료 여부 false 초기화
                 IsCompleted = false;
 
-                // 8. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
+                // 11. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
                 PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
 
-                // 9. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
+                // 12. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
                 PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
@@ -164,7 +197,35 @@ namespace RevitUpdater.UI.MEPUpdater
 
         #endregion InitSetting
 
+        #region CategoryDataCreate
 
+        /// <summary>
+        /// ComboBox와 비슷한 LookUpEdit 컨트롤(lookUpEditCategory)에 데이터 생성 및 출력 
+        /// </summary>
+        private void CategoryDataCreate(List<Element> rvElementList, Options rvGeometryOpt)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // TODO : ComboBox와 비슷한 LookUpEdit 컨트롤(lookUpEditCategory)에 리스트 데이터 바인딩 구현 (2024.03.25 jbh)
+                // 참고 URL - https://build.tistory.com/15
+                // 참고 2 URL - https://kinghell.tistory.com/81
+                //this.lookUpEditCategory.DataBindings.Add(new Binding());
+                this.lookUpEditCategory.Properties.DataSource    = CategoryManager.GetCategoryInfoList(rvElementList, rvGeometryOpt);
+                this.lookUpEditCategory.Properties.ValueMember   = "mainCategory";
+                this.lookUpEditCategory.Properties.DisplayMember = "mainCategoryName";
+                this.lookUpEditCategory.Properties.NullText      = "카테고리를 선택하세요.";
+                this.lookUpEditCategory.Properties.PopulateColumns(); 
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달
+            }
+        }
+
+        #endregion CategoryDataCreate
 
         #region MEPUpdater_FormClosed
 
@@ -390,40 +451,9 @@ namespace RevitUpdater.UI.MEPUpdater
 
             try
             {
-                // TODO : 활성화된 Revit 문서에 존재하는 모든 카테고리 추출하기 (2024.03.22 jbh)
-                // 참고 URL - https://chat.openai.com/c/8fe860ba-c21d-47e9-8ec8-470326417ccd
-                Categories categories = RevitDoc.Settings.Categories;
-
-                
-                List<CategoryInfoView> categoryNameList = new List<CategoryInfoView>();
-
-                foreach (Category mainCategory in categories)
-                {
-                    // categoryList.Add(mainCategory.Name);
-                
-                    foreach (Category subCategory in mainCategory.SubCategories)
-                    {
-                        CategoryInfoView categoryInfo = new CategoryInfoView(mainCategory.Name, subCategory.Name);
-                
-                        categoryNameList.Add(categoryInfo);
-                    }
-                }
-
-                categoryNameList.OrderBy(x => x.mainCategoryName);
+                TaskDialog.Show(UpdaterHelper.NoticeTitle, "테스트 진행 중...");
 
 
-
-
-
-                // var collector = new FilteredElementCollector(RevitDoc).WhereElementIsNotElementType();
-                // var testList  = collector.Where(element => element.Category is not null).Select(x => x.Category).ToList();
-                // var elementList = collector.Where(element => element.Category is not null).Select(x => x.Category.BuiltInCategory).Distinct().ToList();
-
-                // var testCategories = collector.OfClass(typeof(Categories)).ToList();
-
-
-                //var builtInCategories   = Enum.GetValues(typeof(BuiltInCategory));
-                // var builtInCategoryList = ParamsManager.GetbuiltInCategoryNameList(builtInCategories);
             }
             catch (Exception ex)
             {

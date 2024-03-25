@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 
+using Autodesk.Revit.DB;
+
 namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
 {
     /// <summary>
@@ -56,6 +58,21 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
 
     #endregion EnumExistKeyInputData
 
+    #region EnumCategoryInfo
+
+    /// <summary>
+    /// 동일 카테고리 존재여부 확인
+    /// </summary>
+    public enum EnumCategoryInfo : int
+    {
+        [Description("동일 카테고리 존재 안 함.")]
+        NONE = 0,
+        [Description("동일 카테고리 존재함.")]
+        EXIST = 1
+    }
+
+    #endregion EnumCategoryInfo
+
     #region BuiltInParamView
 
     /// <summary>
@@ -105,18 +122,26 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
         public string mainCategoryName { get; set; }
 
         /// <summary>
-        /// 메인 하위에 속하는 서브 카테고리 이름
+        /// 메인 카테고리
         /// </summary>
-        public string subCategoryName { get; set; }
+        public BuiltInCategory mainCategory { get; set; }
+
+        // TODO : 매개변수 그룹 이름 프로퍼티 "paramGroupName" 필요시 사용 예정 (2024.03.25 jbh)
+        /// <summary>
+        /// 특정 객체에 속하는 매개변수 그룹 이름
+        /// </summary>
+        //public string paramGroupName { get; set; }
 
         #endregion 프로퍼티
 
         #region 생성자
 
-        public CategoryInfoView (string pMainCategoryName, string pSubCategoryName)
+        //public CategoryInfoView (string rvMainCategoryName, string rvParamGroupName)
+        public CategoryInfoView(string rvMainCategoryName, BuiltInCategory rvMainCategory)
         {
-            this.mainCategoryName = pMainCategoryName;
-            this.subCategoryName  = pSubCategoryName;
+            this.mainCategoryName = rvMainCategoryName;
+            //this.paramGroupName   = rvParamGroupName;
+            this.mainCategory     = rvMainCategory; 
         }
 
         #endregion 생성자

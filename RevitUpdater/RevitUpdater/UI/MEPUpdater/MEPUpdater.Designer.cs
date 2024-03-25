@@ -32,6 +32,8 @@ namespace RevitUpdater.UI.MEPUpdater
             this.panelTitle = new DevExpress.XtraEditors.PanelControl();
             this.labelTitle = new DevExpress.XtraEditors.LabelControl();
             this.panelContent = new DevExpress.XtraEditors.PanelControl();
+            this.lookUpEditCategory = new DevExpress.XtraEditors.LookUpEdit();
+            this.labelCategory = new DevExpress.XtraEditors.LabelControl();
             this.textParamName = new RevitUpdater.Controls.Text.WaterMarkTextControl();
             this.labelParam = new DevExpress.XtraEditors.LabelControl();
             this.panelBtn = new DevExpress.XtraEditors.PanelControl();
@@ -42,6 +44,7 @@ namespace RevitUpdater.UI.MEPUpdater
             this.panelTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.panelContent)).BeginInit();
             this.panelContent.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lookUpEditCategory.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelBtn)).BeginInit();
             this.panelBtn.SuspendLayout();
             this.SuspendLayout();
@@ -68,6 +71,8 @@ namespace RevitUpdater.UI.MEPUpdater
             // 
             // panelContent
             // 
+            this.panelContent.Controls.Add(this.lookUpEditCategory);
+            this.panelContent.Controls.Add(this.labelCategory);
             this.panelContent.Controls.Add(this.textParamName);
             this.panelContent.Controls.Add(this.labelParam);
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -76,10 +81,31 @@ namespace RevitUpdater.UI.MEPUpdater
             this.panelContent.Size = new System.Drawing.Size(398, 238);
             this.panelContent.TabIndex = 1;
             // 
+            // lookUpEditCategory
+            // 
+            this.lookUpEditCategory.Location = new System.Drawing.Point(124, 56);
+            this.lookUpEditCategory.Name = "lookUpEditCategory";
+            this.lookUpEditCategory.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 11F);
+            this.lookUpEditCategory.Properties.Appearance.Options.UseFont = true;
+            this.lookUpEditCategory.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.lookUpEditCategory.Size = new System.Drawing.Size(220, 24);
+            this.lookUpEditCategory.TabIndex = 3;
+            // 
+            // labelCategory
+            // 
+            this.labelCategory.Appearance.Font = new System.Drawing.Font("Tahoma", 15F);
+            this.labelCategory.Appearance.Options.UseFont = true;
+            this.labelCategory.Location = new System.Drawing.Point(41, 54);
+            this.labelCategory.Name = "labelCategory";
+            this.labelCategory.Size = new System.Drawing.Size(77, 24);
+            this.labelCategory.TabIndex = 2;
+            this.labelCategory.Text = "카테고리 :";
+            // 
             // textParamName
             // 
             this.textParamName.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textParamName.Location = new System.Drawing.Point(136, 79);
+            this.textParamName.Location = new System.Drawing.Point(124, 109);
             this.textParamName.Name = "textParamName";
             this.textParamName.Size = new System.Drawing.Size(220, 25);
             this.textParamName.TabIndex = 1;
@@ -90,7 +116,7 @@ namespace RevitUpdater.UI.MEPUpdater
             // 
             this.labelParam.Appearance.Font = new System.Drawing.Font("Tahoma", 15F);
             this.labelParam.Appearance.Options.UseFont = true;
-            this.labelParam.Location = new System.Drawing.Point(53, 77);
+            this.labelParam.Location = new System.Drawing.Point(41, 107);
             this.labelParam.Name = "labelParam";
             this.labelParam.Size = new System.Drawing.Size(77, 24);
             this.labelParam.TabIndex = 0;
@@ -161,6 +187,7 @@ namespace RevitUpdater.UI.MEPUpdater
             ((System.ComponentModel.ISupportInitialize)(this.panelContent)).EndInit();
             this.panelContent.ResumeLayout(false);
             this.panelContent.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lookUpEditCategory.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelBtn)).EndInit();
             this.panelBtn.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -178,5 +205,7 @@ namespace RevitUpdater.UI.MEPUpdater
         private DevExpress.XtraEditors.LabelControl labelParam;
         private Controls.Text.WaterMarkTextControl textParamName;
         private DevExpress.XtraEditors.SimpleButton btnTest;
+        private DevExpress.XtraEditors.LabelControl labelCategory;
+        private DevExpress.XtraEditors.LookUpEdit lookUpEditCategory;
     }
 }
