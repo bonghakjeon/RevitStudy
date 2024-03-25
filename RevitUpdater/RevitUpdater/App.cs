@@ -6,7 +6,7 @@ using System.Reflection;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.UI;
 
-using RevitUpdater.Common.LogManager;
+using RevitUpdater.Common.LogBase;
 using RevitUpdater.Common.UpdaterBase;
 
 namespace RevitUpdater

@@ -2,28 +2,34 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-using RevitUpdater.Common.LogManager;
+using RevitUpdater.Common.LogBase;
+using RevitUpdater.Common.Managers;
+using RevitUpdater.Common.RequestBase;
 using RevitUpdater.Common.UpdaterBase;
+using RevitUpdater.Models.UpdaterBase.MEPUpdater;
 
 using DevExpress.XtraEditors;
+using System.Collections;
 
 namespace RevitUpdater.UI.MEPUpdater
 {
     public partial class MEPUpdater : XtraForm, IUpdater
     {
         #region 프로퍼티
+
+        /// <summary>
+        /// Revit 응용프로그램 객체
+        /// </summary>
+        private UIApplication RevitUIApp { get; set; }
+
 
         // TODO : 폼 화면(CopyParams.cs) 출력시 기존처럼 .ShowDialog(Modal - 부모 창 제어 X)하는 방식이 아니라
         //        .Show(Modaless - 부모 창 제어 O)으로 하는 방식으로 수정해야 하면
@@ -37,6 +43,16 @@ namespace RevitUpdater.UI.MEPUpdater
         /// Revit 문서 
         /// </summary>
         private Document RevitDoc { get; set; }
+
+        /// <summary>
+        /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러 프로퍼티 
+        /// </summary>
+        private MEPUpdaterRequestHandler RequestHandler { get; set; }
+
+        /// <summary>
+        /// 외부 이벤트 프로퍼티
+        /// </summary>
+        private ExternalEvent ExEvent { get; set; }
 
         /// <summary>
         /// 업데이터 아이디 생성시 필요한 GUID 문자열 프로퍼티
@@ -70,11 +86,11 @@ namespace RevitUpdater.UI.MEPUpdater
 
         #region 생성자
 
-        public MEPUpdater(Document rvDoc, AddInId rvAddInId)
+        public MEPUpdater(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
         {
             InitializeComponent();
 
-            InitSetting(rvDoc, rvAddInId);   // 업데이터 초기 셋팅
+            InitSetting(rvExEvent, pHandler, rvUIApp, rvAddInId);   // 업데이터 초기 셋팅
         }
 
         #endregion 생성자
@@ -84,7 +100,7 @@ namespace RevitUpdater.UI.MEPUpdater
         /// <summary>
         /// 업데이터 초기 셋팅
         /// </summary>
-        private void InitSetting(Document rvDoc, AddInId rvAddInId)
+        private void InitSetting(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -106,22 +122,31 @@ namespace RevitUpdater.UI.MEPUpdater
                 // 참고 URL - https://supportcenter.devexpress.com/ticket/details/q278069/sizing-the-text-area-of-a-textedit-control
                 // this.textParamName.Properties.AutoHeight = false;
 
-                // 1. Revit 문서 프로퍼티에 전달 받은 Revit 문서(rvDoc) 할당
-                RevitDoc = rvDoc;
+                // 1. 외부 이벤트 프로퍼티 할당 
+                ExEvent = rvExEvent;
 
-                // 2. GUID 생성 
+                // 2. 외부 요청 핸들러 프로퍼티 할당 
+                RequestHandler = pHandler;
+
+                // 3. Revit 응용프로그램 객체 프로퍼티에 전달 받은 Revit 객체(rvUIApp) 할당
+                RevitUIApp  = rvUIApp;
+
+                // 4. Revit 문서 프로퍼티 "RevitDoc" 할당 
+                RevitDoc    = rvUIApp.ActiveUIDocument.Document;    // 활성화된 Revit 문서 
+
+                // 5. GUID 생성 
                 Guid guId   = new Guid(GId);
 
-                // 3. 업데이터 아이디(Updater_Id) 객체 생성 
+                // 6. 업데이터 아이디(Updater_Id) 객체 생성 
                 Updater_Id  = new UpdaterId(rvAddInId, guId);
 
-                // 4. 매개변수 값 입력 완료 여부 false 초기화
+                // 7. 매개변수 값 입력 완료 여부 false 초기화
                 IsCompleted = false;
 
-                // 5. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
+                // 8. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
                 PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
 
-                // 6. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
+                // 9. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
                 PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
@@ -138,6 +163,38 @@ namespace RevitUpdater.UI.MEPUpdater
         }
 
         #endregion InitSetting
+
+
+
+        #region MEPUpdater_FormClosed
+
+        /// <summary>
+        /// Revit 업데이터 종료 이벤트 
+        /// </summary>
+        private void MEPUpdater_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 화면 종료 시작");
+
+                // Revit Updater Modaless 폼(MEPUpdater) 화면 닫기 전에 외부 이벤트 프로퍼티 "ExEvent" 리소스 해제 
+                ExEvent.Dispose();
+                ExEvent = null;   // 외부 이벤트 null로 초기화
+                RequestHandler = null;   // 외부 요청 핸들러 null로 초기화
+
+                // base.OnFormClosed(e);    // 폼화면 닫기 (해당 메서드 base.OnFormClosed(e); 호출시 이벤트 메서드 MEPUpdater_FormClosed 두번 실행되서 오류 발생하므로 주석처리 진행)
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 화면 종료 완료");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+            }
+        }
+
+        #endregion MEPUpdater_FormClosed
 
         #region 기본 메소드
 
@@ -158,8 +215,6 @@ namespace RevitUpdater.UI.MEPUpdater
 
             try
             {
-                TaskDialog.Show("Revit MEPUpdater", "콜백 함수 Execute 구현 예정...");
-
                 Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 시작");
 
                 // 매개변수 값 입력 완료 여부 확인 
@@ -170,17 +225,54 @@ namespace RevitUpdater.UI.MEPUpdater
                 }
 
 
+                RevitDoc = rvData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
+
+                var addElementIds = rvData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
+                List<Element> addElements    = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
+                List<string> addElementNames = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
 
 
+                var modElementIds = rvData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
+                List<Element> modElements    = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
+                List<string> modElementNames = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
 
-                // targetParamName = this.textParamName.Text;
+                targetParamName = this.textParamName.Text;   // MEPUpdater 폼 화면의 TextBox에서 입력 받은 문자열을 string 클래스 객체 targetParamName에 할당하기 
+                // builtInParamName = ParamsManager.GetBuiltInParameterName(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);   // 테스트용 - BuiltInParameter 매개변수 이름 "해설" 가져오기
 
+                currentDateTime = DateTime.Now.ToString();   // "targetParamName"에 저장된 문자열과 동일한 이름의 매개변수에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
 
+                if (addElementIds.Count >= (int)EnumExistElements.EXIST
+                    && addElementNames.Count >= (int)EnumExistElements.EXIST)   // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
+                {
+                    // ParamsManager 클래스 static 메서드 "SetParametersValue" 호출
+                    // 신규 추가 객체 리스트(addElements)에 속하는"targetParamName"과 동일한 이름의 매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
+                    // static 메서드 "SetParametersValue" 기능
+                    // 1."targetParamName"과 동일한 이름의 매개변수 추출하기 
+                    // 2."targetParamName"과 동일한 이름의 매개변수에 값“현재 날짜 시간 조합 문자”입력하기 
+                    // 3."targetParamName"과 동일한 이름의 매개변수에 입력 완료된 값“현재 날짜 시간 조합 문자”메시지 출력하기 
+                    IsCompleted = ParamsManager.SetParametersValue(addElements, targetParamName, currentDateTime);
+
+                    // 신규 추가 완료된 객체 이름 리스트(addElementNames) 메세지 출력 
+                    if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+
+                    // 신규 업데이트 실패한 경우 
+                    else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
+                }
+
+                if (modElementIds.Count >= (int)EnumExistElements.EXIST
+                    && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
+                {
+
+                    // 수정된 객체 리스트(modElements)에 속하는 "targetParamName"과 동일한 이름의 매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
+                    IsCompleted = ParamsManager.SetParametersValue(modElements, targetParamName, currentDateTime);
+
+                    // 수정 업데이트 완료된 객체 이름 리스트(modElementNames) 메세지 출력 
+                    if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // 수정 업데이트 실패한 경우 
+                    else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
+                }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 종료");
-
-                
-
             }
             catch (Exception ex)
             {
@@ -222,10 +314,128 @@ namespace RevitUpdater.UI.MEPUpdater
         /// </summary>
         public string GetUpdaterName()
         {
-            return "MEPUpdater";
+            return UpdaterHelper.MEPUpdater;
         }
 
         #endregion 기본 메소드
+
+        #region MakeRequest
+
+        /// <summary>
+        /// 요청(Request) 생성
+        /// </summary>
+        private void MakeRequest(EnumMEPUpdaterRequestId pRequest)
+        {
+            RequestHandler.Request.Make(pRequest);
+            ExEvent.Raise();
+            // DozeOff(); // 주의사항 - MEPUpdater 폼 객체에 속한 모든 컨트롤 비활성화 메서드 호출시 화면의 버튼 기능("ON", "OFF")을 사용할 수 없으므로 해당 메서드는 호출 안 함.
+        }
+
+        #endregion MakeRequest
+
+        #region DozeOff
+
+        /// <summary>
+        /// MEPUpdater 폼 객체에 속한 모든 컨트롤 비활성화
+        /// </summary>
+        private void DozeOff()
+        {
+            EnableCommands(false);
+        }
+
+        #endregion DozeOff
+
+        #region WakeUp
+
+        /// <summary>
+        /// MEPUpdater 폼 객체에 속한 모든 컨트롤 활성화
+        /// </summary>
+        public void WakeUp()
+        {
+            EnableCommands(true);
+        }
+
+        #endregion WakeUp
+
+        #region EnableCommands
+
+        /// <summary>
+        /// 폼 객체에 속한 모든 컨트롤 활성화 / 비활성화
+        /// </summary>
+        private void EnableCommands(bool pStatus)
+        {
+            foreach (System.Windows.Forms.Control ctrl in this.Controls)
+            {
+                ctrl.Enabled = pStatus;
+            }
+
+            // TODO : 아래 if절 로직 필요시 사용 예정 (2024.03.22 jbh)
+            // if (false == pStatus)
+            // {
+            //     this.btnON.Enabled  = true;
+            //     this.btnOFF.Enabled = true;
+            // }
+        }
+
+        #endregion EnableCommands
+
+        #region btnTest_Click
+
+        /// <summary>
+        /// 테스트 기능 이벤트 메서드
+        /// </summary>
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // TODO : 활성화된 Revit 문서에 존재하는 모든 카테고리 추출하기 (2024.03.22 jbh)
+                // 참고 URL - https://chat.openai.com/c/8fe860ba-c21d-47e9-8ec8-470326417ccd
+                Categories categories = RevitDoc.Settings.Categories;
+
+                
+                List<CategoryInfoView> categoryNameList = new List<CategoryInfoView>();
+
+                foreach (Category mainCategory in categories)
+                {
+                    // categoryList.Add(mainCategory.Name);
+                
+                    foreach (Category subCategory in mainCategory.SubCategories)
+                    {
+                        CategoryInfoView categoryInfo = new CategoryInfoView(mainCategory.Name, subCategory.Name);
+                
+                        categoryNameList.Add(categoryInfo);
+                    }
+                }
+
+                categoryNameList.OrderBy(x => x.mainCategoryName);
+
+
+
+
+
+                // var collector = new FilteredElementCollector(RevitDoc).WhereElementIsNotElementType();
+                // var testList  = collector.Where(element => element.Category is not null).Select(x => x.Category).ToList();
+                // var elementList = collector.Where(element => element.Category is not null).Select(x => x.Category.BuiltInCategory).Distinct().ToList();
+
+                // var testCategories = collector.OfClass(typeof(Categories)).ToList();
+
+
+                //var builtInCategories   = Enum.GetValues(typeof(BuiltInCategory));
+                // var builtInCategoryList = ParamsManager.GetbuiltInCategoryNameList(builtInCategories);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);
+            }
+            finally
+            {
+                // TODO : finally문 안에 코드 필요시 구현 예정 (2024.03.14 jbh)
+            }
+        }
+        #endregion btnTest_Click
 
         #region btnON_Click
 
@@ -240,7 +450,7 @@ namespace RevitUpdater.UI.MEPUpdater
             {
                 TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 등록 구현 예정...");
 
-
+                MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
 
                 // TODO : Command.cs -> RevitBox 업데이터 Command 클래스 "CmdMEPUpdater" -> 콜백함수 "Execute"가 실행되어
                 //        MEPUpdater 클래스 폼 화면을 출력할 때 메서드 ".ShowDialog()"가 아닌 ".Show()"로 호출 후
@@ -259,21 +469,22 @@ namespace RevitUpdater.UI.MEPUpdater
 
                 // 참고 URL   - https://nomadcoder.tistory.com/entry/Revit-%ED%95%B4%EA%B2%B0%EB%B0%A9%EB%B2%95Starting-a-transaction-from-an-external-application-running-outside-of-API-context-is-not-allowed
                 // 참고 2 URL - https://stackoverflow.com/questions/31490990/starting-a-transaction-from-an-external-application-running-outside-of-api-conte
+                // 참고 3 URL - https://thebuildingcoder.typepad.com/blog/2015/12/external-event-and-10-year-forum-anniversary.html
 
                 // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
                 // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
                 // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
-                using (Transaction transaction = new Transaction(RevitDoc))
-                {
-                    // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
-                    transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
-
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 + Triggers 등록 시작");
-
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 + Triggers 등록 완료");
-
-                    transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
-                }   // 여기서 Dispose (리소스 해제) 처리 
+                // using (Transaction transaction = new Transaction(RevitDoc))
+                // {
+                //     // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                //     transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
+                // 
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 + Triggers 등록 시작");
+                // 
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 + Triggers 등록 완료");
+                // 
+                //     transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
+                // }   // 여기서 Dispose (리소스 해제) 처리 
 
             }
             catch (Exception ex)
@@ -302,6 +513,8 @@ namespace RevitUpdater.UI.MEPUpdater
             {
                 TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 해제 구현 예정...");
 
+                MakeRequest(EnumMEPUpdaterRequestId.REMOVE);
+
                 // TODO : Command.cs -> RevitBox 업데이터 Command 클래스 "CmdMEPUpdater" -> 콜백함수 "Execute"가 실행되어
                 //        MEPUpdater 클래스 폼 화면을 출력할 때 메서드 ".ShowDialog()"가 아닌 ".Show()"로 호출 후
                 //        MEPUpdater 폼 화면이 출력 되고 -> 버튼 "OFF" 클릭시 이벤트 메서드 "btnOFF_Click"가 실행되면
@@ -319,23 +532,23 @@ namespace RevitUpdater.UI.MEPUpdater
 
                 // 참고 URL   - https://nomadcoder.tistory.com/entry/Revit-%ED%95%B4%EA%B2%B0%EB%B0%A9%EB%B2%95Starting-a-transaction-from-an-external-application-running-outside-of-API-context-is-not-allowed
                 // 참고 2 URL - https://stackoverflow.com/questions/31490990/starting-a-transaction-from-an-external-application-running-outside-of-api-conte
-
+                // 참고 3 URL - https://thebuildingcoder.typepad.com/blog/2015/12/external-event-and-10-year-forum-anniversary.html
 
                 // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
                 // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
                 // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
-                using (Transaction transaction = new Transaction(RevitDoc))
-                {
-                    // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
-                    transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
-
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 + Triggers 해제 시작");
-
-
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 + Triggers 해제 완료");
-
-                    transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
-                }   // 여기서 Dispose (리소스 해제) 처리 
+                // using (Transaction transaction = new Transaction(RevitDoc))
+                // {
+                //     // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                //     transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
+                // 
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 + Triggers 해제 시작");
+                // 
+                // 
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 + Triggers 해제 완료");
+                // 
+                //     transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
+                // }   // 여기서 Dispose (리소스 해제) 처리 
             }
             catch (Exception ex)
             {

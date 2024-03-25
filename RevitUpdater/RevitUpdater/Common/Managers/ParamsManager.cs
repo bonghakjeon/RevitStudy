@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using RevitUpdater.Common.LogManager;
+using RevitUpdater.Common.LogBase;
 using RevitUpdater.Models.UpdaterBase.MEPUpdater;
 using RevitUpdater.Common.UpdaterBase;
 
@@ -13,7 +13,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.ApplicationServices;
 
-namespace RevitUpdater.Common.ParamsManager
+namespace RevitUpdater.Common.Managers
 {
     // TODO : 클래스 "ParamsManager.cs" 안에 static 메서드 구현 (2024.02.13 jbh)
     // 참고 URL - https://www.csharpstudy.com/CSharp/CSharp-static.aspx
@@ -129,11 +129,11 @@ namespace RevitUpdater.Common.ParamsManager
             }
         }
 
-        // TODO : BuiltInCategory 이름 리스트 가져오기 static 메서드 "builtInCategoryNameList" 필요시 오류(오류 원인 - "BuiltInCategory 중 중복된 것과 실제로 사용하지 않는 BuiltInCategory 목록 제거") 보완 및 구현 예정 (2024.03.14 jbh)
+        // TODO : BuiltInCategory 이름 리스트 가져오기 static 메서드 "GetbuiltInCategoryNameList" 필요시 오류(오류 원인 - "BuiltInCategory 중 중복된 것과 실제로 사용하지 않는 BuiltInCategory 목록 제거") 보완 및 구현 예정 (2024.03.14 jbh)
         /// <summary>
         /// BuiltInCategory 이름 리스트 가져오기 
         /// </summary>
-        public static List<string> builtInCategoryNameList(Array pBuiltInCategories)
+        public static List<string> GetbuiltInCategoryNameList(Array pBuiltInCategories)
         {
             string builtInCategoryName = string.Empty;              // BuiltInCategory 매개변수 이름 
             long builtInCategoryValue = 0;                         // BuiltInCategory 매개변수에 입력할 값
@@ -143,7 +143,9 @@ namespace RevitUpdater.Common.ParamsManager
             try
             {
 
-                var test2 = LabelUtils.GetLabelFor(BuiltInCategory.OST_PipeFitting);   // 테스트 코드 
+                var test2 = LabelUtils.GetLabelFor(BuiltInCategory.OST_PipeFitting);   // 테스트 코드 2
+
+                // var test3 = LabelUtils.GetLabelFor(BuiltInCategory.OST_StackedWalls_Obsolete_IdInWrongRange); // 테스트 코드 3
 
                 // Revit 응용 프로그램 안에 내장된 BuiltInCategory를 가지고 Dictionary(key - builtInCategoryName / value - builtInCategoryValue) 만들기
                 // BuiltInCategory Dictionary(key - name / value - value) 만들기
@@ -207,7 +209,15 @@ namespace RevitUpdater.Common.ParamsManager
                                                                                 && builtInCategory != BuiltInCategory.OST_RampsIncomplete
                                                                                 && builtInCategory != BuiltInCategory.OST_TrussDummy
                                                                                 && builtInCategory != BuiltInCategory.OST_Automatic
-                                                                                && builtInCategory != BuiltInCategory.OST_SiteRegion)
+                                                                                && builtInCategory != BuiltInCategory.OST_SiteRegion
+                                                                                && builtInCategory != BuiltInCategory.OST_SiteSurface
+                                                                                && builtInCategory != BuiltInCategory.OST_Sewer
+                                                                                && builtInCategory != BuiltInCategory.OST_Property
+                                                                                && builtInCategory != BuiltInCategory.OST_WallCoreLayer
+                                                                                && builtInCategory != BuiltInCategory.OST_MEPLoadAreaTags_OBSOLETE
+                                                                                && builtInCategory != BuiltInCategory.OST_ElectricalZoneEquipment_Obsolete
+                                                                                && builtInCategory != BuiltInCategory.OST_MinorStations_Deprecated
+                                                                                && builtInCategory != BuiltInCategory.OST_MajorStations_Deprecated)
                                                                          .Select(builtInCategory => LabelUtils.GetLabelFor(builtInCategory))
                                                                          .Distinct()
                                                                          .ToList();

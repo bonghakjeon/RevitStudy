@@ -8,8 +8,8 @@ using System.Reflection;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-using RevitUpdater.Common.LogManager;
-using RevitUpdater.Common.ParamsManager;
+using RevitUpdater.Common.LogBase;
+using RevitUpdater.Common.Managers;
 using RevitUpdater.Common.UpdaterBase;
 using RevitUpdater.Models.UpdaterBase.MEPUpdater;
 
@@ -23,11 +23,6 @@ namespace RevitUpdater.Test
     public class TestMEPUpdater : IUpdater
     {
         #region 프로퍼티 
-
-        /// <summary>
-        /// 업데이터 아이디 생성시 필요한 GUID 문자열 프로퍼티
-        /// </summary>
-        private const string GId = "d42d28af-d2cd-4f07-8873-e7cfb61903d8";
 
         /// <summary>
         /// 업데이터 아이디
@@ -64,7 +59,7 @@ namespace RevitUpdater.Test
 
         public TestMEPUpdater(Document rvDoc, AddInId rvAddInId)
         {
-            Guid guId = new Guid(GId);
+            Guid guId  = new Guid(UpdaterHelper.GId);
             Updater_Id = new UpdaterId(rvAddInId, guId);
 
             InitSetting(rvDoc, Updater_Id);   // 업데이터 초기 셋팅
@@ -158,18 +153,18 @@ namespace RevitUpdater.Test
 
                 var revitDoc = pData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
 
-                var addElementIds = pData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
-                List<Element> addElements = addElementIds.Select(addElementId => revitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
+                var addElementIds            = pData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
+                List<Element> addElements    = addElementIds.Select(addElementId => revitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
                 List<string> addElementNames = addElementIds.Select(addElementId => revitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
 
 
-                var modElementIds = pData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
-                List<Element> modElements = modElementIds.Select(modElementId => revitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
+                var modElementIds            = pData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
+                List<Element> modElements    = modElementIds.Select(modElementId => revitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
                 List<string> modElementNames = modElementIds.Select(modElementId => revitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
 
                 builtInParamName = ParamsManager.GetBuiltInParameterName(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);   // BuiltInParameter 매개변수 이름 "해설" 가져오기
 
-                currentDateTime = DateTime.Now.ToString();   // "해설" 매개변수에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
+                currentDateTime  = DateTime.Now.ToString();   // "해설" 매개변수에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
 
                 if (addElementIds.Count >= (int)EnumExistElements.EXIST
                     && addElementNames.Count >= (int)EnumExistElements.EXIST)   // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
@@ -183,7 +178,7 @@ namespace RevitUpdater.Test
                     IsCompleted = ParamsManager.SetParametersValue(addElements, builtInParamName, currentDateTime);
 
                     // 신규 추가 완료된 객체 이름 리스트(addElementNames) 메세지 출력 
-                    if (true == IsCompleted) TaskDialog.Show("테스트 Simple Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
 
                     // 신규 업데이트 실패한 경우 
                     else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
@@ -197,7 +192,7 @@ namespace RevitUpdater.Test
                     IsCompleted = ParamsManager.SetParametersValue(modElements, builtInParamName, currentDateTime);
 
                     // 수정 업데이트 완료된 객체 이름 리스트(modElementNames) 메세지 출력 
-                    if (true == IsCompleted) TaskDialog.Show("테스트 Simple Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
                     // 수정 업데이트 실패한 경우 
                     else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
@@ -260,7 +255,7 @@ namespace RevitUpdater.Test
 
                 if (UpdaterRegistry.IsUpdaterRegistered(pUpdaterId, rvDoc))   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
                 {
-                    UpdaterRegistry.RemoveAllTriggers(pUpdaterId);           // 지정된 pUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
+                    UpdaterRegistry.RemoveAllTriggers(pUpdaterId);            // 지정된 pUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
                     UpdaterRegistry.UnregisterUpdater(pUpdaterId, rvDoc);     // Revit 문서(rvDoc)에 지정된 pUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
                 }
 
@@ -268,7 +263,7 @@ namespace RevitUpdater.Test
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 완료");
 
-                TaskDialog.Show("테스트 Simple Updater", "테스트 업데이터 등록 완료");
+                TaskDialog.Show("테스트 MEP Updater", "테스트 업데이터 등록 완료");
             }
             catch (Exception ex)
             {
@@ -307,7 +302,7 @@ namespace RevitUpdater.Test
                     UpdaterRegistry.AddTrigger(pUpdaterId, pElementCategoryFilter, changeTypeAddition);   // 지정된 pUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(pElementCategoryFilter) 및 changeTypeAddition을 이용해서 새로 추가 트리거 추가
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + $"테스트 {builtInCategoryName} Triggers 등록 완료");
-                    TaskDialog.Show("테스트 Simple Updater", $"테스트 {builtInCategoryName} Triggers 등록 완료");
+                    TaskDialog.Show("테스트 MEP Updater", $"테스트 {builtInCategoryName} Triggers 등록 완료");
                 }
 
                 // 해당 업데이터 아이디가 존재하지 않거나 업데이터가 등록되어 있지 않은 경우 

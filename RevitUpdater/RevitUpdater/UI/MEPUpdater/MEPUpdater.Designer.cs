@@ -35,6 +35,7 @@ namespace RevitUpdater.UI.MEPUpdater
             this.textParamName = new RevitUpdater.Controls.Text.WaterMarkTextControl();
             this.labelParam = new DevExpress.XtraEditors.LabelControl();
             this.panelBtn = new DevExpress.XtraEditors.PanelControl();
+            this.btnTest = new DevExpress.XtraEditors.SimpleButton();
             this.btnON = new DevExpress.XtraEditors.SimpleButton();
             this.btnOFF = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.panelTitle)).BeginInit();
@@ -77,14 +78,13 @@ namespace RevitUpdater.UI.MEPUpdater
             // 
             // textParamName
             // 
-            this.textParamName.Font = new System.Drawing.Font("Tahoma", 11F);
-            this.textParamName.ForeColor = System.Drawing.Color.Gray;
-            this.textParamName.Location = new System.Drawing.Point(137, 79);
+            this.textParamName.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textParamName.Location = new System.Drawing.Point(136, 79);
             this.textParamName.Name = "textParamName";
-            this.textParamName.Size = new System.Drawing.Size(190, 25);
+            this.textParamName.Size = new System.Drawing.Size(220, 25);
             this.textParamName.TabIndex = 1;
-            this.textParamName.Text = "매개변수 이름을 입력 하세요.";
-            this.textParamName.WaterMarkText = "매개변수 이름을 입력 하세요.";
+            this.textParamName.WaterMarkColor = System.Drawing.Color.Gray;
+            this.textParamName.WaterMarkText = "매개변수 이름을 입력하세요.";
             // 
             // labelParam
             // 
@@ -98,6 +98,7 @@ namespace RevitUpdater.UI.MEPUpdater
             // 
             // panelBtn
             // 
+            this.panelBtn.Controls.Add(this.btnTest);
             this.panelBtn.Controls.Add(this.btnON);
             this.panelBtn.Controls.Add(this.btnOFF);
             this.panelBtn.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -105,6 +106,17 @@ namespace RevitUpdater.UI.MEPUpdater
             this.panelBtn.Name = "panelBtn";
             this.panelBtn.Size = new System.Drawing.Size(398, 50);
             this.panelBtn.TabIndex = 2;
+            // 
+            // btnTest
+            // 
+            this.btnTest.Appearance.Font = new System.Drawing.Font("Tahoma", 14F);
+            this.btnTest.Appearance.Options.UseFont = true;
+            this.btnTest.Location = new System.Drawing.Point(6, 6);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(75, 40);
+            this.btnTest.TabIndex = 2;
+            this.btnTest.Text = "TEST";
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // btnON
             // 
@@ -142,6 +154,7 @@ namespace RevitUpdater.UI.MEPUpdater
             this.Name = "MEPUpdater";
             this.Tag = "매개변수 이름을 입력하세요.";
             this.Text = "MEPUpdater";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MEPUpdater_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.panelTitle)).EndInit();
             this.panelTitle.ResumeLayout(false);
             this.panelTitle.PerformLayout();
@@ -164,5 +177,6 @@ namespace RevitUpdater.UI.MEPUpdater
         private DevExpress.XtraEditors.SimpleButton btnON;
         private DevExpress.XtraEditors.LabelControl labelParam;
         private Controls.Text.WaterMarkTextControl textParamName;
+        private DevExpress.XtraEditors.SimpleButton btnTest;
     }
 }

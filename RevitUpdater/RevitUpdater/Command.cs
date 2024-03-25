@@ -7,9 +7,12 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-using RevitUpdater.Common.LogManager;
+using RevitUpdater.Common.Managers;
+using RevitUpdater.Common.LogBase;
 using RevitUpdater.Common.UpdaterBase;
+
 using RevitUpdater.UI.MEPUpdater;
+
 
 namespace RevitUpdater
 {
@@ -49,6 +52,15 @@ namespace RevitUpdater
     /// </summary>
     internal class CmdMEPUpdater : IExternalCommand
     {
+        #region 프로퍼티
+
+        /// <summary>
+        /// MEPUpdater 폼 객체 
+        /// </summary>
+        private static MEPUpdater MEPUpdaterForm;
+
+        #endregion 프로퍼티
+
         #region 기본 메소드
 
         // TODO : 콜백 함수 Execute 구현 (2024.03.11 jbh)
@@ -67,15 +79,16 @@ namespace RevitUpdater
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 시작");
 
-                UIApplication uiapp = commandData.Application;            // 애플리케이션 객체 
-                Document doc = uiapp.ActiveUIDocument.Document;           // 활성화된 Revit 문서 
-                AddInId addInId = uiapp.ActiveAddInId;                    // RevitBox 업데이터 Command 아이디
+                UIApplication RevitUIApp = commandData.Application;               // 애플리케이션 객체 
+                // Document doc = uiapp.ActiveUIDocument.Document;           // 활성화된 Revit 문서 
+                // AddInId addInId = uiapp.ActiveAddInId;                    // RevitBox 업데이터 Command 아이디
 
                 TaskDialog.Show("RevitBox Update...", "테스트 진행 중...");
 
-                var mepUpdater = new MEPUpdater(doc, addInId);
-                // mepUpdater.ShowDialog();
-                mepUpdater.Show();
+                // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
+                // MEPUpdaterForm.ShowDialog();
+                // MEPUpdaterForm.Show();
+                FormManager.ShowForm(MEPUpdaterForm, RevitUIApp, typeof(MEPUpdater));
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 종료");
 
@@ -90,6 +103,18 @@ namespace RevitUpdater
         }
 
         #endregion 기본 메소드
+
+        #region WakeFormUp
+
+        /// <summary>
+        /// 대기 상태에서 MEPUpdater 폼 화면 깨우기
+        /// </summary>
+        public static void WakeFormUp()
+        {
+            if (MEPUpdaterForm is not null) MEPUpdaterForm.WakeUp();
+        }
+
+        #endregion WakeFormUp
     }
 
     #endregion CmdMEPUpdater

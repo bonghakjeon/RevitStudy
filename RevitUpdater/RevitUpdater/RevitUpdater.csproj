@@ -95,14 +95,22 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="Command.cs" />
-    <Compile Include="Common\LogManager\Logger.cs" />
-    <Compile Include="Common\ParamsManager\ParamsManager.cs" />
-    <Compile Include="Common\RequestHandler\RequestHandler.cs" />
+    <Compile Include="Common\Converters\WavConverter.cs" />
+    <Compile Include="Common\LogBase\Logger.cs" />
+    <Compile Include="Common\Managers\FormManager.cs" />
+    <Compile Include="Common\Managers\ParamsManager.cs" />
+    <Compile Include="Common\Managers\UpdaterManager.cs" />
+    <Compile Include="Common\RequestBase\Request.cs" />
+    <Compile Include="Common\RequestBase\RequestHandler.cs" />
     <Compile Include="Common\UpdaterBase\UpdaterHelper.cs" />
+    <Compile Include="Controls\Text\TestWaterMarkTextControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\Text\WaterMarkTextControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Models\UpdaterBase\MEPUpdater\MEPUpdaterView.cs" />
+    <Compile Include="Models\UpdaterBase\UpdaterInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\TestMEPUpdater.cs" />
     <Compile Include="UI\MEPUpdater\MEPUpdater.cs">

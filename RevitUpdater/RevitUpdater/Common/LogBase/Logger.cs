@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace RevitUpdater.Common.LogManager
+namespace RevitUpdater.Common.LogBase
 {
     // TODO : Revit AddIn 개발 소스를 비쥬얼스튜디오 2022 .net Core 버전(8.0)을 사용하려면 Revit 2025 버전 부터 사용이 가능하므로 현 시점에서 해당 소스는 .net FrameWork 4.8에서만 구동시킬 수 있다. (2024.03.11 jbh)
 
@@ -53,7 +53,7 @@ namespace RevitUpdater.Common.LogManager
 
             try
             {
-                // TODO : Stylet LogManager 클래스 사용 안하고 Serilog 이용해서 로그 기록 및 로그 파일 생성 (2024.01.22 jbh)
+                // TODO : Stylet Logger 클래스 사용 안하고 Serilog 이용해서 로그 기록 및 로그 파일 생성 (2024.01.22 jbh)
                 // 참고 URL - https://m.blog.naver.com/wolfre/221713399852
                 // 참고 2 URL - https://afsdzvcx123.tistory.com/entry/C-%EB%AC%B8%EB%B2%95-C-Serilog-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EB%A1%9C%EA%B7%B8-%EB%82%A8%EA%B8%B0%EA%B8%B0
                 // 참고 3 URL - https://blog.naver.com/PostView.naver?blogId=wolfre&logNo=221713399852&parentCategoryNo=&categoryNo=26&viewDate=&isShowPopularPosts=true&from=search
@@ -194,7 +194,7 @@ namespace RevitUpdater.Common.LogManager
             var fullMethodPath = string.Empty;          // 실행된 메소드 전체 경로  
 
             // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2024.01.22 jbh)
-            var loggerMethod = MethodBase.GetCurrentMethod();
+            var LoggerMethod = MethodBase.GetCurrentMethod();
 
             try
             {
@@ -209,7 +209,7 @@ namespace RevitUpdater.Common.LogManager
             }
             catch (Exception ex)
             {
-                fullMethodPath = "[" + loggerMethod.DeclaringType.FullName + " | " + loggerMethod.Name + "] : ";
+                fullMethodPath = "[" + LoggerMethod.DeclaringType.FullName + " | " + LoggerMethod.Name + "] : ";
                 Log.Error(fullMethodPath + Logger.errorMessage + ex.Message);
                 throw;
             }

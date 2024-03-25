@@ -36,7 +36,11 @@ namespace RevitUpdater.Common.UpdaterBase
         /// <summary>
         /// 로그(Logs) 폴더(디렉토리) 경로 
         /// </summary>
-        public static string LogDirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\RevitBox_Updater\\{AssemblyName}\\Logs";
+        public static string LogDirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\{AssemblyName}\\Logs";
+
+        // TODO : Revit MEP Updater 실행시 작성되는 로그 기록이 다른 Revit 애드인 프로그램의 로그 파일에 기록되서 꼬이므로,
+        // 로그 파일 경로를 내문서((Environment.SpecialFolder.MyDocuments)가 아니라 임시로 D드라이브로 이동함. (2024.03.22 jbh) 
+        // public static string LogDirPath = $"D:\\RevitUpdater\\{AssemblyName}\\Logs";
 
         #endregion 폴더(디렉토리) 경로 
 
@@ -74,5 +78,28 @@ namespace RevitUpdater.Common.UpdaterBase
         #endregion TaskDialog 타이틀
 
         #endregion 공통
+
+        #region MEPUpdater
+
+        /// <summary>
+        /// MEPUpdater Modaless 폼 객체 이름 
+        /// </summary>
+        public const string MEPUpdater = "MEPUpdater";
+
+        /// <summary>
+        /// 업데이터 아이디 생성시 필요한 GUID 문자열 프로퍼티
+        /// </summary>
+        public const string GId = "d42d28af-d2cd-4f07-8873-e7cfb61903d8";
+
+        #endregion MEPUpdater
+
+        #region RequestHandler
+
+        #region MEPUpdaterRequestHandler
+
+        #endregion MEPUpdaterRequestHandler
+
+        #endregion RequestHandler
+
     }
 }
