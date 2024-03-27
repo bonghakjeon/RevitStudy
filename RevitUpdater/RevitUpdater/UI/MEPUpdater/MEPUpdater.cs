@@ -24,6 +24,12 @@ namespace RevitUpdater.UI.MEPUpdater
     {
         #region 프로퍼티
 
+        // TODO : 필요시 프로퍼티 "dtSearchLookUpEdit" 사용 예정 (2024.03.26 jbh)
+        /// <summary>
+        /// 컨트롤 "searchLookUpEditCategory"에 바인딩 할 데이터 테이블 프로퍼티
+        /// </summary>
+        // private DataTable dtSearchLookUpEdit { get; set; } = new DataTable();
+
         /// <summary>
         /// Revit 응용프로그램 객체
         /// </summary>
@@ -49,15 +55,26 @@ namespace RevitUpdater.UI.MEPUpdater
         /// </summary>
         private FilteredElementCollector Collector { get; set; }
 
+        // TODO : Revit 문서 안에 포함된 객체(Element) 리스트 프로퍼티 "ElementList" 필요시 사용 예정 (2024.03.26 jbh)
         /// <summary>
         /// Revit 문서 안에 포함된 객체(Element) 리스트 
         /// </summary>
-        private List<Element> ElementList { get; set; } = new List<Element>();
+        // private List<Element> ElementList { get; set; } = new List<Element>();
 
         /// <summary>
         /// Geometry Element Options
         /// </summary>
         private Options GeometryOpt { get; set; }
+
+        /// <summary>
+        /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 리스트
+        /// </summary>
+        private List<CategoryInfoView> CategoryInfoList { get; set; } = new List<CategoryInfoView>();
+
+        /// <summary>
+        /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 객체
+        /// </summary>
+        public CategoryInfoView CategoryInfo { get; set; }
 
         /// <summary>
         /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러 프로퍼티 
@@ -155,7 +172,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 // 6. Revit 문서 프로퍼티(RevitDoc) 안에 포함된 객체(Element) 목록을 리스트 프로퍼티 "ElementList" 에 할당 
                 // TODO : ElementList 초기화(Clear) 필요시 사용 예정 (2024.03.25 jbh)
                 // ElementList.Clear();  
-                ElementList = Collector.ToList();
+                // ElementList = Collector.ToList();
 
 
                 // 7. GeometryOpt Element Options 프로퍼티 "GeometryOpt" 할당
@@ -165,7 +182,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 GeometryOpt.ComputeReferences = true;           // 각 Geometry 객체에 대해 GeometryObject.Reference 속성을 활성화하도록 Revit을 설정
 
 
-                CategoryDataCreate(ElementList, GeometryOpt);   // LookUpEdit 컨트롤(lookUpEditCategory)에 데이터 생성 및 출력 
+                CategoryDataCreate(Collector, GeometryOpt);   // LookUpEdit 컨트롤(searchLookUpEditCategory)에 데이터 생성 및 출력 
 
                 // 8. GUID 생성 
                 Guid guId   = new Guid(GId);
@@ -200,23 +217,29 @@ namespace RevitUpdater.UI.MEPUpdater
         #region CategoryDataCreate
 
         /// <summary>
-        /// ComboBox와 비슷한 LookUpEdit 컨트롤(lookUpEditCategory)에 데이터 생성 및 출력 
+        /// ComboBox와 비슷한 SearchLookUpEdit 컨트롤(searchLookUpEditCategory)에 데이터 생성 및 출력 
         /// </summary>
-        private void CategoryDataCreate(List<Element> rvElementList, Options rvGeometryOpt)
+        //private void CategoryDataCreate(FilteredElementCollector rvCollector, List<Element> rvElementList, Options rvGeometryOpt)
+        private void CategoryDataCreate(FilteredElementCollector rvCollector, Options rvGeometryOpt)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
-                // TODO : ComboBox와 비슷한 LookUpEdit 컨트롤(lookUpEditCategory)에 리스트 데이터 바인딩 구현 (2024.03.25 jbh)
-                // 참고 URL - https://build.tistory.com/15
-                // 참고 2 URL - https://kinghell.tistory.com/81
-                //this.lookUpEditCategory.DataBindings.Add(new Binding());
-                this.lookUpEditCategory.Properties.DataSource    = CategoryManager.GetCategoryInfoList(rvElementList, rvGeometryOpt);
-                this.lookUpEditCategory.Properties.ValueMember   = "mainCategory";
-                this.lookUpEditCategory.Properties.DisplayMember = "mainCategoryName";
-                this.lookUpEditCategory.Properties.NullText      = "카테고리를 선택하세요.";
-                this.lookUpEditCategory.Properties.PopulateColumns(); 
+                // TODO : ComboBox(comboBoxCategory)에 리스트 데이터 바인딩 구현 (2024.03.26 jbh)
+                CategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화
+                CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
+
+                this.comboBoxCategory.DataSource    = CategoryInfoList;
+                this.comboBoxCategory.ValueMember   = "category";
+                this.comboBoxCategory.DisplayMember = "categoryName";
+
+                // TODO : ComboBox(comboBoxCategory)안에 있는 텍스트를 수정 못 하도록 "ComboBoxStyle.DropDownList"로 설정 (2024.03.26 jbh)
+                // 참고 URL - https://milkoon1.tistory.com/73
+                this.comboBoxCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+                this.comboBoxCategory.SelectedIndex = -1;
+
+                this.comboBoxCategory.Refresh();   // 변경 사항 반영 하도록 comboBoxCategory 컨트롤 Refresh
             }
             catch (Exception ex)
             {
@@ -226,6 +249,44 @@ namespace RevitUpdater.UI.MEPUpdater
         }
 
         #endregion CategoryDataCreate
+
+        #region GetCategoryData
+
+        /// <summary>
+        /// SearchLookUpEdit(콤보박스 + 데이터 검색 기능)에 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 데이터(DataTable) 가져오기 
+        /// </summary>
+        //private DataTable GetCategoryData(FilteredElementCollector rvCollector, Options rvGeometryOpt)
+        //{
+        //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+        //    try
+        //    {
+        //        // 1 단계 : 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 리스트로 가져오기
+        //        //CategoryInfoList.Clear();
+        //        //CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
+
+        //        // 2 단계 : DataTable 클래스 프로퍼티 "dtSearchLookUpEdit"에 컬럼 구현 
+        //        //dtSearchLookUpEdit.Columns.Add(UpdaterHelper.CategoryName);
+        //        //dtSearchLookUpEdit.Columns.Add(UpdaterHelper.CategoryType);
+
+        //        // 3 단계 : DataTable 클래스 프로퍼티 "dtSearchLookUpEdit"에 Caption 구현 
+        //        // dtSearchLookUpEdit.Columns[UpdaterHelper.CategoryName].Caption = UpdaterHelper.CategoryNameCaption;   // 필드명 "카테고리 이름" 변경
+        //        // dtSearchLookUpEdit.Columns[UpdaterHelper.CategoryType].Caption = UpdaterHelper.CategoryTypeCaption;   // 필드명 "카테고리 타입" 변경
+
+        //        // 4 단계 : DataTable 클래스 객체 dtSearchLookUpEdit의 DataRow에 리스트 객체 "categoryInfoList"에 저장된(Geometry 유형 객체에 포함된) 카테고리 정보 데이터 추가 
+        //        // foreach (CategoryInfoView categoryInfo in CategoryInfoList)
+        //        //     dtSearchLookUpEdit.Rows.Add(categoryInfo.categoryName, categoryInfo.category);
+
+        //        // return dtSearchLookUpEdit;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+        //        throw;   // 오류 발생시 상위 호출자 예외처리 전달
+        //    }
+        //}
+
+        #endregion GetCategoryData
 
         #region MEPUpdater_FormClosed
 
@@ -286,7 +347,12 @@ namespace RevitUpdater.UI.MEPUpdater
                 }
 
 
-                RevitDoc = rvData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
+                RevitDoc = rvData.GetDocument();   // UpdaterData 클래스 객체 rvData와 연관된 Document 개체 반환
+
+                // Revit 문서 안에 포함된 객체(Element)를 다시 검색 및 필터링
+                Collector = new FilteredElementCollector(RevitDoc).WhereElementIsNotElementType();
+
+                CategoryDataCreate(Collector, GeometryOpt);   // LookUpEdit 컨트롤(searchLookUpEditCategory)에 데이터 다시 생성 및 출력 
 
                 var addElementIds = rvData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
                 List<Element> addElements    = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
@@ -323,7 +389,6 @@ namespace RevitUpdater.UI.MEPUpdater
                 if (modElementIds.Count >= (int)EnumExistElements.EXIST
                     && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
                 {
-
                     // 수정된 객체 리스트(modElements)에 속하는 "targetParamName"과 동일한 이름의 매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
                     IsCompleted = ParamsManager.SetParametersValue(modElements, targetParamName, currentDateTime);
 
@@ -453,6 +518,20 @@ namespace RevitUpdater.UI.MEPUpdater
             {
                 TaskDialog.Show(UpdaterHelper.NoticeTitle, "테스트 진행 중...");
 
+                // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
+                var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
+
+                CategoryInfo = new CategoryInfoView(categoryInfo.categoryName, categoryInfo.category);
+                //CategoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView; 
+
+                BuiltInCategory testCategory = CategoryManager.GetBuiltInCategory("배관");
+
+                //BuiltInCategory testCategory = CategoryInfoList.Where(x => x.categoryName.Equals("배관"))
+                //                                               .Select(x => x.category)
+                //                                               .FirstOrDefault();
+
+
+                BuiltInCategory test2Category = CategoryManager.GetBuiltInCategory("OST_PipeFitting");
 
             }
             catch (Exception ex)
@@ -479,6 +558,10 @@ namespace RevitUpdater.UI.MEPUpdater
             try
             {
                 TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 등록 구현 예정...");
+
+                // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
+                var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
+                CategoryInfo = new CategoryInfoView(categoryInfo.categoryName, categoryInfo.category);
 
                 MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
 

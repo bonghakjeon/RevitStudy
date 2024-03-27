@@ -56,11 +56,17 @@ namespace RevitUpdater.Common.Managers
                 {
                     Log.Information(Logger.GetMethodPath(currentMethod) + $"테스트 {builtInCategoryName} Triggers 등록 시작");
 
-                    var changeTypeAny = Element.GetChangeTypeAny();                                       // 객체가 수정 방식으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
-                    UpdaterRegistry.AddTrigger(pUpdaterId, pElementCategoryFilter, changeTypeAny);        // 지정된 pUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(pElementCategoryFilter) 및 changeTypeAny을 이용해서 수정 트리거 추가
+                    // TODO : Revit API 메서드 "Element.GetChangeTypeGeometry()" 사용해서 객체 위치만 변경 되었을 때 실행되는 업데이터 트리거 추가 구현 (2024.03.27 jbh)
+                    // 참고 URL - https://www.revitapidocs.com/2018/45751c5b-6d10-657a-a017-04219d1a5ac8.htm
+                    ChangeType changeTypeGeometry = Element.GetChangeTypeGeometry();                         // 객체가 수정 방식(객체 위치변경만 해당 / 객체 자체의 속성값 변경은 해당되지 않음.)으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
+                    UpdaterRegistry.AddTrigger(pUpdaterId, pElementCategoryFilter, changeTypeGeometry);      // 지정된 pUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(pElementCategoryFilter) 및 changeTypeAny을 이용해서 수정 트리거 추가
 
-                    var changeTypeAddition = Element.GetChangeTypeElementAddition();                      // 객체가 새로 추가된 방식으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
-                    UpdaterRegistry.AddTrigger(pUpdaterId, pElementCategoryFilter, changeTypeAddition);   // 지정된 pUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(pElementCategoryFilter) 및 changeTypeAddition을 이용해서 새로 추가 트리거 추가
+                    // TODO : Revit API 메서드 "Element.GetChangeTypeAny()" 사용해서 객체 위치 + 속성값 변경 되었을 때 실행되는 업데이터 트리거 추가 구현 (2024.03.27 jbh)
+                    // ChangeType changeTypeAny = Element.GetChangeTypeAny();                                // 객체가 수정 방식(객체 위치 변경 및 객체 자체의 속성값 변경 모두 포함)으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
+                    // UpdaterRegistry.AddTrigger(pUpdaterId, pElementCategoryFilter, changeTypeAny);        // 지정된 pUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(pElementCategoryFilter) 및 changeTypeAny을 이용해서 수정 트리거 추가
+
+                    ChangeType changeTypeAddition = Element.GetChangeTypeElementAddition();                  // 객체가 새로 추가된 방식으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
+                    UpdaterRegistry.AddTrigger(pUpdaterId, pElementCategoryFilter, changeTypeAddition);      // 지정된 pUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(pElementCategoryFilter) 및 changeTypeAddition을 이용해서 새로 추가 트리거 추가
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + $"테스트 {builtInCategoryName} Triggers 등록 완료");
                     TaskDialog.Show("테스트 MEP Updater", $"테스트 {builtInCategoryName} Triggers 등록 완료");

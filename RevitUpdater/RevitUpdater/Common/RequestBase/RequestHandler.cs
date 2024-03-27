@@ -75,15 +75,22 @@ namespace RevitUpdater.Common.RequestBase
         private UpdaterId Updater_Id { get; set; }
 
         /// <summary>
+        /// 카테고리(객체) 필터 (카테고리(객체) 대상 - 배관, 배관 부속류, 단열재, 배관 밸브류)
+        /// </summary>
+        private ElementCategoryFilter MEPCategoryFilter { get; set; }
+
+        // TODO : 아래 주석친 프로퍼티 카테고리 필터 (배관 - OST_PipeCurves) 필요시 참고 (2024.03.27 jbh)
+        /// <summary>
         /// 카테고리 필터 (배관 - OST_PipeCurves)
         /// </summary>
-        private ElementCategoryFilter PipeCurvesCategoryFilter { get; set; }
+        // private ElementCategoryFilter PipeCurvesCategoryFilter { get; set; }
 
 
+        // TODO : 아래 주석친 프로퍼티 카테고리 필터 (배관 부속류 - OST_PipeFitting) 필요시 참고 (2024.03.27 jbh)
         /// <summary>
         /// 카테고리 필터 (배관 부속류 - OST_PipeFitting)
         /// </summary>
-        private ElementCategoryFilter PipeFittingCategoryFilter { get; set; }
+        // private ElementCategoryFilter PipeFittingCategoryFilter { get; set; }
 
         #endregion 프로퍼티
 
@@ -253,14 +260,22 @@ namespace RevitUpdater.Common.RequestBase
                     Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 완료");
                     TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 등록 완료");
 
-                    // 2. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 및 MEP Triggers 등록 
-                    PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
-                    UpdaterManager.RegisterTriggers(pUpdaterId, PipeCurvesCategoryFilter);
-        
-                    // 3. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 및 MEP Triggers 등록 
-                    PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
-                    UpdaterManager.RegisterTriggers(pUpdaterId, PipeFittingCategoryFilter);   
-        
+                    BuiltInCategory updaterBuiltInCategory = pMEPUpdaterForm.CategoryInfo.category;
+
+                    // 2. 카테고리 ComboBox 컨트롤(comboBoxCategory)에서 선택한
+                    // 카테고리 객체 (BupdaterBuiltInCategory)만 필터링 처리 및 MEP Triggers 등록 
+                    MEPCategoryFilter = new ElementCategoryFilter(updaterBuiltInCategory);
+                    UpdaterManager.RegisterTriggers(pUpdaterId, MEPCategoryFilter);
+
+                    // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.03.27 jbh)
+                    // 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 및 MEP Triggers 등록 
+                    // PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
+                    // UpdaterManager.RegisterTriggers(pUpdaterId, PipeCurvesCategoryFilter);
+
+                    // 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 및 MEP Triggers 등록 
+                    //PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
+                    //UpdaterManager.RegisterTriggers(pUpdaterId, PipeFittingCategoryFilter);   
+
                     Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 등록 셋팅 완료");
         
                     transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋

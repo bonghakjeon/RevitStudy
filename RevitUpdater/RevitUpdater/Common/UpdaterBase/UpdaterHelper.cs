@@ -96,6 +96,31 @@ namespace RevitUpdater.Common.UpdaterBase
         /// </summary>
         public const string ElementType = "Element";
 
+        /// <summary>
+        /// SearchLookUpEdit - 컬럼 (카테고리 이름)
+        /// </summary>
+        public const string CategoryName = "CategoryName";
+
+        /// <summary>
+        /// SearchLookUpEdit - 컬럼 Caption (카테고리 이름)
+        /// </summary>
+        public const string CategoryNameCaption = "카테고리 이름";
+
+        /// <summary>
+        /// SearchLookUpEdit - 컬럼 (카테고리 타입)
+        /// </summary>
+        public const string CategoryType = "CategoryType";
+
+        /// <summary>
+        /// SearchLookUpEdit - 컬럼 Caption (카테고리 타입)
+        /// </summary>
+        public const string CategoryTypeCaption = "카테고리 타입";
+
+        /// <summary>
+        /// SearchLookUpEdit - 매개변수 선택이 안 된 경우 표시될 텍스트
+        /// </summary>
+        public const string NullText = "카테고리를 선택하세요.";
+
         #endregion MEPUpdater
 
         #region RequestHandler

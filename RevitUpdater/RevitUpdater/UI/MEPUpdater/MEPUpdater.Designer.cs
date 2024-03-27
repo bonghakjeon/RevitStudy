@@ -32,7 +32,7 @@ namespace RevitUpdater.UI.MEPUpdater
             this.panelTitle = new DevExpress.XtraEditors.PanelControl();
             this.labelTitle = new DevExpress.XtraEditors.LabelControl();
             this.panelContent = new DevExpress.XtraEditors.PanelControl();
-            this.lookUpEditCategory = new DevExpress.XtraEditors.LookUpEdit();
+            this.comboBoxCategory = new System.Windows.Forms.ComboBox();
             this.labelCategory = new DevExpress.XtraEditors.LabelControl();
             this.textParamName = new RevitUpdater.Controls.Text.WaterMarkTextControl();
             this.labelParam = new DevExpress.XtraEditors.LabelControl();
@@ -44,7 +44,6 @@ namespace RevitUpdater.UI.MEPUpdater
             this.panelTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.panelContent)).BeginInit();
             this.panelContent.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lookUpEditCategory.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelBtn)).BeginInit();
             this.panelBtn.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +70,7 @@ namespace RevitUpdater.UI.MEPUpdater
             // 
             // panelContent
             // 
-            this.panelContent.Controls.Add(this.lookUpEditCategory);
+            this.panelContent.Controls.Add(this.comboBoxCategory);
             this.panelContent.Controls.Add(this.labelCategory);
             this.panelContent.Controls.Add(this.textParamName);
             this.panelContent.Controls.Add(this.labelParam);
@@ -81,16 +80,14 @@ namespace RevitUpdater.UI.MEPUpdater
             this.panelContent.Size = new System.Drawing.Size(398, 238);
             this.panelContent.TabIndex = 1;
             // 
-            // lookUpEditCategory
+            // comboBoxCategory
             // 
-            this.lookUpEditCategory.Location = new System.Drawing.Point(124, 56);
-            this.lookUpEditCategory.Name = "lookUpEditCategory";
-            this.lookUpEditCategory.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 11F);
-            this.lookUpEditCategory.Properties.Appearance.Options.UseFont = true;
-            this.lookUpEditCategory.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.lookUpEditCategory.Size = new System.Drawing.Size(220, 24);
-            this.lookUpEditCategory.TabIndex = 3;
+            this.comboBoxCategory.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.comboBoxCategory.FormattingEnabled = true;
+            this.comboBoxCategory.Location = new System.Drawing.Point(124, 58);
+            this.comboBoxCategory.Name = "comboBoxCategory";
+            this.comboBoxCategory.Size = new System.Drawing.Size(220, 24);
+            this.comboBoxCategory.TabIndex = 3;
             // 
             // labelCategory
             // 
@@ -187,7 +184,6 @@ namespace RevitUpdater.UI.MEPUpdater
             ((System.ComponentModel.ISupportInitialize)(this.panelContent)).EndInit();
             this.panelContent.ResumeLayout(false);
             this.panelContent.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lookUpEditCategory.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelBtn)).EndInit();
             this.panelBtn.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -206,6 +202,6 @@ namespace RevitUpdater.UI.MEPUpdater
         private Controls.Text.WaterMarkTextControl textParamName;
         private DevExpress.XtraEditors.SimpleButton btnTest;
         private DevExpress.XtraEditors.LabelControl labelCategory;
-        private DevExpress.XtraEditors.LookUpEdit lookUpEditCategory;
+        private System.Windows.Forms.ComboBox comboBoxCategory;
     }
 }

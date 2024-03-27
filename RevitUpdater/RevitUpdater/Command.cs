@@ -12,7 +12,7 @@ using RevitUpdater.Common.LogBase;
 using RevitUpdater.Common.UpdaterBase;
 
 using RevitUpdater.UI.MEPUpdater;
-
+using RevitUpdater.UI.Test;
 
 namespace RevitUpdater
 {
@@ -89,6 +89,9 @@ namespace RevitUpdater
                 // MEPUpdaterForm.ShowDialog();
                 // MEPUpdaterForm.Show();
                 FormManager.ShowForm(MEPUpdaterForm, RevitUIApp, typeof(MEPUpdater));
+
+                // TestMEPUpdater testMEPUpdater = new TestMEPUpdater();
+                // testMEPUpdater.Show();
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 종료");
 

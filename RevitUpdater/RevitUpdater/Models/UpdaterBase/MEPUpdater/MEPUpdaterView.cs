@@ -117,14 +117,14 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
         #region 프로퍼티 
 
         /// <summary>
-        /// 메인 카테고리 이름
+        /// 카테고리 이름
         /// </summary>
-        public string mainCategoryName { get; set; }
+        public string categoryName { get; set; }
 
         /// <summary>
-        /// 메인 카테고리
+        /// 카테고리
         /// </summary>
-        public BuiltInCategory mainCategory { get; set; }
+        public BuiltInCategory category { get; set; }
 
         // TODO : 매개변수 그룹 이름 프로퍼티 "paramGroupName" 필요시 사용 예정 (2024.03.25 jbh)
         /// <summary>
@@ -136,12 +136,12 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
 
         #region 생성자
 
-        //public CategoryInfoView (string rvMainCategoryName, string rvParamGroupName)
-        public CategoryInfoView(string rvMainCategoryName, BuiltInCategory rvMainCategory)
+        //public CategoryInfoView (string rvCategoryName, string rvParamGroupName)
+        public CategoryInfoView(string rvCategoryName, BuiltInCategory rvCategory)
         {
-            this.mainCategoryName = rvMainCategoryName;
+            this.categoryName = rvCategoryName;
             //this.paramGroupName   = rvParamGroupName;
-            this.mainCategory     = rvMainCategory; 
+            this.category     = rvCategory; 
         }
 
         #endregion 생성자

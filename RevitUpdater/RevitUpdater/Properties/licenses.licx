@@ -1,3 +1,5 @@
-DevExpress.XtraEditors.Repository.RepositoryItemTextEdit, DevExpress.XtraEditors.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a
 DevExpress.XtraEditors.LookUpEdit, DevExpress.XtraEditors.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a
+DevExpress.XtraEditors.Repository.RepositoryItemTextEdit, DevExpress.XtraEditors.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a
+DevExpress.XtraEditors.ComboBoxEdit, DevExpress.XtraEditors.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a
 DevExpress.XtraEditors.TextEdit, DevExpress.XtraEditors.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a
+DevExpress.XtraEditors.SearchLookUpEdit, DevExpress.XtraGrid.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a
