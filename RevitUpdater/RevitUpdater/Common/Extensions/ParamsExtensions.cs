@@ -30,7 +30,7 @@ namespace RevitUpdater.Common.Extensions
                 string removeWhiteSpacesResult = string.Concat(pStr.Where(c => false == Char.IsWhiteSpace(c)));
                 return removeWhiteSpacesResult;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -58,7 +58,7 @@ namespace RevitUpdater.Common.Extensions
                 string replaceWhiteSpacesResult = Regex.Replace(pStr, @"\s", "");
                 return replaceWhiteSpacesResult;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달

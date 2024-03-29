@@ -98,7 +98,7 @@ namespace RevitUpdater.Common.LogBase
                 //Log.Error($"Error name = {System.Reflection.Assembly.GetEntryAssembly().GetName().Name}");
                 //Log.Fatal($"Fatal name = {System.Reflection.Assembly.GetEntryAssembly().GetName().Name}");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 // TODO : 오류 발생시 상위 호출자 예외처리 전달 throw 구현 (2024.02.02 jbh)
                 // 참고 URL - https://devlog.jwgo.kr/2009/11/27/thrownthrowex/
@@ -138,7 +138,7 @@ namespace RevitUpdater.Common.LogBase
                 DirectoryInfo directory = new DirectoryInfo(logDirPath);
 
                 // 3. 디렉터리(directory)가 존재 여부 확인
-                if (false == directory.Exists) Directory.CreateDirectory(logDirPath);   // 디렉터리 새로 생성
+                if(false == directory.Exists) Directory.CreateDirectory(logDirPath);   // 디렉터리 새로 생성
 
 
                 var fileList = directory.GetFiles().ToList();               // 4. 해당 디렉터리(di) 안에 로그 파일 존재 여부 확인 
@@ -167,10 +167,10 @@ namespace RevitUpdater.Common.LogBase
                 // TODO : 아래 소스코드 실행시 당일 날짜(DateTime.Now) 2일 전일(-2 = retainedFileCountLimit) 이전 로그파일 찾아서 오래된 로그 파일 삭제 처리 구현 (2024.02.02 jbh)
                 fileList.FindAll(file => file.CreationTime.CompareTo(DateTime.Now.AddDays(daysToKeep)) < 0)
                         .ForEach(file => {
-                            if (Path.GetExtension(file.FullName) == ".log") File.Delete(file.FullName);
+                            if(Path.GetExtension(file.FullName) == ".log") File.Delete(file.FullName);
                         });
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 Console.WriteLine($"오류 발생: {ex.Message}");
@@ -207,7 +207,7 @@ namespace RevitUpdater.Common.LogBase
 
                 return fullMethodPath;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 fullMethodPath = "[" + LoggerMethod.DeclaringType.FullName + " | " + LoggerMethod.Name + "] : ";
                 Log.Error(fullMethodPath + Logger.errorMessage + ex.Message);

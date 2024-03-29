@@ -14,7 +14,7 @@ namespace RevitUpdater.UI.MEPUpdater
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if(disposing && (components != null))
             {
                 components.Dispose();
             }
@@ -84,7 +84,7 @@ namespace RevitUpdater.UI.MEPUpdater
             // 
             this.comboBoxCategory.Font = new System.Drawing.Font("Tahoma", 10F);
             this.comboBoxCategory.FormattingEnabled = true;
-            this.comboBoxCategory.Location = new System.Drawing.Point(124, 58);
+            this.comboBoxCategory.Location = new System.Drawing.Point(124, 45);
             this.comboBoxCategory.Name = "comboBoxCategory";
             this.comboBoxCategory.Size = new System.Drawing.Size(220, 24);
             this.comboBoxCategory.TabIndex = 3;
@@ -93,7 +93,7 @@ namespace RevitUpdater.UI.MEPUpdater
             // 
             this.labelCategory.Appearance.Font = new System.Drawing.Font("Tahoma", 15F);
             this.labelCategory.Appearance.Options.UseFont = true;
-            this.labelCategory.Location = new System.Drawing.Point(41, 54);
+            this.labelCategory.Location = new System.Drawing.Point(41, 41);
             this.labelCategory.Name = "labelCategory";
             this.labelCategory.Size = new System.Drawing.Size(77, 24);
             this.labelCategory.TabIndex = 2;

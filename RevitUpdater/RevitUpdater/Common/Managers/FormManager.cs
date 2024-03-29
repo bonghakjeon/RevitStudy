@@ -31,9 +31,9 @@ namespace RevitUpdater.Common.Managers
                 modalessFormName = pModalessFormType.Name;
 
                 // Modaless 폼 객체가 null이거나 삭제된 경우 
-                if (pModalessForm is null || pModalessForm.IsDisposed)
+                if(pModalessForm is null || pModalessForm.IsDisposed)
                 {
-                    switch (modalessFormName)
+                    switch(modalessFormName)
                     {
                         case UpdaterHelper.MEPUpdater:   // MEP 업데이터인 경우 
 
@@ -54,7 +54,7 @@ namespace RevitUpdater.Common.Managers
                     pModalessForm.Show();   // Modaless 폼(.Show()) 형식 화면 출력 
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -84,12 +84,12 @@ namespace RevitUpdater.Common.Managers
                 // Revit 응용 프로그램에서 현재 실행 중인 모든 폼 화면 목록 가져오도록 구현  
                 FormCollection openForms = Application.OpenForms;
 
-                foreach (System.Windows.Forms.Form openForm in openForms)
+                foreach(System.Windows.Forms.Form openForm in openForms)
                 {
                     string openFormName = openForm.Name;
                     Type openFormInterface = openForm.GetType().GetInterface(pInterfaceType.Name);
 
-                    if (openFormName.Equals(pModalessFormType.Name)
+                    if(openFormName.Equals(pModalessFormType.Name)
                         && openFormInterface is not null)
                     {
                         form = openForm;
@@ -101,7 +101,7 @@ namespace RevitUpdater.Common.Managers
 
                 return form;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 

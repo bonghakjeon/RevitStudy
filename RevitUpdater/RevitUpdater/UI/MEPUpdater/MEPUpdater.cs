@@ -201,7 +201,7 @@ namespace RevitUpdater.UI.MEPUpdater
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -241,7 +241,7 @@ namespace RevitUpdater.UI.MEPUpdater
 
                 this.comboBoxCategory.Refresh();   // 변경 사항 반영 하도록 comboBoxCategory 컨트롤 Refresh
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -279,7 +279,7 @@ namespace RevitUpdater.UI.MEPUpdater
 
         //        // return dtSearchLookUpEdit;
         //    }
-        //    catch (Exception ex)
+        //    catch(Exception ex)
         //    {
         //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
         //        throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -310,7 +310,7 @@ namespace RevitUpdater.UI.MEPUpdater
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 화면 종료 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
             }
@@ -340,7 +340,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 시작");
 
                 // 매개변수 값 입력 완료 여부 확인 
-                if (true == IsCompleted)
+                if(true == IsCompleted)
                 {
                     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
                     return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
@@ -368,7 +368,7 @@ namespace RevitUpdater.UI.MEPUpdater
 
                 currentDateTime = DateTime.Now.ToString();   // "targetParamName"에 저장된 문자열과 동일한 이름의 매개변수에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
 
-                if (addElementIds.Count >= (int)EnumExistElements.EXIST
+                if(addElementIds.Count >= (int)EnumExistElements.EXIST
                     && addElementNames.Count >= (int)EnumExistElements.EXIST)   // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
                 {
                     // ParamsManager 클래스 static 메서드 "SetParametersValue" 호출
@@ -380,27 +380,27 @@ namespace RevitUpdater.UI.MEPUpdater
                     IsCompleted = ParamsManager.SetParametersValue(addElements, targetParamName, currentDateTime);
 
                     // 신규 추가 완료된 객체 이름 리스트(addElementNames) 메세지 출력 
-                    if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
 
                     // 신규 업데이트 실패한 경우 
                     else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
-                if (modElementIds.Count >= (int)EnumExistElements.EXIST
+                if(modElementIds.Count >= (int)EnumExistElements.EXIST
                     && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
                 {
                     // 수정된 객체 리스트(modElements)에 속하는 "targetParamName"과 동일한 이름의 매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
                     IsCompleted = ParamsManager.SetParametersValue(modElements, targetParamName, currentDateTime);
 
                     // 수정 업데이트 완료된 객체 이름 리스트(modElementNames) 메세지 출력 
-                    if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
                     // 수정 업데이트 실패한 경우 
                     else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 종료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -496,7 +496,7 @@ namespace RevitUpdater.UI.MEPUpdater
             }
 
             // TODO : 아래 if절 로직 필요시 사용 예정 (2024.03.22 jbh)
-            // if (false == pStatus)
+            // if(false == pStatus)
             // {
             //     this.btnON.Enabled  = true;
             //     this.btnOFF.Enabled = true;
@@ -534,7 +534,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 BuiltInCategory test2Category = CategoryManager.GetBuiltInCategory("OST_PipeFitting");
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -600,7 +600,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 // }   // 여기서 Dispose (리소스 해제) 처리 
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -663,7 +663,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 //     transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 // }   // 여기서 Dispose (리소스 해제) 처리 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);

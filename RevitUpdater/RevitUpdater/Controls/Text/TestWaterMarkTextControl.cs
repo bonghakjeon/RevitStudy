@@ -48,7 +48,7 @@ namespace RevitUpdater.Controls.Text
             set
             {
                 _WaterMarkText = value;
-                if (this.Text == "")
+                if(this.Text == "")
                 {
                     TempFontColor = this.ForeColor;
 
@@ -177,7 +177,7 @@ namespace RevitUpdater.Controls.Text
         //        Log.Information(Logger.GetMethodPath(currentMethod) + "키보드 키입력 이벤트 시작");
 
         //        // 워터마크 상태일 경우
-        //        // if (true == WaterMarkState)
+        //        // if(true == WaterMarkState)
         //        // {
         //        //     // TODO : 삼항 연산자 사용해서 키보드로 입력받은 키 데이터(e.KeyData) 값이
         //        //     //        BackSpace(Keys.Back)일 경우 워터마크 문자열, 문자열 색상, 워터마크 상태 그대로 유지
@@ -188,14 +188,14 @@ namespace RevitUpdater.Controls.Text
         //        // }
 
         //        // 엔터 키일 경우 
-        //        if (e.KeyData == Keys.Enter) e.Handled = true;
+        //        if(e.KeyData == Keys.Enter) e.Handled = true;
 
 
         //        base.OnKeyDown(e);
 
         //        Log.Information(Logger.GetMethodPath(currentMethod) + "키보드 키입력 이벤트 종료");
         //    }
-        //    catch (Exception ex)
+        //    catch(Exception ex)
         //    {
         //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
         //        MessageBox.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -214,7 +214,7 @@ namespace RevitUpdater.Controls.Text
                 Log.Information(Logger.GetMethodPath(currentMethod) + "키보드 키입력 이벤트 시작");
 
                 // 워터마크 상태일 경우
-                // if (true == WaterMarkState)
+                // if(true == WaterMarkState)
                 // {
                 //     // TODO : 삼항 연산자 사용해서 키보드로 입력받은 키 데이터(e.KeyData) 값이
                 //     //        BackSpace(Keys.Back)일 경우 워터마크 문자열, 문자열 색상, 워터마크 상태 그대로 유지
@@ -225,14 +225,14 @@ namespace RevitUpdater.Controls.Text
                 // }
 
                 // 엔터 키일 경우 
-                if (e.KeyData == Keys.Enter) e.Handled = true;
+                if(e.KeyData == Keys.Enter) e.Handled = true;
 
 
                 base.OnKeyDown(e);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "키보드 키입력 이벤트 종료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 MessageBox.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -259,7 +259,7 @@ namespace RevitUpdater.Controls.Text
                 KeyInput = e.KeyChar.ToString();
 
                 // 워터마크 상태일 경우
-                if (true == WaterMarkState)
+                if(true == WaterMarkState)
                 {
                     isHangul = IsValidatorHangul(KeyInput);
 
@@ -275,13 +275,13 @@ namespace RevitUpdater.Controls.Text
 
 
                 // 엔터 키일 경우 
-                if (e.KeyChar == (char)Keys.Enter) e.Handled = true;
+                if(e.KeyChar == (char)Keys.Enter) e.Handled = true;
 
                 base.OnKeyPress(e);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "키보드 키입력 이벤트 종료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 MessageBox.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -305,10 +305,10 @@ namespace RevitUpdater.Controls.Text
                 Log.Information(Logger.GetMethodPath(currentMethod) + "텍스트 변경 이벤트 시작");
 
                 // TODO : 워터마크 상태이고, 키보드로 직접 입력한 문자열이 존재하는 경우 
-                if (true == WaterMarkState)
+                if(true == WaterMarkState)
                 {
                     // 워터마크 상태이나, 입력받은 키가 BackSpace인 경우 
-                    if (KeyInput.Equals(BackSpace) || KeyInput.Equals(SpaceBar)) 
+                    if(KeyInput.Equals(BackSpace) || KeyInput.Equals(SpaceBar)) 
                     {
                         this.Text = WaterMarkText;
                         this.ForeColor = WaterMarkColor;
@@ -316,7 +316,7 @@ namespace RevitUpdater.Controls.Text
                     
 
                     // this.Text에 남은 문자열과 WaterMarkText가 null 또는 공백이 아닌 경우 
-                    if (false == string.IsNullOrWhiteSpace(this.Text)
+                    if(false == string.IsNullOrWhiteSpace(this.Text)
                         && false == string.IsNullOrWhiteSpace(WaterMarkText))
                     {
                         // TODO : 메서드 "Replace" 사용해서 워터마크 문자열(WaterMarkText)을 공백으로 치환한 이후 남은 키보드로 직접 입력한 문자열 구하기 (2024.03.20 jbh)
@@ -325,7 +325,7 @@ namespace RevitUpdater.Controls.Text
                         inputText = inputText.Replace(WaterMarkText, string.Empty);
                     }
 
-                    if (true == inputText.Length >= (int)EnumExistKeyInputData.EXIST
+                    if(true == inputText.Length >= (int)EnumExistKeyInputData.EXIST
                         && false == string.IsNullOrWhiteSpace(inputText))
                     {
                         WaterMarkState = false;
@@ -336,7 +336,7 @@ namespace RevitUpdater.Controls.Text
 
                 // BackSpace키 누르기 직전 문자열이 존재해서 워터마크 상태가 아니고
                 // BackSpace키 누르고 난 직 후 this.Text에 남은 문자열이 null 또는 공백일 경우 
-                if (false == WaterMarkState
+                if(false == WaterMarkState
                     && true == string.IsNullOrWhiteSpace(this.Text))
                 {
                     WaterMarkState = true;     // 워터마크(WaterMarkText) 문자열(Text) 입력 가능 상태 변경 
@@ -351,7 +351,7 @@ namespace RevitUpdater.Controls.Text
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "텍스트 변경 이벤트 종료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 MessageBox.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -377,7 +377,7 @@ namespace RevitUpdater.Controls.Text
 
                 return result;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 

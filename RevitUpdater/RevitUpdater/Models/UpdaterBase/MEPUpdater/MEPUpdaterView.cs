@@ -136,7 +136,7 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
 
         #region 생성자
 
-        //public CategoryInfoView (string rvCategoryName, string rvParamGroupName)
+        //public CategoryInfoView(string rvCategoryName, string rvParamGroupName)
         public CategoryInfoView(string rvCategoryName, BuiltInCategory rvCategory)
         {
             this.categoryName = rvCategoryName;

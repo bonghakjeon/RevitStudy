@@ -38,7 +38,7 @@ namespace RevitUpdater.Common.Managers
 
                 return builtInParamName;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 // TODO : 오류 발생시 상위 호출자 예외처리 전달 throw 구현 (2024.01.29 jbh)
@@ -122,7 +122,7 @@ namespace RevitUpdater.Common.Managers
 
                 return paramDatas;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -148,7 +148,7 @@ namespace RevitUpdater.Common.Managers
                                                                .ToList();
 
                 // 2 단계 : 매개변수가 존재하지 않는 경우 
-                if (targetParameters.Count.Equals((int)EnumExistParameters.NONE))
+                if(targetParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
                     // TODO : 테스트 하면서 추후 값을 입력하려는 매개변수가 존재하지 않는 경우 메시지 박스 (TaskDialog.Show)로 출력할지 아니면 오류 처리 (throw new Exception)로 진행할 지 결정 후 로직 다시 수정하기 (2024.03.14 jbh)
                     // TaskDialog.Show(AABIMHelper.NoticeTitle, $"매개변수 {rvParamName}가 존재하지 않습니다.\r\n다시 선택하시기 바랍니다.");
@@ -201,7 +201,7 @@ namespace RevitUpdater.Common.Managers
                     }
 
                     // 매개변수에 값 입력 완료한 경우 
-                    if (true == bResult)
+                    if(true == bResult)
                     {
                         SetParamInfoView setCompletedParameter = new SetParamInfoView(rvParamName, rvParamValue);
 
@@ -217,7 +217,7 @@ namespace RevitUpdater.Common.Managers
                 });
 
                 // 매개변수에 값 입력이 모두 실패한 경우 (리스트 객체 "setCompletedParameters"에 데이터가 존재하지 않는 경우)
-                if (setCompletedParameters.Count.Equals((int)EnumExistParameters.NONE))
+                if(setCompletedParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
                     TaskDialog.Show(UpdaterHelper.ErrorTitle, $"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
                     throw new Exception($"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
@@ -230,7 +230,7 @@ namespace RevitUpdater.Common.Managers
 
                 return true;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 return false;
@@ -253,7 +253,7 @@ namespace RevitUpdater.Common.Managers
 
                 return true;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 // throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 

@@ -147,18 +147,18 @@ namespace RevitUpdater.Common.RequestBase
                 // TODO : 부모 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어할 수 있도록 구현 예정 (2024.03.15 jbh)
                 EnumMEPUpdaterRequestId requestIdValue = Request.Take();
 
-                switch (requestIdValue)
+                switch(requestIdValue)
                 {
                     case EnumMEPUpdaterRequestId.NONE:   // 요청이 없는 경우 -> 즉시 종료
                         return;
 
                     case EnumMEPUpdaterRequestId.REGISTER:
-                        if (true == isUpdaterRegistered) RemoveMEP(RevitDoc, Updater_Id);
+                        if(true == isUpdaterRegistered) RemoveMEP(RevitDoc, Updater_Id);
                         RegisterMEP(mepUpdaterForm, RevitDoc, Updater_Id);
                         break;
 
                     case EnumMEPUpdaterRequestId.REMOVE:
-                        if (true == isUpdaterRegistered) RemoveMEP(RevitDoc, Updater_Id);
+                        if(true == isUpdaterRegistered) RemoveMEP(RevitDoc, Updater_Id);
                         // Revit MEP 업데이터 + Triggers가 이미 해제되어 있는 경우 
                         else TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 + Triggers 이미 해제 완료되었습니다.");
                         break;
@@ -170,7 +170,7 @@ namespace RevitUpdater.Common.RequestBase
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "메서드 Execute 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -198,7 +198,7 @@ namespace RevitUpdater.Common.RequestBase
                 // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
                 // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
                 // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
-                using (Transaction transaction = new Transaction(rvDoc))
+                using(Transaction transaction = new Transaction(rvDoc))
                 {
                     // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                     transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
@@ -217,7 +217,7 @@ namespace RevitUpdater.Common.RequestBase
                     transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 }   // 여기서 Dispose (리소스 해제) 처리 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -240,7 +240,7 @@ namespace RevitUpdater.Common.RequestBase
                 // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
                 // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
                 // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
-                using (Transaction transaction = new Transaction(rvDoc))
+                using(Transaction transaction = new Transaction(rvDoc))
                 {
                     // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                     transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
@@ -281,7 +281,7 @@ namespace RevitUpdater.Common.RequestBase
                     transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 }   // 여기서 Dispose (리소스 해제) 처리 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 

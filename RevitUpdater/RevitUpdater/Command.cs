@@ -23,7 +23,7 @@ namespace RevitUpdater
     /// <summary>
     /// 테스트용 Command
     /// </summary>
-    public class Command
+    internal class Command
     {
 
     }
@@ -97,7 +97,7 @@ namespace RevitUpdater
 
                 return Result.Succeeded;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);
@@ -114,7 +114,7 @@ namespace RevitUpdater
         /// </summary>
         public static void WakeFormUp()
         {
-            if (MEPUpdaterForm is not null) MEPUpdaterForm.WakeUp();
+            if(MEPUpdaterForm is not null) MEPUpdaterForm.WakeUp();
         }
 
         #endregion WakeFormUp

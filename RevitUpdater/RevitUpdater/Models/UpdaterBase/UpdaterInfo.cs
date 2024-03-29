@@ -17,7 +17,7 @@ namespace RevitUpdater.Models.UpdaterBase
         /// </summary>
         public SoundPlayer WavSound { get; set; } 
          
-        public UpdaterInfo (string pWavFilePath)
+        public UpdaterInfo(string pWavFilePath)
         {
             WavSound = new SoundPlayer(pWavFilePath);
         }

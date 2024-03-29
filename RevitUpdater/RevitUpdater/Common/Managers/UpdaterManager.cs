@@ -30,7 +30,7 @@ namespace RevitUpdater.Common.Managers
         // 
         //         TaskDialog.Show("테스트 MEP Updater", "테스트 업데이터 등록 완료");
         //     }
-        //     catch (Exception ex)
+        //     catch(Exception ex)
         //     {
         //         Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
         //         throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -46,12 +46,12 @@ namespace RevitUpdater.Common.Managers
 
             try
             {
-                BuiltInCategory builtInCategory = (BuiltInCategory)pElementCategoryFilter.CategoryId.Value;
+                BuiltInCategory builtInCategory = (BuiltInCategory)pElementCategoryFilter.CategoryId.Value;  // 카테고리 필터 객체의 BuiltInCategory 가져오기  
 
                 string builtInCategoryName = LabelUtils.GetLabelFor(builtInCategory);   // BuiltInCategory 이름 가져오기 
 
                 // 해당 업데이터 아이디가 존재하고, 업데이터가 등록되어 있는 경우 
-                if (pUpdaterId is not null
+                if(pUpdaterId is not null
                     && UpdaterRegistry.IsUpdaterRegistered(pUpdaterId))
                 {
                     Log.Information(Logger.GetMethodPath(currentMethod) + $"테스트 {builtInCategoryName} Triggers 등록 시작");
@@ -75,7 +75,7 @@ namespace RevitUpdater.Common.Managers
                 // 해당 업데이터 아이디가 존재하지 않거나 업데이터가 등록되어 있지 않은 경우 
                 else throw new Exception($"테스트 {builtInCategoryName} Triggers 등록 실패!\r\n담당자에게 문의하세요.");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -92,7 +92,7 @@ namespace RevitUpdater.Common.Managers
         // 
         //     try
         //     {
-        //         if (UpdaterRegistry.IsUpdaterRegistered(pUpdaterId, rvDoc))   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
+        //         if(UpdaterRegistry.IsUpdaterRegistered(pUpdaterId, rvDoc))   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
         //         {
         //             Log.Information(Logger.GetMethodPath(currentMethod) + " Revit MEP 업데이터 + Triggers 해제 시작");
         // 
@@ -102,7 +102,7 @@ namespace RevitUpdater.Common.Managers
         //             Log.Information(Logger.GetMethodPath(currentMethod) + " Revit MEP 업데이터 + Triggers 해제 완료");
         //         }
         //     }
-        //     catch (Exception ex)
+        //     catch(Exception ex)
         //     {
         //         Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
         //         throw;   // 오류 발생시 상위 호출자 예외처리 전달

@@ -23,10 +23,10 @@ namespace RevitUpdater.Common.Extensions
 
             try
             {
-                if (false == typeof(TEnum).IsEnum) return default(TEnum);       // Enum 열거형 구조체가 아닐 경우 
+                if(false == typeof(TEnum).IsEnum) return default(TEnum);       // Enum 열거형 구조체가 아닐 경우 
                 return (TEnum)Enum.Parse(typeof(TEnum), rvEnumMemberValName);   // Enum 열거형 구조체일 경우 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -47,10 +47,10 @@ namespace RevitUpdater.Common.Extensions
 
             try
             {
-                if (false == typeof(TEnum).IsEnum) return string.Empty;       // Enum 열거형 구조체가 아닐 경우 
+                if(false == typeof(TEnum).IsEnum) return string.Empty;       // Enum 열거형 구조체가 아닐 경우 
                 return Enum.GetName(typeof(TEnum), rvEnumMemberVal);          // Enum 열거형 구조체일 경우 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -70,10 +70,10 @@ namespace RevitUpdater.Common.Extensions
 
             try
             {
-                if (false == typeof(TEnum).IsEnum) return String.Empty;   // Enum 열거형 구조체가 아닐 경우 
+                if(false == typeof(TEnum).IsEnum) return String.Empty;   // Enum 열거형 구조체가 아닐 경우 
                 return Enum.GetName(typeof(TEnum), rvEnumValue);          // Enum 열거형 구조체일 경우 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달

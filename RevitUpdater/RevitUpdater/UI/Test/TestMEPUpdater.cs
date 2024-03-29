@@ -56,14 +56,14 @@ namespace RevitUpdater.UI.Test
         private void cboState2_SelectionChangeCommitted(object sender, EventArgs e)
         {
             States obj = cboState2.SelectedItem as States;
-            if (obj != null)
+            if(obj != null)
                 lblValue.Text = obj.Name;
         }
 
         private void btnAddNames_Click(object sender, EventArgs e)
         {
             string[] name = new string[] { "Natalie", "Cemal", "Garray", "Tomas", "Bill" };
-            for (int i = 0; i < 5; i++)
+            for(int i = 0; i < 5; i++)
             {
                 cmbNames.Properties.Items.Add(name[i]);
             }

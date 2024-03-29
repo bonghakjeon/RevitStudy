@@ -42,7 +42,7 @@ namespace RevitUpdater
 
                 return Result.Succeeded;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);

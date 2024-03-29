@@ -64,7 +64,7 @@ namespace RevitUpdater.Common.Managers
 
                 return builtInCategoryNameList;  // 마지막 단계 : builtInCategoryNameList 리턴
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // TODO : 오류 발생시 상위 호출자 예외처리 전달 throw
@@ -118,7 +118,7 @@ namespace RevitUpdater.Common.Managers
 
                     // 동일한 카테고리(BuiltInCategory category)가 존재하지 않는 경우
                     // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
-                    if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
+                    if(existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
 
 
 
@@ -151,7 +151,7 @@ namespace RevitUpdater.Common.Managers
                 //                                .OrderBy(categoryInfo => categoryInfo.categoryName)
                 //                                .ToList();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -205,7 +205,7 @@ namespace RevitUpdater.Common.Managers
 
                 return builtInCategory;   // 마지막 단계 : BuiltInCategory 리턴 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 
@@ -231,7 +231,7 @@ namespace RevitUpdater.Common.Managers
 
         //        return builtInCategory;   // BuiltInCategory 리턴 
         //    }
-        //    catch (Exception ex)
+        //    catch(Exception ex)
         //    {
         //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
         //        throw;   // 오류 발생시 상위 호출자 예외처리 전달 
