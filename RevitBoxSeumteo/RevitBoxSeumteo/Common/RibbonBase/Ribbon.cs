@@ -21,7 +21,7 @@ namespace RevitBoxSeumteo.Common.RibbonBase
 
         /// <summary>
         /// 리본 컨트롤(메뉴) 등록(생성)
-        /// </summary>s
+        /// </summary>
         public static void CreateRibbonControl(UIControlledApplication application)
         {
             try

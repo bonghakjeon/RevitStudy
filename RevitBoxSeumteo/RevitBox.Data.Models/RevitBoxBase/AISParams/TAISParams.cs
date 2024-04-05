@@ -1,20 +1,26 @@
-﻿using RevitBoxSeumteoNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using RevitBox.Data.Models.Common.AISParam;
+using RevitBox.Data.Models.TableInfo;
+using RevitBoxSeumteoNet;
 
 namespace RevitBox.Data.Models.RevitBoxBase.AISParams
 {
     // TODO : 필요시 T_AISParams.cs 클래스 파일 구현 예정 (2023.11.15 jbh)
     public class TAISParams<T> : TAISParams where T : TAISParams<T> { }
-    //public class T_AISParams : RevitModelBase<T_AISParams>
+    //public class T_AISParams : RbModelBase<T_AISParams>
     //{
     //}
 
     // TODO : 일단 임시로 아래 처럼 구현해서 사용 추후 필요시 위에 주석 친 소스코드 처럼 변경 및 
-    //        RevitModelBase 클래스 구현 예정 (2023.11.15 jbh)     
+    //        RbModelBase 클래스 구현 예정 (2023.11.15 jbh)     
     public class TAISParams : RbModelBase<TAISParams>  // BindableBase
     {
         #region 프로퍼티 
@@ -538,7 +544,7 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
         /// <summary>
         /// AIS_공구상면적 - 타입 실수(double)
         /// </summary>
-        
+        // ---- 
 
 
         #endregion 카테고리 - 프로젝트정보
@@ -566,17 +572,531 @@ namespace RevitBox.Data.Models.RevitBoxBase.AISParams
 
         #endregion AIS 매개변수 
 
+
+
         #endregion AISParamsBoardVM
 
         #endregion 프로퍼티
 
 
-
-
         #region 생성자 
+
+        public TAISParams() => this.Clear();
 
         #endregion 생성자 
 
+        #region CreateDataTable
 
+        // TODO : 엑셀 데이터 (Export - Import) 하는 과정에서 필요한 AIS 매개변수 데이터를 DataTable로 만들어 주기 메서드 "CreateDataTable" 추후 구현 예정 (2023.12.06 jbh)
+        /// <summary>
+        /// 엑셀 데이터 (Export - Import) 하는 과정에서 필요한 AIS 매개변수 데이터를 DataTable로 만들어주기 
+        /// </summary>
+        /// <returns></returns>
+        //public override DataTable CreateDataTable()
+        //{
+
+        //}
+
+        #endregion CreateDataTable
+
+        #region ToColumnInfo
+
+        // TODO : 메서드 "ToColumnInfo" 구현 예정 (2023.11.20 jbh)
+        public override Dictionary<string, TTableColumn> ToColumnInfo()
+        {
+            Dictionary<string, TTableColumn> columnInfo = base.ToColumnInfo();
+
+            // TODO : Dictionary 객체 columnInfo 구현시 소스코드 예시 (2023.11.20 jbh)
+            //columnInfo.Add("br_BrandCode", new TTableColumn()
+            //{
+            //    tc_orgin_name = "br_BrandCode",
+            //    tc_trans_name = "브랜드코드"
+            //});
+
+            // TODO : Dictionary 객체 columnInfo에 추가할 Value(TTableColumn)에 속하는 프로퍼티 "tc_origin_name"에
+            //        nameof 연산자 사용해서 속성 이름 자체를 문자열로 가져오기 (2023.11.23 jbh)
+            // 참고 URL - https://hyokye0ng.tistory.com/86
+            // nameof 연산자 장점 
+            // 참고 URL - https://loveme-do.tistory.com/12
+            // 공통 - 카테고리 레벨
+            columnInfo.Add("ais_LevelCode", new TTableColumn()
+            {
+                // tc_origin_name = "ais_LevelCode",
+                tc_origin_name = nameof(ais_LevelCode),
+                // tc_trans_name = "AIS_분류코드"
+                tc_trans_name  = AISParamsHelper.AIS_분류코드
+            });
+
+            // 개요 - 카테고리 면적
+            columnInfo.Add("ais_AreaCode", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_AreaCode),
+                // tc_trans_name = "AIS_개요분류코드"
+                tc_trans_name  = AISParamsHelper.AIS_개요분류코드
+            });
+            columnInfo.Add("ais_IsExceptYn_TotalFloorArea", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_IsExceptYn_TotalFloorArea),
+                tc_trans_name  = AISParamsHelper.AIS_연면적제외
+            });
+            columnInfo.Add("ais_IsExceptYn_FloorAreaRatio", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_IsExceptYn_FloorAreaRatio),
+                tc_trans_name  = AISParamsHelper.AIS_용적률제외
+            });
+            columnInfo.Add("ais_IsExceptYn_FloorArea", new TTableColumn() 
+            { 
+                tc_origin_name = nameof(ais_IsExceptYn_FloorArea),
+                tc_trans_name  = AISParamsHelper.AIS_바닥면적제외
+            });
+
+            // 건축
+            // 카테고리 - 룸
+            columnInfo.Add("ais_ArchCode", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_ArchCode),
+                tc_trans_name  = AISParamsHelper.AIS_건축분류코드
+            });
+            columnInfo.Add("ais_IsEmergencyElevatorUseYn", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_IsEmergencyElevatorUseYn),
+                tc_trans_name  = AISParamsHelper.AIS_비상용승강기
+            });
+            columnInfo.Add("ais_IsEvacuationElevatorUseYn", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_IsEvacuationElevatorUseYn),
+                tc_trans_name  = AISParamsHelper.AIS_피난용승강기
+            });
+            columnInfo.Add("ais_IsSpecialEscStairsUseYn", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_IsSpecialEscStairsUseYn),
+                tc_trans_name  = AISParamsHelper.AIS_특별피난계단
+            });
+            columnInfo.Add("ais_IsfireEscStairsUseYn", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_IsfireEscStairsUseYn),
+                tc_trans_name  = AISParamsHelper.AIS_피난계단
+            });
+            columnInfo.Add("ais_FinishFloor", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_FinishFloor),
+                tc_trans_name  = AISParamsHelper.AIS_바닥마감
+            });
+            columnInfo.Add("ais_NumberFloor", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_NumberFloor),
+                tc_trans_name  = AISParamsHelper.AIS_바닥번호
+            });
+            columnInfo.Add("ais_BaseBoard", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_BaseBoard),
+                tc_trans_name  = AISParamsHelper.AIS_걸레받이마감
+            });
+            columnInfo.Add("ais_NumberBaseBoard", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_NumberBaseBoard),
+                tc_trans_name  = AISParamsHelper.AIS_걸레받이번호
+            });
+            columnInfo.Add("ais_FinishWall", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_FinishWall),
+                tc_trans_name  = AISParamsHelper.AIS_벽마감
+            });
+            columnInfo.Add("ais_NumberWall", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_NumberWall),
+                tc_trans_name  = AISParamsHelper.AIS_벽번호
+            });
+            columnInfo.Add("ais_FinishCeiling", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_FinishCeiling),
+                tc_trans_name  = AISParamsHelper.AIS_천장마감
+            });
+            columnInfo.Add("ais_NumberCeiling", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_NumberCeiling),
+                tc_trans_name  = AISParamsHelper.AIS_천장번호
+            });
+
+            // 건축
+            // 카테고리 - 문
+            columnInfo.Add("ais_FireGrade", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_FireGrade),
+                tc_trans_name  = AISParamsHelper.AIS_방화등급
+            });
+
+            // 건축
+            // 카테고리 - 창
+            columnInfo.Add("ais_IsSmokeVentilatorUseYn", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_IsSmokeVentilatorUseYn),
+                tc_trans_name  = AISParamsHelper.AIS_배연창
+            });
+
+            // 건축
+            // 카테고리 - 주차(건물내부)
+            columnInfo.Add("ais_InsideParkingArea", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_InsideParkingArea),
+                tc_trans_name  = AISParamsHelper.AIS_건축주차구획
+            });
+
+            // 대지(배치)
+            // 카테고리 - 면적
+            columnInfo.Add("ais_SiteCode", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_SiteCode),
+                tc_trans_name  = AISParamsHelper.AIS_대지분류코드
+            });
+            columnInfo.Add("ais_IsSiteUseYn", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_IsSiteUseYn),
+                tc_trans_name  = AISParamsHelper.AIS_실사용
+            });
+
+            // 대지(배치)
+            // 카테고리 - 프로젝트정보
+            // TODO : AIS_공구상면적이 맞는지 아니면 AIS_공부상면적이 맞는지 차주에 "조원호 팀장님"과 소통 진행해서 확인하기(2023.11.17 jbh)
+            // AIS_공구상면적 - 타입 실수(double) 
+            columnInfo.Add("", new TTableColumn()
+            {
+                // tc_origin_name = nameof()"",
+                tc_trans_name  = AISParamsHelper.AIS_공구상면적
+            });
+
+            // 대지(배치) 
+            // 카테고리 - 주차
+            columnInfo.Add("ais_OutsideParkingArea", new TTableColumn()
+            {
+                tc_origin_name = nameof(ais_OutsideParkingArea),
+                tc_trans_name  = AISParamsHelper.AIS_대지주차구획
+            });
+
+            return columnInfo;
+        }
+
+        #endregion ToColumnInfo
+
+        #region Clear
+
+        // TODO : 메서드 "Clear" 추후 구현 예정 (2023.11.20 jbh)
+        public override void Clear()
+        {
+            base.Clear();
+            // this.TableCode = TableCodeType.AISParams;
+            this.DataCode                      = DataCodeType.AISParams;   // 데이터 코드 
+
+            // 공통 - 카테고리 레벨
+            this.ais_LevelCode                 = string.Empty;             // AIS_분류코드 
+
+            // 개요 - 카테고리 면적
+            this.ais_AreaCode                  = string.Empty;             // AIS_개요분류코드 
+            this.ais_IsExceptYn_TotalFloorArea = true;                     // AIS_연면적제외 
+            this.ais_IsExceptYn_FloorAreaRatio = true;                     // AIS_용적률제외 
+            this.ais_IsExceptYn_FloorArea      = true;                     // AIS_바닥면적제외 
+
+            // 건축
+            // 카테고리 - 룸
+            this.ais_ArchCode                  = string.Empty;             // AIS_건축분류코드
+            this.ais_IsEmergencyElevatorUseYn  = true;                     // AIS_비상용승강기 
+            this.ais_IsEvacuationElevatorUseYn = true;                     // AIS_피난용승강기 
+            this.ais_IsSpecialEscStairsUseYn   = true;                     // AIS_특별피난계단 
+            this.ais_IsfireEscStairsUseYn      = true;                     // AIS_피난계단 
+            this.ais_FinishFloor               = string.Empty;             // AIS_바닥마감 
+            this.ais_NumberFloor               = string.Empty;             // AIS_바닥번호 
+            this.ais_BaseBoard                 = string.Empty;             // AIS_걸레받이마감 
+            this.ais_NumberBaseBoard           = string.Empty;             // AIS_걸레받이번호 
+            this.ais_FinishWall                = string.Empty;             // AIS_벽마감
+            this.ais_NumberWall                = string.Empty;             // AIS_벽번호
+            this.ais_FinishCeiling             = string.Empty;             // AIS_천장마감
+            this.ais_NumberCeiling             = string.Empty;             // AIS_천장번호 
+
+            // 건축
+            // 카테고리 - 문
+            this.ais_FireGrade                 = string.Empty;             // AIS_방화등급
+
+            // 건축
+            // 카테고리 - 창
+            this.ais_IsSmokeVentilatorUseYn    = true;                     // AIS_배연창
+
+            // 건축
+            // 카테고리 - 주차(건물내부)
+            this.ais_InsideParkingArea         = string.Empty;             // AIS_건축주차구획(건물내부)
+
+            // 대지(배치)
+            // 카테고리 - 면적
+            this.ais_SiteCode                  = string.Empty;             // AIS_대지분류코드
+            this.ais_IsSiteUseYn               = true;                     // AIS_실사용(대지)
+
+            // 대지(배치)
+            // 카테고리 - 프로젝트정보
+            // TODO : AIS_공구상면적이 맞는지 아니면 AIS_공부상면적이 맞는지 차주에 "조원호 팀장님"과 소통 진행해서 확인하기(2023.11.17 jbh)
+            // AIS_공구상면적 - 타입 실수(double) 
+            // this.공구상면적
+
+            // 대지(배치) 
+            // 카테고리 - 주차
+            this.ais_OutsideParkingArea        = string.Empty;             // AIS_대지주차구획
+
+        }
+
+        #endregion Clear
+
+        #region CreateClone
+
+        // TODO : RbModelBase 클래스 객체 "CreateClone" 필요시 구현 예정 (2023.11.20 jbh)
+        protected override RbModelBase CreateClone => (RbModelBase) new TAISParams();
+
+        #endregion CreateClone
+
+        #region Clone
+
+        // TODO : 메서드 "Clone" 구현 예정 (2023.11.20 jbh)
+        public override object Clone()
+        {
+            TAISParams tAISParams    = base.Clone() as TAISParams;
+
+            // 공통 - 카테고리 레벨
+            tAISParams.ais_LevelCode                 = this.ais_LevelCode;                   // AIS_분류코드 
+
+            // 개요 - 카테고리 면적
+            tAISParams.ais_AreaCode                  = this.ais_AreaCode;                    // AIS_개요분류코드 
+            tAISParams.ais_IsExceptYn_TotalFloorArea = this.ais_IsExceptYn_TotalFloorArea;   // AIS_연면적제외 
+            tAISParams.ais_IsExceptYn_FloorAreaRatio = this.ais_IsExceptYn_FloorAreaRatio;   // AIS_용적률제외
+            tAISParams.ais_IsExceptYn_FloorArea      = this.ais_IsExceptYn_FloorArea;        // AIS_바닥면적제외
+
+            // 건축
+            // 카테고리 - 룸
+            tAISParams.ais_ArchCode                  = this.ais_ArchCode;                    // AIS_건축분류코드
+            tAISParams.ais_IsEmergencyElevatorUseYn  = this.ais_IsEmergencyElevatorUseYn;    // AIS_비상용승강기
+            tAISParams.ais_IsEvacuationElevatorUseYn = this.ais_IsEvacuationElevatorUseYn;   // AIS_피난용승강기
+            tAISParams.ais_IsSpecialEscStairsUseYn   = this.ais_IsSpecialEscStairsUseYn;     // AIS_특별피난계단 
+            tAISParams.ais_IsfireEscStairsUseYn      = this.ais_IsfireEscStairsUseYn;        // AIS_피난계단
+            tAISParams.ais_FinishFloor               = this.ais_FinishFloor;                 // AIS_바닥마감
+            tAISParams.ais_NumberFloor               = this.ais_NumberFloor;                 // AIS_바닥번호 
+            tAISParams.ais_BaseBoard                 = this.ais_BaseBoard;                   // AIS_걸레받이마감
+            tAISParams.ais_NumberBaseBoard           = this.ais_NumberBaseBoard;             // AIS_걸레받이번호
+            tAISParams.ais_FinishWall                = this.ais_FinishWall;                  // AIS_벽마감
+            tAISParams.ais_NumberWall                = this.ais_NumberWall;                  // AIS_벽번호
+            tAISParams.ais_FinishCeiling             = this.ais_FinishCeiling;               // AIS_천장마감
+            tAISParams.ais_NumberCeiling             = this.ais_NumberCeiling;               // AIS_천장번호
+
+            // 건축
+            // 카테고리 - 문
+            tAISParams.ais_FireGrade                 = this.ais_FireGrade;                   // AIS_방화등급
+
+            // 건축
+            // 카테고리 - 창
+            tAISParams.ais_IsSmokeVentilatorUseYn    = this.ais_IsSmokeVentilatorUseYn;      // AIS_배연창
+
+            // 건축
+            // 카테고리 - 주차(건물내부)
+            tAISParams.ais_InsideParkingArea         = this.ais_InsideParkingArea;           // AIS_건축주차구획(건물내부)
+
+            // 대지(배치)
+            // 카테고리 - 면적
+            tAISParams.ais_SiteCode                  = this.ais_SiteCode;                    // AIS_대지분류코드
+            tAISParams.ais_IsSiteUseYn               = this.ais_IsSiteUseYn;                 // AIS_실사용(대지)
+
+            // 대지(배치)
+            // 카테고리 - 프로젝트정보
+            // TODO : AIS_공구상면적이 맞는지 아니면 AIS_공부상면적이 맞는지 차주에 "조원호 팀장님"과 소통 진행해서 확인하기(2023.11.27 jbh)
+            // AIS_공구상면적 - 타입 실수(double) 
+            // tAISParams.공구상면적                    = 
+
+            // 대지(배치) 
+            // 카테고리 - 주차
+            tAISParams.ais_OutsideParkingArea        = this.ais_OutsideParkingArea;          // AIS_대지주차구획
+
+            return (object) tAISParams;
+        }
+
+        #endregion Clone
+
+        #region PutData
+
+        // TODO : 메서드 "PutData" 구현 예정 (2023.11.20 jbh)
+        public void PutData(TAISParams pSource) 
+        {
+            this.PutData((RbModelBase) pSource);
+            this.ais_LevelCode = pSource.ais_LevelCode;
+            this.ais_AreaCode  = pSource.ais_AreaCode;
+            // . . . 
+        }
+
+        #endregion PutData
+
+        #region GetFieldValues
+
+        // TODO : 추후 DB 설계 필요시 메서드 "GetFieldValues" 구현 예정 (2023.11.20 jbh)
+        //public override bool GetFieldValues(RevitOleDbRecordset p_rs)
+        //{
+        //    try
+        //    {
+        //        this.ais_LevelCode = p_rs.GetFieldInt("ais_LevelCode");
+        //        return true;
+        //    }
+        //    catch (Exception ex) 
+        //    {
+        //        this.message = " " + this.TableCode.ToDescription() + " 실패\n--------------------------------------------------------------------------------------------------\n 테이블 : " + this.TableCode.ToDescription() + "\n 메소드 : " + MethodBase.GetCurrentMethod().ReflectedType.Name + "==>" + MethodBase.GetCurrentMethod().Name + "\n" + string.Format(" LINE : {0} 행\n", (object)new StackFrame(0, true).GetFileLineNumber()) + "--------------------------------------------------------------------------------------------------\n 내용 : " + ex.Message + "\n--------------------------------------------------------------------------------------------------\n";
+        //        Log.Logger.ErrorColor(this.message);
+        //    }
+        //    return false;
+        //}
+
+        #endregion GetFieldValues
+
+        #region InsertQuery
+
+        // TODO : 추후 DB 설계 필요시 메서드 "InsertQuery" 구현 예정 (2023.11.20 jbh)
+        // public override string InsertQuery() => string.Format(" INSERT INTO {0}{1} (", (object)DbQueryHelper.ToDBNameBridge(RbModelBase.REVIT_BASE), (object)this.TableCode) + " br_BrandCode,br_SiteID,br_BrandName,br_UseYn,br_Memo,br_AddProperty,br_InDate,br_InUser,br_ModDate,br_ModUser) VALUES ( " + string.Format(" {0}", (object)this.br_BrandCode) + string.Format(",{0}", (object)this.br_SiteID) + string.Format(",'{0}','{1}','{2}',{3}", (object)this.br_BrandName, (object)this.br_UseYn, (object)this.br_Memo, (object)this.br_AddProperty) + string.Format(",{0},{1}", (object)this.br_InDate.GetDateToStrInNull(), (object)this.br_InUser) + string.Format(",{0},{1}", (object)this.br_ModDate.GetDateToStrInNull(), (object)this.br_ModUser) + ")";
+
+        #endregion InsertQuery
+
+        #region Insert
+
+        // TODO : 추후 DB 설계 필요시 메서드 "Insert" 구현 예정 (2023.11.20 jbh)
+        //public override bool Insert()
+        //{
+        //    this.InsertChecked();
+        //    if (this.OleDB.Execute(this.InsertQuery()))
+        //        return true;
+        //    this.message = " " + this.TableCode.ToDescription() + " 실패\n--------------------------------------------------------------------------------------------------\n 테이블 : " + this.TableCode.ToDescription() + "\n 메소드 : " + MethodBase.GetCurrentMethod().ReflectedType.Name + "==>" + MethodBase.GetCurrentMethod().Name + "\n" + string.Format(" LINE : {0} 행\n", (object)new StackFrame(0, true).GetFileLineNumber()) + "--------------------------------------------------------------------------------------------------\n" + string.Format(" 에러 : {0}\n", (object)this.OleDB.LastErrorID) + string.Format(" 코드 : ({0},{1})\n", (object)this.br_BrandCode, (object)this.br_SiteID) + " 내용 : " + this.OleDB.LastErrorMessage + "\n--------------------------------------------------------------------------------------------------\n";
+        //    Log.Logger.DebugColor(this.message);
+        //    return false;
+        //}
+
+        #endregion Insert
+
+        #region InsertAsync
+
+        // TODO : 추후 DB 설계 필요시 메서드 "InsertAsync" 구현 예정 (2023.11.20 jbh)
+        //public override async Task<bool> InsertAsync()
+        //{
+        //    TAISParams tAISParams = this;
+        //    // ISSUE: reference to a compiler-generated method
+        //    tAISParams.\u003C\u003En__0();
+        //    if (await tbrand.OleDB.ExecuteAsync(tAISParams.InsertQuery()))
+        //        return true;
+        //    tAISParams.message = " " + tAISParams.TableCode.ToDescription() + " 실패\n--------------------------------------------------------------------------------------------------\n 테이블 : " + tbrand.TableCode.ToDescription() + "\n 메소드 : " + MethodBase.GetCurrentMethod().ReflectedType.Name + "==>" + MethodBase.GetCurrentMethod().Name + "\n" + string.Format(" LINE : {0} 행\n", (object)new StackFrame(0, true).GetFileLineNumber()) + "--------------------------------------------------------------------------------------------------\n" + string.Format(" 에러 : {0}\n", (object)tAISParams.OleDB.LastErrorID) + string.Format(" 코드 : ({0},{1})\n", (object)tbrand.br_BrandCode, (object)tAISParams.br_SiteID) + " 내용 : " + tAISParams.OleDB.LastErrorMessage + "\n--------------------------------------------------------------------------------------------------\n";
+        //    Log.Logger.DebugColor(tAISParams.message);
+        //    return false;
+        //}
+
+        #endregion InsertAsync
+
+        #region UpdateQuery
+
+        // TODO : 추후 DB 설계 필요시 메서드 "UpdateQuery" 구현 예정 (2023.11.20 jbh)
+        // public override string UpdateQuery() => string.Format(" UPDATE {0}{1} SET ", (object)DbQueryHelper.ToDBNameBridge(RbModelBase.REVIT_BASE), (object)this.TableCode) + " br_BrandName='" + this.br_BrandName + "',br_UseYn='" + this.br_UseYn + "',br_Memo='" + this.br_Memo + "'" + string.Format(",{0}={1}", (object)"br_AddProperty", (object)this.br_AddProperty) + string.Format(",{0}={1},{2}={3}", (object)"br_ModDate", (object)this.br_ModDate.GetDateToStrInNull(), (object)"br_ModUser", (object)this.br_ModUser) + string.Format(" WHERE {0}={1}", (object)"br_BrandCode", (object)this.br_BrandCode) + string.Format(" AND {0}={1}", (object)"br_SiteID", (object)this.br_SiteID);
+
+        #endregion UpdateQuery
+
+        #region Update
+
+        // TODO : 추후 DB 설계 필요시 메서드 "Update" 구현 예정 (2023.11.20 jbh)
+        //public override bool Update(RbModelBase p_old = null)
+        //{
+        //    this.UpdateChecked();
+        //    if (this.OleDB.Execute(this.UpdateQuery()))
+        //        return true;
+        //    this.message = " " + this.TableCode.ToDescription() + " 실패\n--------------------------------------------------------------------------------------------------\n 테이블 : " + this.TableCode.ToDescription() + "\n 메소드 : " + MethodBase.GetCurrentMethod().ReflectedType.Name + "==>" + MethodBase.GetCurrentMethod().Name + "\n" + string.Format(" LINE : {0} 행\n", (object)new StackFrame(0, true).GetFileLineNumber()) + "--------------------------------------------------------------------------------------------------\n" + string.Format(" 에러 : {0}\n", (object)this.OleDB.LastErrorID) + string.Format(" 코드 : ({0},{1})\n", (object)this.br_BrandCode, (object)this.br_SiteID) + " 내용 : " + this.OleDB.LastErrorMessage + "\n--------------------------------------------------------------------------------------------------\n";
+        //    Log.Logger.DebugColor(this.message);
+        //    return false;
+        //}
+
+        #endregion Update
+
+        #region UpdateAsync
+
+        // TODO : 추후 DB 설계 필요시 메서드 "UpdateAsync" 구현 예정 (2023.11.20 jbh)
+        //public override async Task<bool> UpdateAsync(RbModelBase p_old = null)
+        //{
+        //    TAISParams tAISParams = this;
+        //    // ISSUE: reference to a compiler-generated method
+        //    tAISParams.\u003C\u003En__1();
+        //    if (await tAISParams.OleDB.ExecuteAsync(tAISParams.UpdateQuery()))
+        //        return true;
+        //    tAISParams.message = " " + tAISParams.TableCode.ToDescription() + " 실패\n--------------------------------------------------------------------------------------------------\n 테이블 : " + tAISParams.TableCode.ToDescription() + "\n 메소드 : " + MethodBase.GetCurrentMethod().ReflectedType.Name + "==>" + MethodBase.GetCurrentMethod().Name + "\n" + string.Format(" LINE : {0} 행\n", (object)new StackFrame(0, true).GetFileLineNumber()) + "--------------------------------------------------------------------------------------------------\n" + string.Format(" 에러 : {0}\n", (object)tAISParams.OleDB.LastErrorID) + string.Format(" 코드 : ({0},{1})\n", (object)tAISParams.br_BrandCode, (object)tAISParams.br_SiteID) + " 내용 : " + tAISParams.OleDB.LastErrorMessage + "\n--------------------------------------------------------------------------------------------------\n";
+        //    Log.Logger.DebugColor(tAISParams.message);
+        //    return false;
+        //}
+
+        #endregion UpdateAsync
+
+        #region UpdateExInsertMySQLQuery
+
+        // TODO : 추후 DB 설계 필요시 메서드 "UpdateExInsertMySQLQuery" 구현 예정 (2023.11.20 jbh)
+        //public override string UpdateExInsertMySQLQuery()
+        //{
+        //    StringBuilder stringBuilder = new StringBuilder();
+        //    stringBuilder.Append(this.InsertQuery());
+
+        //    return stringBuilder.ToString();
+        //}
+
+        #endregion UpdateExInsertMySQLQuery
+
+        #region UpdateExInsert
+
+        // TODO : 추후 DB 설계 필요시 메서드 "UpdateExInsertMySQLQuery" 구현 예정 (2023.11.20 jbh) 
+        //public override bool UpdateExInsert()
+        //{
+        //    //this.UpdateChecked();
+        //    //if (this.OleDB.Execute(this.UpdateExInsertQuery()))
+        //    //    return true;
+        //    //this.message = " " + this.TableCode.ToDescription() + " 실패\n--------------------------------------------------------------------------------------------------\n 테이블 : " + this.TableCode.ToDescription() + "\n 메소드 : " + MethodBase.GetCurrentMethod().ReflectedType.Name + "==>" + MethodBase.GetCurrentMethod().Name + "\n" + string.Format(" LINE : {0} 행\n", (object)new StackFrame(0, true).GetFileLineNumber()) + "--------------------------------------------------------------------------------------------------\n" + string.Format(" 에러 : {0}\n", (object)this.OleDB.LastErrorID) + string.Format(" 코드 : ({0},{1})\n", (object)this.br_BrandCode, (object)this.br_SiteID) + " 내용 : " + this.OleDB.LastErrorMessage + "\n--------------------------------------------------------------------------------------------------\n";
+        //    //Log.Logger.DebugColor(this.message);
+        //    return false;
+        //}
+
+        #endregion UpdateExInsert
+
+        #region UpdateExInsertAsync
+
+        // TODO : 추후 DB 설계 필요시 메서드 "UpdateExInsertAsync" 구현 예정 (2023.11.20 jbh) 
+        //public override async Task<bool> UpdateExInsertAsync()
+        //{
+        //    return false;
+        //}
+
+        #endregion UpdateExInsertAsync
+
+        #region GetSelectWhereAnd
+
+        // TODO : 추후 DB 설계 필요시 메서드 "GetSelectWhereAnd" 구현 예정 (2023.11.20 jbh) 
+        //public override string GetSelectWhereAnd(object p_param, bool p_isKeyWord) 
+        //{
+        //    StringBuilder stringBuilder = new StringBuilder(" WHERE");
+        //    // . . . 
+        //    return !stringBuilder.ToString().Equals(" WHERE") ? stringBuilder.Replace("WHERE AND", "WHERE").ToString() : string.Empty;
+        //}
+
+        #endregion GetSelectWhereAnd
+
+        #region GetSelectQuery
+
+        // TODO : 추후 DB 설계 필요시 메서드 "GetSelectQuery" 구현 예정 (2023.11.20 jbh) 
+        //public override string GetSelectQuery(object p_param)
+        //{
+        //    StringBuilder stringBuilder = new StringBuilder();
+
+        //    try
+        //    {
+        //        // . . . 
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //    return stringBuilder.ToString();
+        //}
+
+        #endregion GetSelectQuery
+
+        #region Sample
+
+        #endregion Sample
     }
 }
