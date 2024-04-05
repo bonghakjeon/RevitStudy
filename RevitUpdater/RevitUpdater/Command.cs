@@ -85,6 +85,9 @@ namespace RevitUpdater
 
                 TaskDialog.Show("RevitBox Update...", "테스트 진행 중...");
 
+                if (RevitUIApp.ActiveUIDocument is null)   // Revit 문서를 열지 않은 경우 
+                    throw new Exception("MEP Updater 기능 실행하기 전에\r\nRevit 문서를 열어 주시기 바랍니다.");
+
                 // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
                 // MEPUpdaterForm.ShowDialog();
                 // MEPUpdaterForm.Show();
