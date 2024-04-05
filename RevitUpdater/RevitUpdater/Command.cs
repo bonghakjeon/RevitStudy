@@ -57,7 +57,7 @@ namespace RevitUpdater
         /// <summary>
         /// MEPUpdater 폼 객체 
         /// </summary>
-        private static MEPUpdater MEPUpdaterForm;
+        private static MEPUpdaterForm MEPUpdaterForm;
 
         #endregion 프로퍼티
 
@@ -88,7 +88,7 @@ namespace RevitUpdater
                 // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
                 // MEPUpdaterForm.ShowDialog();
                 // MEPUpdaterForm.Show();
-                FormManager.ShowForm(MEPUpdaterForm, RevitUIApp, typeof(MEPUpdater));
+                FormManager.ShowForm(MEPUpdaterForm, RevitUIApp, typeof(MEPUpdaterForm));
 
                 // TestMEPUpdater testMEPUpdater = new TestMEPUpdater();
                 // testMEPUpdater.Show();

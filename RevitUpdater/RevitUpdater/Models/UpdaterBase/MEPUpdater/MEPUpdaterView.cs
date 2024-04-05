@@ -7,9 +7,15 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
     /// <summary>
     /// 테스트용 MEP 업데이터 데이터 모델
     /// </summary>
-    public class UpdaterView
+    public class MEPUpdaterView
     {
+        #region 프로퍼티
 
+        #endregion 프로퍼티 
+
+        #region 생성자 
+
+        #endregion 생성자 
     }
 
     #region EnumExistElements

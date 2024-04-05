@@ -96,7 +96,7 @@ namespace RevitUpdater.Common.Managers
                 List<BuiltInParamView> paramDatas = new List<BuiltInParamView>();
 
                 // 3 단계 : foreach 반복문 사용해서 BuiltInParameter 매개변수들의 이름 및 값 구해서 리스트 객체 "paramDatas"에 데이터 추가 
-                foreach (BuiltInParameter builtInParam in builtInParamList)
+                foreach(BuiltInParameter builtInParam in builtInParamList)
                 {
                     // TODO : BuiltInParameter -> ForgeTypeId 구하기 (2024.02.07 jbh)
                     //        아래 URL 주소와 연동된 PDF 문서 5 Page -> "ParameterUtils.GetParameterTypeId(BuiltInParameter)" 참고
@@ -166,7 +166,7 @@ namespace RevitUpdater.Common.Managers
                 // 3 단계 : foreach 문에서 리스트 "targetParameters"에 속한 요소(매개변수) 방문 
                 targetParameters.ForEach(param => {
                     // 4 단계 : 매개변수의 값 자료형 찾아서 메서드 파라미터 rvParamValue를 형변환(casting) 및 해당 매개변수(rvParamName와 동일한 이름)에 값 입력하기
-                    switch (param.StorageType)
+                    switch(param.StorageType)
                     {
                         case StorageType.Integer:   // "dataType": "예/아니요" 인 경우 
                             int intParamValue = Int32.Parse(rvParamValue);

@@ -35,14 +35,14 @@ namespace RevitUpdater.Common.Managers
                 {
                     switch(modalessFormName)
                     {
-                        case UpdaterHelper.MEPUpdater:   // MEP 업데이터인 경우 
+                        case UpdaterHelper.MEPUpdaterFormName:   // MEP 업데이터인 경우 
 
                             AddInId addInId = rvUIApp.ActiveAddInId;                                 // RevitBox 업데이터 Command 아이디
 
                             MEPUpdaterRequestHandler mepHandler = new MEPUpdaterRequestHandler();    // MEP 업데이터 외부 요청 핸들러 객체 mepHandler 생성 
                             ExternalEvent exEvent = ExternalEvent.Create(mepHandler);                // MEP 업데이터 폼 객체가 사용할 외부 이벤트 생성 
 
-                            pModalessForm = new MEPUpdater(exEvent, mepHandler, rvUIApp, addInId); // MEP 업데이터 폼 객체 생성
+                            pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp, addInId); // MEP 업데이터 폼 객체 생성
 
                             break;
 

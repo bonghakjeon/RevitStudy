@@ -20,7 +20,7 @@ using DevExpress.XtraEditors;
 
 namespace RevitUpdater.UI.MEPUpdater
 {
-    public partial class MEPUpdater : XtraForm, IUpdater
+    public partial class MEPUpdaterForm : XtraForm, IUpdater
     {
         #region 프로퍼티
 
@@ -89,7 +89,7 @@ namespace RevitUpdater.UI.MEPUpdater
         /// <summary>
         /// 업데이터 아이디 생성시 필요한 GUID 문자열 프로퍼티
         /// </summary>
-        private const string GId = "d42d28af-d2cd-4f07-8873-e7cfb61903d8";
+        // private const string GId = "d42d28af-d2cd-4f07-8873-e7cfb61903d8";
 
         /// <summary>
         /// 업데이터 아이디
@@ -118,7 +118,7 @@ namespace RevitUpdater.UI.MEPUpdater
 
         #region 생성자
 
-        public MEPUpdater(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
+        public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
         {
             InitializeComponent();
 
@@ -185,7 +185,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 CategoryDataCreate(Collector, GeometryOpt);   // LookUpEdit 컨트롤(searchLookUpEditCategory)에 데이터 생성 및 출력 
 
                 // 8. GUID 생성 
-                Guid guId   = new Guid(GId);
+                Guid guId   = new Guid(UpdaterHelper.GId);
 
                 // 9. 업데이터 아이디(Updater_Id) 객체 생성 
                 Updater_Id  = new UpdaterId(rvAddInId, guId);
@@ -274,7 +274,7 @@ namespace RevitUpdater.UI.MEPUpdater
         //        // dtSearchLookUpEdit.Columns[UpdaterHelper.CategoryType].Caption = UpdaterHelper.CategoryTypeCaption;   // 필드명 "카테고리 타입" 변경
 
         //        // 4 단계 : DataTable 클래스 객체 dtSearchLookUpEdit의 DataRow에 리스트 객체 "categoryInfoList"에 저장된(Geometry 유형 객체에 포함된) 카테고리 정보 데이터 추가 
-        //        // foreach (CategoryInfoView categoryInfo in CategoryInfoList)
+        //        // foreach(CategoryInfoView categoryInfo in CategoryInfoList)
         //        //     dtSearchLookUpEdit.Rows.Add(categoryInfo.categoryName, categoryInfo.category);
 
         //        // return dtSearchLookUpEdit;
@@ -440,7 +440,7 @@ namespace RevitUpdater.UI.MEPUpdater
         /// </summary>
         public string GetUpdaterName()
         {
-            return UpdaterHelper.MEPUpdater;
+            return UpdaterHelper.MEPUpdaterFormName;
         }
 
         #endregion 기본 메소드
@@ -490,7 +490,7 @@ namespace RevitUpdater.UI.MEPUpdater
         /// </summary>
         private void EnableCommands(bool pStatus)
         {
-            foreach (System.Windows.Forms.Control ctrl in this.Controls)
+            foreach(System.Windows.Forms.Control ctrl in this.Controls)
             {
                 ctrl.Enabled = pStatus;
             }
@@ -587,7 +587,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
                 // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
                 // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
-                // using (Transaction transaction = new Transaction(RevitDoc))
+                // using(Transaction transaction = new Transaction(RevitDoc))
                 // {
                 //     // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                 //     transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
@@ -650,7 +650,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
                 // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
                 // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
-                // using (Transaction transaction = new Transaction(RevitDoc))
+                // using(Transaction transaction = new Transaction(RevitDoc))
                 // {
                 //     // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                 //     transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작

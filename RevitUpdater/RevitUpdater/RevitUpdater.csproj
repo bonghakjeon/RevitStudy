@@ -126,11 +126,11 @@
     </Compile>
     <Compile Include="Test\States.cs" />
     <Compile Include="Test\TestMEPUpdater.cs" />
-    <Compile Include="UI\MEPUpdater\MEPUpdater.cs">
+    <Compile Include="UI\MEPUpdater\MEPUpdaterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\MEPUpdater\MEPUpdater.Designer.cs">
-      <DependentUpon>MEPUpdater.cs</DependentUpon>
+    <Compile Include="UI\MEPUpdater\MEPUpdaterForm.Designer.cs">
+      <DependentUpon>MEPUpdaterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Test\TestMEPUpdater.cs">
       <SubType>Form</SubType>
@@ -138,6 +138,7 @@
     <Compile Include="UI\Test\TestMEPUpdater.Designer.cs">
       <DependentUpon>TestMEPUpdater.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\MEPUpdater\MEPUpdater.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -149,8 +150,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\MEPUpdater\MEPUpdater.resx">
-      <DependentUpon>MEPUpdater.cs</DependentUpon>
+    <EmbeddedResource Include="UI\MEPUpdater\MEPUpdaterForm.resx">
+      <DependentUpon>MEPUpdaterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Test\TestMEPUpdater.resx">
       <DependentUpon>TestMEPUpdater.cs</DependentUpon>

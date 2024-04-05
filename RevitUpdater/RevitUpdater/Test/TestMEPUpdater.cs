@@ -12,13 +12,14 @@ using RevitUpdater.Common.LogBase;
 using RevitUpdater.Common.Managers;
 using RevitUpdater.Common.UpdaterBase;
 using RevitUpdater.Models.UpdaterBase.MEPUpdater;
+using Autodesk.Revit.ApplicationServices;
 
 namespace RevitUpdater.Test
 {
     // TODO : Revit AddIn 개발 소스를 비쥬얼스튜디오 2022 .net Core 버전(8.0)을 사용하려면 Revit 2025 버전 부터 사용이 가능하므로 현 시점에서 해당 소스는 .net FrameWork 4.8에서만 구동시킬 수 있다. (2024.03.11 jbh)
 
     /// <summary>
-    /// RevitBox 업데이터 
+    /// 테스트 MEP 업데이터 
     /// </summary>
     public class TestMEPUpdater : IUpdater
     {
@@ -87,12 +88,12 @@ namespace RevitUpdater.Test
                 WallCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_Walls);
 
                 // 3. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
-                PipeCurvesCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
+                PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
 
                 // 4. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
                 PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
 
-                RegisterUpdater(rvDoc, pUpdaterId);                         // 업데이터 등록 
+                RegisterUpdater(rvDoc, pUpdaterId);                        // 업데이터 등록 
 
                 RegisterTriggers(pUpdaterId, WallCategoryFilter);          // 객체 "벽" Triggers 등록 
                 RegisterTriggers(pUpdaterId, PipeCurvesCategoryFilter);    // 객체 "배관" Triggers 등록
@@ -135,17 +136,19 @@ namespace RevitUpdater.Test
         public void Execute(UpdaterData pData)
         {
             string builtInParamName = string.Empty;   // BuiltInParameter 매개변수 이름 
-            string currentDateTime = string.Empty;   // BuiltInParameter 매개변수에 입력할 값(“현재 날짜 시간 조합 문자” )
+            string workerName       = string.Empty;   // 작업자 이름 (로그인 계정 - 영문 또는 한글)
+            string currentDateTime  = string.Empty;   // BuiltInParameter 매개변수에 입력할 값(“현재 날짜 시간 조합 문자” )
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
-                Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater Execute 시작");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater 콜백 함수 Execute 시작");
 
                 // 매개변수 값 입력 완료 여부 확인 
                 if(true == IsCompleted)
                 {
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater 콜백 함수 Execute 종료");
                     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
                     return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
                 }
@@ -167,8 +170,10 @@ namespace RevitUpdater.Test
                 currentDateTime  = DateTime.Now.ToString();   // "해설" 매개변수에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
 
                 if(addElementIds.Count >= (int)EnumExistElements.EXIST
-                    && addElementNames.Count >= (int)EnumExistElements.EXIST)   // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
+                   && addElementNames.Count >= (int)EnumExistElements.EXIST)   // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
                 {
+                    // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자" ) 생성 로직 추가 예정 (2024.04.02 jbh)
+
                     // ParamsManager 클래스 static 메서드 "SetParametersValue" 호출
                     // 신규 추가 객체 리스트(addElements)에 속하는 BuiltInParameter“해설”매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
                     // static 메서드 "SetParametersValue" 기능
@@ -185,7 +190,7 @@ namespace RevitUpdater.Test
                 }
 
                 if(modElementIds.Count >= (int)EnumExistElements.EXIST
-                    && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
+                   && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
                 {
 
                     // 수정된 객체 리스트(modElements)에 속하는 BuiltInParameter“해설”매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
@@ -196,8 +201,6 @@ namespace RevitUpdater.Test
                     // 수정 업데이트 실패한 경우 
                     else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
-
-                Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater Execute 완료");
             }
             catch(Exception ex)
             {

@@ -103,7 +103,7 @@ namespace RevitUpdater.Common.Managers
                 List<CategoryInfoView> categoryInfoList = new List<CategoryInfoView>();
 
 
-                foreach (Element element in geometryList)
+                foreach(Element element in geometryList)
                 {
                     string categoryName       = element.Category.Name;
                     BuiltInCategory category  = element.Category.BuiltInCategory;
@@ -125,7 +125,7 @@ namespace RevitUpdater.Common.Managers
                     // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.03.25 jbh)
                     // ParameterSet paramSet   = element.Parameters;
 
-                    // foreach (Parameter param in paramSet)
+                    // foreach(Parameter param in paramSet)
                     // {
                     //     // TODO : 메서드 "GetGroupTypeId", static 메서드 "LabelUtils.GetLabelForGroup" 사용해서 특정 객체에 속한 매개변수 그룹 이름 구하기 (2024.03.25 jbh)
                     //     ForgeTypeId paramGroup = param.Definition.GetGroupTypeId();

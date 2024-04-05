@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 
 namespace RevitUpdater.Common.RequestBase
 {
@@ -62,10 +57,13 @@ namespace RevitUpdater.Common.RequestBase
         #region Take
 
         /// <summary>
-        /// 최신 요청(Request)한  열거형 구조체 EnumMEPUpdaterRequestId 얻기
+        /// 최신 요청(Request)한 열거형 구조체 EnumMEPUpdaterRequestId 얻기
         /// </summary>
         public EnumMEPUpdaterRequestId Take()
         {
+            // TODO : 클래스 Interlocked의 메서드 Exchange 사용해서 최신 요청(Request)한 열거형 구조체 EnumMEPUpdaterRequestId 얻기 구현 (2024.03.29 jbh)
+            // 참고 URL - https://learn.microsoft.com/en-us/dotnet/api/system.threading.interlocked?view=net-8.0
+            // 참고 2 URL - https://velog.io/@yarogono/C-Interlocked%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90
             return (EnumMEPUpdaterRequestId)Interlocked.Exchange(ref RequestIdValue, (int)EnumMEPUpdaterRequestId.NONE);
         }
 
@@ -77,7 +75,10 @@ namespace RevitUpdater.Common.RequestBase
         /// 사용자가 명령 버튼을 누를 때 대화 상자가 해당 메서드(Make) 호출
         /// </summary>
         public void Make(EnumMEPUpdaterRequestId pRequest)
-        { 
+        {
+            // TODO : 클래스 Interlocked의 메서드 Exchange 사용해서 사용자가 명령 버튼을 누를 때 대화 상자가 해당 메서드(Make) 호출 구현 (2024.03.29 jbh)
+            // 참고 URL - https://learn.microsoft.com/en-us/dotnet/api/system.threading.interlocked?view=net-8.0
+            // 참고 2 URL - https://velog.io/@yarogono/C-Interlocked%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90
             Interlocked.Exchange(ref RequestIdValue, (int)pRequest);
         }
 

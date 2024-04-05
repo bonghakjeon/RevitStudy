@@ -1,7 +1,7 @@
 ﻿
 namespace RevitUpdater.UI.MEPUpdater
 {
-    partial class MEPUpdater
+    partial class MEPUpdaterForm
     {
         /// <summary>
         /// Required designer variable.

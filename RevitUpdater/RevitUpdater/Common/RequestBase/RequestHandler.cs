@@ -1,10 +1,6 @@
 ﻿using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -110,7 +106,7 @@ namespace RevitUpdater.Common.RequestBase
         /// </summary>
         public string GetName()
         {
-            return UpdaterHelper.MEPUpdater;
+            return UpdaterHelper.MEPUpdaterFormName;
         }
 
         #endregion GetName
@@ -139,7 +135,7 @@ namespace RevitUpdater.Common.RequestBase
                 Updater_Id = new UpdaterId(addInId, guId);
 
                 // 3. 인터페이스 "IUpdater" 상속 받는 폼 객체 "MEPUpdater" 찾기 
-                MEPUpdater mepUpdaterForm = (MEPUpdater)FormManager.GetForm(typeof(IUpdater), typeof(MEPUpdater));
+                MEPUpdaterForm mepUpdaterForm = (MEPUpdaterForm)FormManager.GetForm(typeof(IUpdater), typeof(MEPUpdaterForm));
 
                 // Revit MEP 업데이터 + Triggers가 등록되어 있는 경우 true 리턴 / Revit MEP 업데이터 + Triggers가 이미 해제되어 있는 경우 false 리턴 
                 isUpdaterRegistered = UpdaterRegistry.IsUpdaterRegistered(Updater_Id, RevitDoc);   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
@@ -231,7 +227,7 @@ namespace RevitUpdater.Common.RequestBase
         /// <summary>
         /// Revit MEP 업데이터 + Triggers 등록 
         /// </summary>
-        private void RegisterMEP(MEPUpdater pMEPUpdaterForm, Document rvDoc, UpdaterId pUpdaterId)
+        private void RegisterMEP(MEPUpdaterForm pMEPUpdaterForm, Document rvDoc, UpdaterId pUpdaterId)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
         

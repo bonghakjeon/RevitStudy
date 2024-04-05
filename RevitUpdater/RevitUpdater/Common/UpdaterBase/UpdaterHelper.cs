@@ -84,7 +84,7 @@ namespace RevitUpdater.Common.UpdaterBase
         /// <summary>
         /// MEPUpdater Modaless 폼 객체 이름 
         /// </summary>
-        public const string MEPUpdater = "MEPUpdater";
+        public const string MEPUpdaterFormName = "MEPUpdaterForm";
 
         /// <summary>
         /// 업데이터 아이디 생성시 필요한 GUID 문자열 프로퍼티
