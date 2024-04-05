@@ -114,6 +114,8 @@
     <Compile Include="Common\Managers\UpdaterManager.cs" />
     <Compile Include="Common\RequestBase\Request.cs" />
     <Compile Include="Common\RequestBase\RequestHandler.cs" />
+    <Compile Include="Common\RibbonBase\Ribbon.cs" />
+    <Compile Include="Common\RibbonBase\RibbonHelper.cs" />
     <Compile Include="Controls\Text\WaterMarkTextControl.cs">
       <SubType>Component</SubType>
     </Compile>

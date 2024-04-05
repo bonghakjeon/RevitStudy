@@ -67,7 +67,7 @@ namespace HTSBIM2019.Common.LogBase
                                                         // Verbose(0) => Debug => Information => Warning => Error => Fatal(5)
                               .WriteTo.Console()        // 콘솔 파일에도 로그 출력
                               .WriteTo.Debug()
-                              // 로그 파일 이름을 날짜 형식(예)"AABIM_20231016.log" 으로 로그 파일 생성
+                              // 로그 파일 이름을 날짜 형식(예)"HTSBIM_20231016.log" 으로 로그 파일 생성
                               .WriteTo.File(
                                   // $"Logs\\{Assembly.GetEntryAssembly().GetName().Name}\\{Assembly.GetEntryAssembly().GetName().Name}_{DateTime.Now.ToString("yyyyMMdd")}.log",
                                   path: filePath,
@@ -85,7 +85,7 @@ namespace HTSBIM2019.Common.LogBase
                                   encoding: Encoding.UTF8
                               )
                               .CreateLogger();
-                Log.Logger = log;             // Serilog를 AABIM2024에서 사용할 수 있도록 설정 (전역 로그)
+                Log.Logger = log;             // Serilog를 HTSBIM2019에서 사용할 수 있도록 설정 (전역 로그)
 
                 // 기간 지난 로그 파일 삭제 (new LoggerConfiguration() -> .WriteTo.File(retainedFileCountLimit)에 할당된 값(기간) 기준)
                 DeleteOldLogFiles(pLogDirPath, retainedFileCountLimit);

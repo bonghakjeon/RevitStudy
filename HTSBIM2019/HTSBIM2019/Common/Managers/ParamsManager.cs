@@ -364,7 +364,7 @@ namespace HTSBIM2019.Common.Managers
                 if (targetParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
                     // TODO : 테스트 하면서 추후 값을 입력하려는 매개변수가 존재하지 않는 경우 메시지 박스 (TaskDialog.Show)로 출력할지 아니면 오류 처리 (throw new Exception)로 진행할 지 결정 후 로직 다시 수정하기 (2024.03.14 jbh)
-                    // TaskDialog.Show(AABIMHelper.NoticeTitle, $"매개변수 {rvParamName}가 존재하지 않습니다.\r\n다시 선택하시기 바랍니다.");
+                    // TaskDialog.Show(HTSBIMHelper.NoticeTitle, $"매개변수 {rvParamName}가 존재하지 않습니다.\r\n다시 선택하시기 바랍니다.");
                     // return;
                     throw new Exception($"Revit 문서의 모든 객체(Element)에\r\n매개변수 - {rvParamName}\r\n이/가 존재하지 않습니다.\r\n다시 확인 바랍니다.");
                 }
@@ -455,7 +455,7 @@ namespace HTSBIM2019.Common.Managers
         #region ClashCheck_InRealTime
 
         // TODO : 실시간 간섭 체크 메서드 "ClashCheck_InRealTime" 필요시 구현 예정 (2024.03.13 jbh)
-        // 참고 소스 파일 - "RevitBox2023" -> 폴더 "MEPBox" -> CreashMEPCopy.cs
+        // 참고 소스 파일 - "HTS Revit2023" -> 폴더 "MEPBox" -> CreashMEPCopy.cs
         // 참고 메서드 - CreashMEPCopy.cs -> 실시간 간섭 체크 메서드 "CreashChkNoneCopy" 
         /// <summary>
         /// 실시간 간섭 체크

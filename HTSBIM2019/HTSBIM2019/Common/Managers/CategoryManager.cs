@@ -19,11 +19,76 @@ namespace HTSBIM2019.Common.Managers
         #region GetCategoryInfoList
 
         /// <summary>
+        /// BuiltInCategory 정보 리스트 가져오기 
+        /// </summary>
+        // public static List<CategoryInfoView> GetCategoryInfoList(FilteredElementCollector rvCollector, Document rvDoc)
+        public static List<CategoryInfoView> GetCategoryInfoList(Document rvDoc)
+        {
+            string categoryName = string.Empty;                  // BuiltInCategory 이름
+
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // 1 단계 : Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
+                // Categories categories = rvDoc.Settings.Categories;
+                List<Category> categories = rvDoc.Settings.Categories.OfType<Category>().ToList();
+
+                // 2 단계 : BuiltInCategory 매개변수 데이터 가져오기
+                Array builtInCategories = Enum.GetValues(typeof(BuiltInCategory));
+                // Array builtInCategoryNames = Enum.GetNames(typeof(BuiltInCategory));
+
+                List<CategoryInfoView> categoryInfoList = new List<CategoryInfoView>();
+
+                foreach(BuiltInCategory builtInCategory in builtInCategories) 
+                {
+                    Category category = categories.Where(category => category.Id.IntegerValue == (int)builtInCategory)
+                                                  .FirstOrDefault();
+
+                    if(category is null) continue;   // 카테고리가 존재하지 않는 경우 continue
+
+                    categoryName = string.Empty;
+                    categoryName = category.Name;
+
+                    CategoryInfoView categoryInfo = new CategoryInfoView(categoryName, builtInCategory);
+
+                    // TODO : 카테고리 정보 리스트 객체 "categoryInfoList"에 Linq 확장 메서드 "Where" , "ToList" 사용해서
+                    //        동일한 카테고리(BuiltInCategory category) 갯수(Count)가 존재하는지 확인
+                    int existCount = categoryInfoList.Where(catInfo => (int)catInfo.category == (int)categoryInfo.category)
+                                                     .ToList()
+                                                     .Count;
+
+                    // 동일한 카테고리(BuiltInCategory category)가 존재하지 않는 경우
+                    // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
+                    if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
+                }
+
+                // 카테고리 정보 리스트 객체 "categoryInfoList" 카테고리 이름 순으로 정렬(OrderBy)
+                List<CategoryInfoView> orderedCategoryInfoList = categoryInfoList// .Where(categoryInfo => false == string.IsNullOrWhiteSpace(categoryInfo.categoryName))   // BuiltInCategory 이름이 존재하는 경우
+                                                                                 // .Select(categoryInfo => categoryInfo)
+                                                                                 .OrderBy(categoryInfo => categoryInfo.categoryName)
+                                                                                 .ToList();
+
+                return orderedCategoryInfoList;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
+            }
+        }
+
+        #endregion GetCategoryInfoList
+
+        #region GetCategoryInfoList
+
+        /// <summary>
         /// Geometry 유형 객체(GeometryElement)에 속한 카테고리 정보 리스트 가져오기 
         /// </summary>
         //public static List<CategoryInfoView> GetCategoryInfoList(FilteredElementCollector rvCollector, List<Element> rvElementList, Options rvGeometryOpt)
         public static List<CategoryInfoView> GetCategoryInfoList(FilteredElementCollector rvCollector, Options rvGeometryOpt)
         {
+            string categoryName = string.Empty;                  // 카테고리 이름
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
@@ -48,7 +113,8 @@ namespace HTSBIM2019.Common.Managers
 
                 foreach (Element element in geometryList)
                 {
-                    string categoryName = element.Category.Name;
+                    categoryName = string.Empty;
+                    categoryName = element.Category.Name;
 
                     // TODO : BuiltInCategory 열거형 구조체 객체 category 구하기 (2024.04.01 jbh)
                     // 참고 URL - https://chat.openai.com/c/32ce8d83-d39a-48d7-af9a-44c408b64fe0
@@ -114,7 +180,7 @@ namespace HTSBIM2019.Common.Managers
         /// </summary>
         public static void CreateCategorySet(Document rvDoc, List<Updater_Parameters> pUpdaterParamList)
         {
-            string paramName = string.Empty;                    // MEP Updater 매개변수 이름
+            string paramName = string.Empty;                     // MEP Updater 매개변수 이름
             ParameterType paramType = ParameterType.Invalid;     // 생성할 매개변수 유형
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록하기
 

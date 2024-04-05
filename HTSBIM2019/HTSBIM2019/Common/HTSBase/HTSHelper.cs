@@ -25,6 +25,7 @@ namespace HTSBIM2019.Common.HTSBase
         // public static string AssemblyName = $"{Assembly.GetExecutingAssembly().GetName().Name}";
         public static string AssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 
+        // TODO : 추후 NSIS 셋업 프로그램 사용해서 해당 HTSBIM2019 인스톨 파일 만들어서 임의의 PC/노트북에 설치 후 dll 파일을 제대로 잘 찾는지 테스트 진행 예정 (2024.04.05 jbh)
         /// <summary>
         /// 어셈블리(.dll 파일) 경로
         /// </summary>
@@ -163,29 +164,34 @@ namespace HTSBIM2019.Common.HTSBase
         public const string ElementType = "Element";
 
         /// <summary>
-        /// SearchLookUpEdit - 컬럼 (카테고리 이름)
+        /// ComboBox 컨트롤(comboBoxCategory)에 바인딩할 대상 카테고리 - 배관
         /// </summary>
-        public const string CategoryName = "CategoryName";
+        public const string 배관 = "배관";
 
         /// <summary>
-        /// SearchLookUpEdit - 컬럼 Caption (카테고리 이름)
+        /// ComboBox 컨트롤(comboBoxCategory)에 바인딩할 대상 카테고리 - 배관 부속류
         /// </summary>
-        public const string CategoryNameCaption = "카테고리 이름";
+        public const string 배관부속류 = "배관 부속류";
 
         /// <summary>
-        /// SearchLookUpEdit - 컬럼 (카테고리 타입)
+        /// ComboBox 컨트롤(comboBoxCategory)에 바인딩할 대상 카테고리 - 배관 단열재
         /// </summary>
-        public const string CategoryType = "CategoryType";
+        public const string 배관단열재 = "배관 단열재";
 
         /// <summary>
-        /// SearchLookUpEdit - 컬럼 Caption (카테고리 타입)
+        /// ComboBox 컨트롤(comboBoxCategory)에 바인딩할 대상 카테고리 - 배관 밸브류
         /// </summary>
-        public const string CategoryTypeCaption = "카테고리 타입";
+        public const string 배관밸브류 = "배관 밸브류";
 
         /// <summary>
-        /// SearchLookUpEdit - 매개변수 선택이 안 된 경우 표시될 텍스트
+        /// ComboBox 컨트롤(comboBoxCategory) - ValueMember
         /// </summary>
-        public const string NullText = "카테고리를 선택하세요.";
+        public const string Category = "category";
+
+        /// <summary>
+        /// ComboBox 컨트롤(comboBoxCategory) - DisplayMember
+        /// </summary>
+        public const string CategoryName = "categoryName";
 
         #endregion MEPUpdaterForm
 

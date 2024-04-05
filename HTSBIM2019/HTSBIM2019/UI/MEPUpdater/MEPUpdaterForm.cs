@@ -25,10 +25,11 @@ namespace HTSBIM2019.UI.MEPUpdater
     {
         #region 프로퍼티
 
+        // TODO : Revit 응용프로그램 객체 프로퍼티 "RevitUIApp" 필요시 사용 예정 (2024.04.05 jbh)
         /// <summary>
         /// Revit 응용프로그램 객체
         /// </summary>
-        private UIApplication RevitUIApp { get; set; }
+        // private UIApplication RevitUIApp { get; set; }
 
 
         // TODO : 폼 화면(CopyParams.cs) 출력시 기존처럼 .ShowDialog(Modal - 부모 창 제어 X)하는 방식이 아니라
@@ -58,7 +59,7 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// <summary>
         /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 리스트
         /// </summary>
-        private List<CategoryInfoView> CategoryInfoList { get; set; } = new List<CategoryInfoView>();
+        private List<CategoryInfoView> GeometryCategoryInfoList { get; set; } = new List<CategoryInfoView>();
 
         /// <summary>
         /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 객체
@@ -75,20 +76,17 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// </summary>
         private ExternalEvent ExEvent { get; set; }
 
-        /// <summary>
-        /// 매개변수 값 입력 완료 여부 
-        /// </summary>
-        private bool IsCompleted { get; set; }
-
         #endregion 프로퍼티
 
         #region 생성자
 
-        public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
+        //public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
+        public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
         {
             InitializeComponent();
 
-            InitSetting(rvExEvent, pHandler, rvUIApp, rvAddInId);   // 업데이터 초기 셋팅
+            // InitSetting(rvExEvent, pHandler, rvUIApp, rvAddInId);   // 업데이터 초기 셋팅
+            InitSetting(rvExEvent, pHandler, rvUIApp);   // 업데이터 초기 셋팅
         }
 
         #endregion 생성자
@@ -98,7 +96,8 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// <summary>
         /// 업데이터 초기 셋팅
         /// </summary>
-        private void InitSetting(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
+        //private void InitSetting(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
+        private void InitSetting(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -126,11 +125,14 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // 2. 외부 요청 핸들러 프로퍼티 할당 
                 RequestHandler = pHandler;
 
+                // TODO : 아래 주석친 프로퍼티 "RevitUIApp" 필요시 사용 예정 (2024.04.05 jbh)
                 // 3. Revit 응용프로그램 객체 프로퍼티에 전달 받은 Revit 객체(rvUIApp) 할당
-                RevitUIApp = rvUIApp;
+                // RevitUIApp = rvUIApp;
 
                 // 4. Revit 문서 프로퍼티 "RevitDoc" 할당 
-                RevitDoc = rvUIApp.ActiveUIDocument.Document;    // 활성화된 Revit 문서 
+                RevitDoc = rvUIApp.ActiveUIDocument.Document;    // 활성화된 Revit 문서
+
+                
 
                 // 5. Revit 문서 안에 포함된 객체(Element)를 검색 및 필터링
                 Collector = new FilteredElementCollector(RevitDoc).WhereElementIsNotElementType();
@@ -148,16 +150,14 @@ namespace HTSBIM2019.UI.MEPUpdater
                 GeometryOpt.ComputeReferences = true;           // 각 Geometry 객체에 대해 GeometryObject.Reference 속성을 활성화하도록 Revit을 설정
 
 
-                CategoryDataCreate(Collector, GeometryOpt);   // LookUpEdit 컨트롤(searchLookUpEditCategory)에 데이터 생성 및 출력 
+                // CategoryDataCreate(Collector, GeometryOpt);     // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                CategoryDataCreate(RevitDoc);     // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
 
                 // 8. GUID 생성 
-                Guid guId = new Guid(HTSHelper.GId);
+                // Guid guId = new Guid(HTSHelper.GId);
 
                 // 9. 업데이터 아이디(Updater_Id) 객체 생성 
-                AppSetting.Default.UpdaterBase.MEPUpdater.Updater_Id = new UpdaterId(rvAddInId, guId);
-
-                // 10. 매개변수 값 입력 완료 여부 false 초기화
-                IsCompleted = false;
+                // AppSetting.Default.UpdaterBase.MEPUpdater.Updater_Id = new UpdaterId(rvAddInId, guId);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
             }
@@ -177,22 +177,30 @@ namespace HTSBIM2019.UI.MEPUpdater
         #region CategoryDataCreate
 
         /// <summary>
-        /// ComboBox와 비슷한 SearchLookUpEdit 컨트롤(searchLookUpEditCategory)에 데이터 생성 및 출력 
+        /// ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
         /// </summary>
-        //private void CategoryDataCreate(FilteredElementCollector rvCollector, List<Element> rvElementList, Options rvGeometryOpt)
-        private void CategoryDataCreate(FilteredElementCollector rvCollector, Options rvGeometryOpt)
+        // private void CategoryDataCreate(FilteredElementCollector rvCollector, Options rvGeometryOpt)
+        private void CategoryDataCreate(Document rvDoc)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
-                // TODO : ComboBox(comboBoxCategory)에 리스트 데이터 바인딩 구현 (2024.03.26 jbh)
-                CategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화
-                CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
+                List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(rvDoc);
 
-                this.comboBoxCategory.DataSource    = CategoryInfoList;
-                this.comboBoxCategory.ValueMember   = "category";
-                this.comboBoxCategory.DisplayMember = "categoryName";
+                // TODO : ComboBox(comboBoxCategory)에 바인딩할 리스트에 데이터 할당 구현 (2024.03.26 jbh)
+                GeometryCategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화
+                // CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
+                GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.categoryName.Equals(HTSHelper.배관)
+                                                                               || categoryInfo.categoryName.Equals(HTSHelper.배관부속류)
+                                                                               || categoryInfo.categoryName.Equals(HTSHelper.배관단열재)
+                                                                               || categoryInfo.categoryName.Equals(HTSHelper.배관밸브류))
+                                                           .ToList();
+
+
+                this.comboBoxCategory.DataSource    = GeometryCategoryInfoList;
+                this.comboBoxCategory.ValueMember   = HTSHelper.Category;
+                this.comboBoxCategory.DisplayMember = HTSHelper.CategoryName;
 
                 // TODO : ComboBox(comboBoxCategory)안에 있는 텍스트를 수정 못 하도록 "ComboBoxStyle.DropDownList"로 설정 (2024.03.26 jbh)
                 // 참고 URL - https://milkoon1.tistory.com/73
@@ -209,44 +217,6 @@ namespace HTSBIM2019.UI.MEPUpdater
         }
 
         #endregion CategoryDataCreate
-
-        #region GetCategoryData
-
-        /// <summary>
-        /// SearchLookUpEdit(콤보박스 + 데이터 검색 기능)에 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 데이터(DataTable) 가져오기 
-        /// </summary>
-        //private DataTable GetCategoryData(FilteredElementCollector rvCollector, Options rvGeometryOpt)
-        //{
-        //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
-
-        //    try
-        //    {
-        //        // 1 단계 : 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 리스트로 가져오기
-        //        //CategoryInfoList.Clear();
-        //        //CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
-
-        //        // 2 단계 : DataTable 클래스 프로퍼티 "dtSearchLookUpEdit"에 컬럼 구현 
-        //        //dtSearchLookUpEdit.Columns.Add(UpdaterHelper.CategoryName);
-        //        //dtSearchLookUpEdit.Columns.Add(UpdaterHelper.CategoryType);
-
-        //        // 3 단계 : DataTable 클래스 프로퍼티 "dtSearchLookUpEdit"에 Caption 구현 
-        //        // dtSearchLookUpEdit.Columns[UpdaterHelper.CategoryName].Caption = UpdaterHelper.CategoryNameCaption;   // 필드명 "카테고리 이름" 변경
-        //        // dtSearchLookUpEdit.Columns[UpdaterHelper.CategoryType].Caption = UpdaterHelper.CategoryTypeCaption;   // 필드명 "카테고리 타입" 변경
-
-        //        // 4 단계 : DataTable 클래스 객체 dtSearchLookUpEdit의 DataRow에 리스트 객체 "categoryInfoList"에 저장된(Geometry 유형 객체에 포함된) 카테고리 정보 데이터 추가 
-        //        // foreach(CategoryInfoView categoryInfo in CategoryInfoList)
-        //        //     dtSearchLookUpEdit.Rows.Add(categoryInfo.categoryName, categoryInfo.category);
-
-        //        // return dtSearchLookUpEdit;
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
-        //        throw;   // 오류 발생시 상위 호출자 예외처리 전달
-        //    }
-        //}
-
-        #endregion GetCategoryData
 
         #region MEPUpdater_FormClosed
 
@@ -277,132 +247,6 @@ namespace HTSBIM2019.UI.MEPUpdater
         }
 
         #endregion MEPUpdater_FormClosed
-
-        #region 기본 메소드
-
-        // TODO : 콜백 함수 Execute 구현 (2024.03.11 jbh)
-        // 콜백(CallBack) 함수란? 시스템이 사용자가 요청한 처리를 하다가 특정 이벤트를 발생시켜 해당 이벤트를 처리해달라고 역으로 전달해 오는 함수
-        // 참고 URL   - https://nephrolepis.tistory.com/12
-        // 참고 2 URL - https://todaycode.tistory.com/24
-
-        /// <summary>
-        /// 콜백 함수 Execute
-        /// </summary>
-        //public void Execute(UpdaterData rvData)
-        //{
-        //    string targetParamName = string.Empty;   // 값을 할당할 매개변수 이름 
-        //    string currentDateTime = string.Empty;   // 매개변수에 입력할 값(“현재 날짜 시간 조합 문자” )
-
-        //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
-
-        //    try
-        //    {
-        //        Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 시작");
-
-        //        // 매개변수 값 입력 완료 여부 확인 
-        //        if (true == IsCompleted)
-        //        {
-        //            IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
-        //            return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
-        //        }
-
-
-        //        RevitDoc = rvData.GetDocument();   // UpdaterData 클래스 객체 rvData와 연관된 Document 개체 반환
-
-        //        // Revit 문서 안에 포함된 객체(Element)를 다시 검색 및 필터링
-        //        Collector = new FilteredElementCollector(RevitDoc).WhereElementIsNotElementType();
-
-        //        CategoryDataCreate(Collector, GeometryOpt);   // LookUpEdit 컨트롤(searchLookUpEditCategory)에 데이터 다시 생성 및 출력 
-
-        //        var addElementIds = rvData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
-        //        List<Element> addElements = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
-        //        List<string> addElementNames = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
-
-
-        //        var modElementIds = rvData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
-        //        List<Element> modElements = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
-        //        List<string> modElementNames = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
-
-
-        //        currentDateTime = DateTime.Now.ToString();   // "targetParamName"에 저장된 문자열과 동일한 이름의 매개변수에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
-
-        //        if (addElementIds.Count >= (int)EnumExistElements.EXIST
-        //            && addElementNames.Count >= (int)EnumExistElements.EXIST)   // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
-        //        {
-        //            // ParamsManager 클래스 static 메서드 "SetParametersValue" 호출
-        //            // 신규 추가 객체 리스트(addElements)에 속하는"targetParamName"과 동일한 이름의 매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
-        //            // static 메서드 "SetParametersValue" 기능
-        //            // 1."targetParamName"과 동일한 이름의 매개변수 추출하기 
-        //            // 2."targetParamName"과 동일한 이름의 매개변수에 값“현재 날짜 시간 조합 문자”입력하기 
-        //            // 3."targetParamName"과 동일한 이름의 매개변수에 입력 완료된 값“현재 날짜 시간 조합 문자”메시지 출력하기 
-        //            IsCompleted = ParamsManager.SetParametersValue(addElements, targetParamName, currentDateTime);
-
-        //            // 신규 추가 완료된 객체 이름 리스트(addElementNames) 메세지 출력 
-        //            if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
-
-        //            // 신규 업데이트 실패한 경우 
-        //            else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
-        //        }
-
-        //        if (modElementIds.Count >= (int)EnumExistElements.EXIST
-        //            && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
-        //        {
-        //            // 수정된 객체 리스트(modElements)에 속하는 "targetParamName"과 동일한 이름의 매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
-        //            IsCompleted = ParamsManager.SetParametersValue(modElements, targetParamName, currentDateTime);
-
-        //            // 수정 업데이트 완료된 객체 이름 리스트(modElementNames) 메세지 출력 
-        //            if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
-        //            // 수정 업데이트 실패한 경우 
-        //            else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
-        //        }
-
-        //        Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 종료");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
-        //        TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
-        //    }
-        //    finally
-        //    {
-        //        // TODO : finally문 안에 코드 필요시 구현 예정 (2024.03.14 jbh)
-        //    }
-        //}
-
-        /// <summary>
-        /// 부가정보 가져오기
-        /// </summary>
-        //public string GetAdditionalInformation()
-        //{
-        //    return "NA";
-        //}
-
-        /// <summary>
-        /// 업데이터 우선순위 변경하기
-        /// </summary>
-        //public ChangePriority GetChangePriority()
-        //{
-        //    return ChangePriority.MEPFixtures;
-        //}
-
-        /// <summary>
-        /// 업데이터 아이디 가져오기
-        /// </summary>
-        //public UpdaterId GetUpdaterId()
-        //{
-        //    //return Updater_Id;
-        //    return AppSetting.Default.UpdaterBase.MEPUpdater.Updater_Id;
-        //}
-
-        /// <summary>
-        /// 업데이터 이름 가져오기 
-        /// </summary>
-        //public string GetUpdaterName()
-        //{
-        //    return HTSHelper.MEPUpdaterFormName;
-        //}
-
-        #endregion 기본 메소드
 
         #region MakeRequest
 
@@ -477,9 +321,11 @@ namespace HTSBIM2019.UI.MEPUpdater
             {
                 TaskDialog.Show(HTSHelper.NoticeTitle, "테스트 진행 중...");
 
-                string dllParentDirPath = DirectoryManager.GetDllParentDirectoryPath(HTSHelper.AssemblyFilePath);
+                // string dllParentDirPath = DirectoryManager.GetDllParentDirectoryPath(HTSHelper.AssemblyFilePath);
 
-                var paramList = ParamsManager.GetMEPUpdaterParameterList(dllParentDirPath);
+                // var paramList = ParamsManager.GetMEPUpdaterParameterList(dllParentDirPath);
+
+                var testCategoryList = CategoryManager.GetCategoryInfoList(RevitDoc); 
 
                 // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
                 var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
@@ -542,5 +388,9 @@ namespace HTSBIM2019.UI.MEPUpdater
         }
 
         #endregion btnON_Click
+
+        #region Sample
+
+        #endregion Sample
     }
 }

@@ -38,18 +38,18 @@ namespace HTSBIM2019
 
     #region CmdMEPUpdater
 
-    // TODO : RevitBox 업데이터 구현 (2024.03.13 jbh)
+    // TODO : HTS Revit 업데이터 구현 (2024.03.13 jbh)
     // 참고 URL   - https://forums.autodesk.com/t5/revit-api-forum/iupdater-simple-example-needed/m-p/9893248
     // 참고 2 URL - https://thebuildingcoder.typepad.com/blog/2012/06/documentchanged-versus-dynamic-model-updater.html
 
-    // RevitBox 업데이터 Command 클래스 CmdMEPUpdater class 접근 제한자 intenal 설정 (2024.03.14 jbh)
+    // HTS Revit 업데이터 Command 클래스 CmdMEPUpdater class 접근 제한자 intenal 설정 (2024.03.14 jbh)
     // 접근 제한자 internal - internal 로 선언한 변수 또는 클래스는 CmdMEPUpdater 프로젝트 내에서만 접근이 가능하고, 외부에선 접근이 불가능
     // 참고 URL - https://slaner.tistory.com/69
 
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     /// <summary>
-    /// RevitBox 업데이터 Command
+    /// 1. MEP 사용 기록 관리 Command
     /// </summary>
     internal class CmdMEPUpdater : IExternalCommand
     {
@@ -78,11 +78,11 @@ namespace HTSBIM2019
 
             try
             {
-                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 시작");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "HTS Revit 업데이터 Command - Execute 시작");
 
                 UIApplication RevitUIApp = commandData.Application;               // Revit UI 애플리케이션 객체 
                 // Document doc = uiapp.ActiveUIDocument.Document;                // 활성화된 Revit 문서 
-                // AddInId addInId = uiapp.ActiveAddInId;                         // RevitBox 업데이터 Command 아이디
+                // AddInId addInId = uiapp.ActiveAddInId;                         // HTS Revit 업데이터 Command 아이디
 
                 Application RevitApp = RevitUIApp.Application;                    // Revit 애플리케이션 객체 
 
@@ -93,7 +93,10 @@ namespace HTSBIM2019
                 AppSetting.Default.Login.Username    = RevitApp.Username;         // 작업자(사용자) 이름
 
 
-                TaskDialog.Show("RevitBox Update...", "테스트 진행 중...");
+                // TaskDialog.Show("HTS Revit Update...", "테스트 진행 중...");
+
+                if (RevitUIApp.ActiveUIDocument is null)   // Revit 문서를 열지 않은 경우 
+                    throw new Exception("MEP Updater 기능 실행하기 전에\r\nRevit 문서를 열어 주시기 바랍니다.");
 
                 // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
                 // MEPUpdaterForm.ShowDialog();
@@ -103,7 +106,7 @@ namespace HTSBIM2019
                 // TestMEPUpdater testMEPUpdater = new TestMEPUpdater();
                 // testMEPUpdater.Show();
 
-                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 Command - Execute 종료");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "HTS Revit 업데이터 Command - Execute 종료");
 
                 return Result.Succeeded;
             }
@@ -131,6 +134,59 @@ namespace HTSBIM2019
     }
 
     #endregion CmdMEPUpdater
+
+    #region CmdTechnicalSupport
+
+    [Transaction(TransactionMode.Manual)]
+    [Regeneration(RegenerationOption.Manual)]
+    /// <summary>
+    /// 2. (주)상상진화 기술지원 문의 Command
+    /// </summary>
+    internal class CmdTechnicalSupport : IExternalCommand
+    {
+        #region 프로퍼티
+
+
+        #endregion 프로퍼티
+
+        #region 기본 메소드
+
+        // TODO : 콜백 함수 Execute 구현 (2024.03.11 jbh)
+        // 콜백(CallBack) 함수란? 시스템이 사용자가 요청한 처리를 하다가 특정 이벤트를 발생시켜 해당 이벤트를 처리해달라고 역으로 전달해 오는 함수
+        // 참고 URL - https://nephrolepis.tistory.com/12
+        // 참고 2 URL - https://todaycode.tistory.com/24
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2024.01.22 jbh)
+            // 참고 URL - https://slaner.tistory.com/73
+            // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
+            // 참고 3 URL - https://stackoverflow.com/questions/44153/can-you-use-reflection-to-find-the-name-of-the-currently-executing-method
+            var currentMethod = MethodBase.GetCurrentMethod();
+
+            try
+            {
+                Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 기술지원 문의 Command - Execute 시작");
+
+                TaskDialog.Show("(주)상상진화 기술지원 문의...", "구현 예정...");
+
+                // TODO : 상상플렉스 웹사이트 URL 주소로 연동 되도록 구현 예정 (2024.04.05 jbh) 
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 기술지원 문의 Command - Execute 종료");
+
+                return Result.Succeeded;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+                return Result.Failed;
+            }
+        }
+
+        #endregion 기본 메소드
+    }
+
+    #endregion CmdTechnicalSupport
 
     #region Sample
 

@@ -128,8 +128,8 @@ namespace HTSBIM2019.Common.RequestBase
                 IUpdater mepUpdater = AppSetting.Default.UpdaterBase.MEPUpdater;
 
                 // TODO : 아래 주석친 테스트 코드 필요시 사용 예정 (2024.04.01 jbh)
-                // RevitBox 업데이터 Command 아이디 값 프로퍼티 "Updater_Id" 할당 
-                // AddInId addInId = rvUIApp.ActiveAddInId;         // RevitBox 업데이터 Command 아이디
+                // HTS Revit 업데이터 Command 아이디 값 프로퍼티 "Updater_Id" 할당 
+                // AddInId addInId = rvUIApp.ActiveAddInId;         // HTS Revit 업데이터 Command 아이디
                 // Guid guId = new Guid(HTSHelper.GId);
                 // Updater_Id = new UpdaterId(addInId, guId);
 
@@ -198,7 +198,7 @@ namespace HTSBIM2019.Common.RequestBase
                 // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
                 using (Transaction transaction = new Transaction(rvDoc))
                 {
-                    // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                    // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                     transaction.Start(HTSHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
 
                     // TODO : static 메서드 "UpdaterManager.RemoveSetting" 필요시 추가 수정 및 사용 예정 (2024.03.22 jbh)
@@ -241,7 +241,7 @@ namespace HTSBIM2019.Common.RequestBase
                 // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
                 using (Transaction transaction = new Transaction(rvDoc))
                 {
-                    // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                    // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                     transaction.Start(HTSHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 등록 셋팅 시작");

@@ -149,7 +149,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
             string currentDateTime = string.Empty;               // 매개변수에 입력할 값("현재 날짜 시간 조합 문자")
             string paramValue      = string.Empty;               // 매개변수에 입력할 값(문자열)
 
-            bool bResult   = false;                              // 매개변수 ("객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자")에 매핑된 값 입력 완료 여부 
+            bool bResult = false;                                // 매개변수 ("객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자")에 매핑된 값 입력 완료 여부 
             
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 

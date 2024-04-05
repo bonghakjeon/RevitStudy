@@ -1,10 +1,12 @@
 ﻿using Serilog;
+
 using System;
 using System.Reflection;
 
-using HTSBIM2019.Settings;
 using HTSBIM2019.Common.HTSBase;
 using HTSBIM2019.Common.LogBase;
+using HTSBIM2019.Common.RibbonBase;
+using HTSBIM2019.Settings;
 using HTSBIM2019.Utils.MEPUpdater;
 
 using Autodesk.Revit.Attributes;
@@ -38,9 +40,11 @@ namespace HTSBIM2019
 
             try
             {
-                Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 프로그램 시작");
-
                 Logger.ConfigureLogger(HTSHelper.AssemblyName, HTSHelper.LogDirPath);   // Serilog 로그 초기 설정 
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "HTS Revit 업데이터 프로그램 시작");
+
+                Ribbon.CreateRibbonControl(application);   // 리본 메뉴 등록
 
                 AddInId addInId = application.ActiveAddInId;
                 AppSetting.Default.UpdaterBase.MEPUpdater = new MEPUpdater(addInId);
