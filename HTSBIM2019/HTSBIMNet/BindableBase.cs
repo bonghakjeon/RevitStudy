@@ -78,7 +78,8 @@ namespace HTSBIMNet
 
         protected virtual void OnPropertyChanged(string name)
         {
-            if (!this._EnablePropertyChanged)
+            // if (!this._EnablePropertyChanged)
+            if (false == this._EnablePropertyChanged)
                 return;
             PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
             // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2024.04.11 jbh)
