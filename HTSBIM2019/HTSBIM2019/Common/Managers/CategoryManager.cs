@@ -25,6 +25,7 @@ namespace HTSBIM2019.Common.Managers
         public static List<CategoryInfoView> GetCategoryInfoList(Document rvDoc)
         {
             string categoryName = string.Empty;                  // BuiltInCategory 이름
+            int existCount = 0;                                  // 동일 카테고리(BuiltInCategory Category) 갯수(Count) 존재 여부 
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -53,20 +54,20 @@ namespace HTSBIM2019.Common.Managers
                     CategoryInfoView categoryInfo = new CategoryInfoView(categoryName, builtInCategory);
 
                     // TODO : 카테고리 정보 리스트 객체 "categoryInfoList"에 Linq 확장 메서드 "Where" , "ToList" 사용해서
-                    //        동일한 카테고리(BuiltInCategory category) 갯수(Count)가 존재하는지 확인
-                    int existCount = categoryInfoList.Where(catInfo => (int)catInfo.category == (int)categoryInfo.category)
-                                                     .ToList()
-                                                     .Count;
+                    //        동일한 카테고리(BuiltInCategory Category) 갯수(Count)가 존재하는지 확인
+                    existCount = categoryInfoList.Where(catInfo => (int)catInfo.Category == (int)categoryInfo.Category)
+                                                 .ToList()
+                                                 .Count;
 
-                    // 동일한 카테고리(BuiltInCategory category)가 존재하지 않는 경우
+                    // 동일한 카테고리(BuiltInCategory Category)가 존재하지 않는 경우
                     // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
                     if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
                 }
 
                 // 카테고리 정보 리스트 객체 "categoryInfoList" 카테고리 이름 순으로 정렬(OrderBy)
-                List<CategoryInfoView> orderedCategoryInfoList = categoryInfoList// .Where(categoryInfo => false == string.IsNullOrWhiteSpace(categoryInfo.categoryName))   // BuiltInCategory 이름이 존재하는 경우
+                List<CategoryInfoView> orderedCategoryInfoList = categoryInfoList// .Where(categoryInfo => false == string.IsNullOrWhiteSpace(categoryInfo.CategoryName))   // BuiltInCategory 이름이 존재하는 경우
                                                                                  // .Select(categoryInfo => categoryInfo)
-                                                                                 .OrderBy(categoryInfo => categoryInfo.categoryName)
+                                                                                 .OrderBy(categoryInfo => categoryInfo.CategoryName)
                                                                                  .ToList();
 
                 return orderedCategoryInfoList;
@@ -124,12 +125,12 @@ namespace HTSBIM2019.Common.Managers
                     CategoryInfoView categoryInfo = new CategoryInfoView(categoryName, category);
 
                     // TODO : 카테고리 정보 리스트 객체 "categoryInfoList"에 Linq 확장 메서드 "Where" , "ToList" 사용해서
-                    //        동일한 카테고리(BuiltInCategory category) 갯수(Count)가 존재하는지 확인
-                    int existCount = categoryInfoList.Where(catInfo => (int)catInfo.category == (int)categoryInfo.category)
+                    //        동일한 카테고리(BuiltInCategory Category) 갯수(Count)가 존재하는지 확인
+                    int existCount = categoryInfoList.Where(catInfo => (int)catInfo.Category == (int)categoryInfo.Category)
                                                      .ToList()
                                                      .Count;
 
-                    // 동일한 카테고리(BuiltInCategory category)가 존재하지 않는 경우
+                    // 동일한 카테고리(BuiltInCategory Category)가 존재하지 않는 경우
                     // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
                     if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
 
@@ -150,18 +151,18 @@ namespace HTSBIM2019.Common.Managers
                 }
 
                 // 카테고리 정보 리스트 객체 "categoryInfoList" 카테고리 이름 순으로 정렬(OrderBy)
-                List<CategoryInfoView> orderedCategoryInfoList = categoryInfoList.OrderBy(categoryInfo => categoryInfo.categoryName)
+                List<CategoryInfoView> orderedCategoryInfoList = categoryInfoList.OrderBy(categoryInfo => categoryInfo.CategoryName)
                                                                                  .ToList();
 
                 return orderedCategoryInfoList;
 
                 // TODO : C# Linq 확장 메서드 Distinct() 사용해서 사용자 정의 클래스 CategoryInfoView 리스트 객체 categoryInfoList에서 
-                //        익명 타입(Anonymous Type) 사용해서 카테고리 이름(categoryInfo.categoryName),
-                //        카테고리 정보 (categoryInfo.category) 중복 제거 처리 (2024.03.25 jbh)
+                //        익명 타입(Anonymous Type) 사용해서 카테고리 이름(categoryInfo.CategoryName),
+                //        카테고리 정보 (categoryInfo.Category) 중복 제거 처리 (2024.03.25 jbh)
                 // 참고 URL - https://developer-talk.tistory.com/560
-                // var testList = categoryInfoList.Select(categoryInfo => new { categoryInfo.categoryName, categoryInfo.category })
+                // var testList = categoryInfoList.Select(categoryInfo => new { categoryInfo.CategoryName, categoryInfo.Category })
                 //                                .Distinct()
-                //                                .OrderBy(categoryInfo => categoryInfo.categoryName)
+                //                                .OrderBy(categoryInfo => categoryInfo.CategoryName)
                 //                                .ToList();
             }
             catch (Exception ex)
@@ -206,7 +207,7 @@ namespace HTSBIM2019.Common.Managers
                     CategorySet categorySet = rvDoc.Application.Create.NewCategorySet();
 
                     // 반복문 사용해서 카테고리 셋 하위에 존재하는 모든 카테고리 방문 
-                    foreach (var category in updaterParam.categorySet)
+                    foreach (var category in updaterParam.CategorySet)
                     {
                         Category cat = rvDoc.Settings.Categories.get_Item(category);   // string 클래스 객체 "category"와 동일한 카테고리 가져오기 
 
@@ -217,12 +218,12 @@ namespace HTSBIM2019.Common.Managers
 
                     // 4 단계 : 카테고리 하위에 추가하려는 MEP Updater 매개변수 이름 가져오기  
                     paramName = string.Empty;
-                    paramName = updaterParam.paramName;
+                    paramName = updaterParam.ParamName;
 
                     paramType = ParameterType.Invalid;   // MEP Updater 매개변수 유형 초기화
 
                     // 5 단계 : MEP Updater 매개변수 자료형(문자) 가져오기
-                    if (updaterParam.dataType.Equals(HTSHelper.text)) paramType = ParameterType.Text;
+                    if (updaterParam.DataType.Equals(HTSHelper.text)) paramType = ParameterType.Text;
 
                     else
                         throw new Exception($"생성할 공유 매개변수 유형(T): {HTSHelper.text}아닌\r\n다른 유형으로 오입력!\r\n담당자에게 문의하세요.");

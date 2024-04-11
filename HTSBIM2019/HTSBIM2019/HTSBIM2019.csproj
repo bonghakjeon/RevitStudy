@@ -134,6 +134,7 @@
       <DependentUpon>MEPUpdaterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\MEPUpdater\MEPUpdater.cs" />
+    <Compile Include="Utils\TechnicalSupport\TechnicalSupport.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -37,10 +37,13 @@ namespace HTSBIM2019.Common.LogBase
         /// Serilog 로그 초기 설정 
         /// </summary>
         /// <param name="rvAssemblyName">로그 기록 남기려는 어셈블리 이름</param>
-        public static void ConfigureLogger(string rvAssemblyName, string pLogDirPath)
+        //public static void ConfigureLogger(string rvAssemblyName, string pLogDirPath)
+        public static void ConfigureLogger(string rvAssemblyName, string pDllFilePath)
         {
+            string logDirPath = string.Empty;                                // 로그파일 상위 디렉토리(폴더) 경로 
             // string filePath = pLogDirPath + $"\\{rvAssemblyName}_" + DateTime.Today.ToString("yyyyMMdd") + ".log";
-            string filePath = pLogDirPath + $"\\{rvAssemblyName}_.log";
+            // string filePath = pLogDirPath + $"\\{rvAssemblyName}_.log";   // 로그파일 생성 경로
+            string filePath = string.Empty;                                  // 로그파일 생성 경로
 
             // TODO : 로그 파일 갯수 설정 변수 "retainedFileCountLimit"를 프로퍼티(Logger 클래스 객체의 인스턴스 변수)로 구현 안 하고
             //        static 메서드 "ConfigureLogger" 안의 지역변수로 구현해서 static 메서드 "DeleteOldLogFiles(dirPath, retainedFileCountLimit)"의
@@ -49,10 +52,22 @@ namespace HTSBIM2019.Common.LogBase
             //        하기 때문이다.
             // static 메서드 유튜브 참고 URL - https://youtu.be/Fl4TzjPKAMU?si=KUrhqTCO8jrNzicy
             // TODO : 테스트 완료 후 로그 파일 갯수 설정 프로퍼티 "retainedFileCountLimit" 기간 30으로 수정 예정 (2024.02.02 jbh)
-            int retainedFileCountLimit = 7;   // 로그 파일 갯수 설정 (테스트용 7일 이전)
+            int retainedFileCountLimit = 30;   // 로그 파일 갯수 설정 (테스트용 30일 이전)
 
             try
             {
+                // 로그파일 상위 디렉토리(폴더) 경로 구하기
+                StringBuilder sbLogDirPath = new StringBuilder(pDllFilePath);
+                sbLogDirPath.Append($"\\Logs");
+                logDirPath = sbLogDirPath.ToString();
+
+                // 상위 디렉토리(폴더) 하위 로그파일 경로 구하기 
+                StringBuilder sbFilePath = new StringBuilder(logDirPath);
+                sbFilePath.Append($"\\{rvAssemblyName}_.log");
+
+                filePath = sbFilePath.ToString();
+
+
                 // TODO : Stylet Logger 클래스 사용 안하고 Serilog 이용해서 로그 기록 및 로그 파일 생성 (2024.01.22 jbh)
                 // 참고 URL - https://m.blog.naver.com/wolfre/221713399852
                 // 참고 2 URL - https://afsdzvcx123.tistory.com/entry/C-%EB%AC%B8%EB%B2%95-C-Serilog-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EB%A1%9C%EA%B7%B8-%EB%82%A8%EA%B8%B0%EA%B8%B0
@@ -88,7 +103,8 @@ namespace HTSBIM2019.Common.LogBase
                 Log.Logger = log;             // Serilog를 HTSBIM2019에서 사용할 수 있도록 설정 (전역 로그)
 
                 // 기간 지난 로그 파일 삭제 (new LoggerConfiguration() -> .WriteTo.File(retainedFileCountLimit)에 할당된 값(기간) 기준)
-                DeleteOldLogFiles(pLogDirPath, retainedFileCountLimit);
+                //DeleteOldLogFiles(pLogDirPath, retainedFileCountLimit);
+                DeleteOldLogFiles(logDirPath, retainedFileCountLimit);
 
                 // 로그 레벨 기록 예시
                 //Log.Information($"Info name = {System.Reflection.Assembly.GetEntryAssembly().GetName().Name}");
@@ -117,7 +133,7 @@ namespace HTSBIM2019.Common.LogBase
         /// </summary>
         /// <param name="pDirPath"></param>
         /// <param name=""></param>
-        public static void DeleteOldLogFiles(string pDirPath, int pRetainedFileCountLimit)
+        public static void DeleteOldLogFiles(string pLogDirPath, int pRetainedFileCountLimit)
         {
             string logDirPath = string.Empty;   // 로그 파일이 저장된 디렉토리 경로 
 
@@ -131,7 +147,7 @@ namespace HTSBIM2019.Common.LogBase
 
             try
             {
-                logDirPath = pDirPath;                                      // 1. 로그 파일이 저장된 디렉토리 경로 할당
+                logDirPath = pLogDirPath;                                   // 1. 로그 파일이 저장된 디렉토리 경로 할당
 
                 daysToKeep = (-1) * pRetainedFileCountLimit;                // 2. 로그 파일 삭제할 기간 설정 (로그파일 삭제하려면 음수로 값 할당 처리 필요)
 

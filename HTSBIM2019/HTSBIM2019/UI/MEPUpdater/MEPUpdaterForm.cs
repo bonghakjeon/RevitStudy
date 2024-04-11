@@ -191,10 +191,10 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // TODO : ComboBox(comboBoxCategory)에 바인딩할 리스트에 데이터 할당 구현 (2024.03.26 jbh)
                 GeometryCategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화
                 // CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
-                GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.categoryName.Equals(HTSHelper.배관)
-                                                                               || categoryInfo.categoryName.Equals(HTSHelper.배관부속류)
-                                                                               || categoryInfo.categoryName.Equals(HTSHelper.배관단열재)
-                                                                               || categoryInfo.categoryName.Equals(HTSHelper.배관밸브류))
+                GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals(HTSHelper.배관)
+                                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관단열재)
+                                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관부속류)
+                                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관밸브류))
                                                            .ToList();
 
 
@@ -330,13 +330,13 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
                 var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
 
-                CategoryInfo = new CategoryInfoView(categoryInfo.categoryName, categoryInfo.category);
+                CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
                 //CategoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView; 
 
                 // BuiltInCategory testCategory = CategoryManager.GetBuiltInCategory("배관");
 
-                //BuiltInCategory testCategory = CategoryInfoList.Where(x => x.categoryName.Equals("배관"))
-                //                                               .Select(x => x.category)
+                //BuiltInCategory testCategory = CategoryInfoList.Where(x => x.CategoryName.Equals("배관"))
+                //                                               .Select(x => x.Category)
                 //                                               .FirstOrDefault();
 
 
@@ -370,9 +370,9 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
                 var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
-                // CategoryInfo = new CategoryInfoView(categoryInfo.categoryName, categoryInfo.category);
+                // CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
 
-                AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo = new CategoryInfoView(categoryInfo.categoryName, categoryInfo.category);
+                AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
 
                 MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
             }

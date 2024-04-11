@@ -203,5 +203,14 @@ namespace HTSBIM2019.Common.HTSBase
 
         #endregion RequestHandler
 
+        #region TechnicalSupport
+
+        /// <summary>
+        /// 상상플렉스 커뮤니티 웹 사이트 URL 주소 
+        /// </summary>
+        public const string SangSangFlexURL = "https://www.ssflex.co.kr/community/open";
+
+        #endregion TechnicalSupport
+
     }
 }

@@ -259,7 +259,7 @@ namespace HTSBIM2019.Common.RequestBase
                     Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 완료");
                     TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 등록 완료");
 
-                    BuiltInCategory updaterBuiltInCategory = AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo.category; // pMEPUpdater.CategoryInfo.category;
+                    BuiltInCategory updaterBuiltInCategory = AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo.Category; // pMEPUpdater.CategoryInfo.Category;
 
                     // 2. 카테고리 ComboBox 컨트롤(comboBoxCategory)에서 선택한
                     // 카테고리 객체 (BupdaterBuiltInCategory)만 필터링 처리 및 MEP Triggers 등록 

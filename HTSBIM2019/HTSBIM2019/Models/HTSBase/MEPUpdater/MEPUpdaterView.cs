@@ -3,6 +3,8 @@ using System.ComponentModel;
 
 using Autodesk.Revit.DB;
 
+using HTSBIMNet;
+
 namespace HTSBIM2019.Models.HTSBase.MEPUpdater
 {
     /// <summary>
@@ -79,19 +81,21 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
     /// <summary>
     /// BuiltInParameter 매개변수 정보
     /// </summary>
-    public class BuiltInParamView
+    public class BuiltInParamView : BindableBase
     {
         #region 프로퍼티
 
         /// <summary>
         /// 매개변수 이름
         /// </summary>
-        public string paramName { get; set; }
+        public string ParamName { get => _ParamName; set { _ParamName = value; NotifyOfPropertyChange(); } }
+        private string _ParamName;
 
         /// <summary>
         /// 매개변수 값
         /// </summary>
-        public long paramValue { get; set; }
+        public long ParamValue { get => _ParamValue; set { _ParamValue = value; NotifyOfPropertyChange(); } }
+        private long _ParamValue;
 
         #endregion 프로퍼티
 
@@ -99,8 +103,8 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
 
         public BuiltInParamView(string rvParamName, long rvParamValue)
         {
-            this.paramName = rvParamName;
-            this.paramValue = rvParamValue;
+            this._ParamName = rvParamName;
+            this._ParamValue = rvParamValue;
         }
 
         #endregion 생성자
@@ -113,36 +117,39 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
     /// <summary>
     /// 카테고리 정보 
     /// </summary>
-    public class CategoryInfoView
+    public class CategoryInfoView : BindableBase
     {
         #region 프로퍼티 
 
         /// <summary>
         /// 카테고리 이름
         /// </summary>
-        public string categoryName { get; set; }
+        public string CategoryName { get => _CategoryName; set { _CategoryName = value; NotifyOfPropertyChange(); } }
+        private string _CategoryName;
 
         /// <summary>
         /// 카테고리
         /// </summary>
-        public BuiltInCategory category { get; set; }
+        public BuiltInCategory Category { get => _Category; set { _Category = value; NotifyOfPropertyChange(); } }
+        private BuiltInCategory _Category;
 
         // TODO : 매개변수 그룹 이름 프로퍼티 "paramGroupName" 필요시 사용 예정 (2024.03.25 jbh)
         /// <summary>
         /// 특정 객체에 속하는 매개변수 그룹 이름
         /// </summary>
-        //public string paramGroupName { get; set; }
+        // public string ParamGroupName { get => _ParamGroupName; set { _ParamGroupName = value; NotifyOfPropertyChange(); } }
+        // private string _ParamGroupName;
 
         #endregion 프로퍼티
 
         #region 생성자
 
-        //public CategoryInfoView(string rvCategoryName, string rvParamGroupName)
+        // public CategoryInfoView(string rvCategoryName, string rvParamGroupName)
         public CategoryInfoView(string rvCategoryName, BuiltInCategory rvCategory)
         {
-            this.categoryName = rvCategoryName;
-            //this.paramGroupName   = rvParamGroupName;
-            this.category = rvCategory;
+            this._CategoryName = rvCategoryName;
+            // this._ParamGroupName   = rvParamGroupName;
+            this._Category = rvCategory;
         }
 
         #endregion 생성자
@@ -156,19 +163,21 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
     /// <summary>
     /// BuiltInCategory 정보
     /// </summary>
-    public class BuiltInCategoryView
+    public class BuiltInCategoryView : BindableBase
     {
         #region 프로퍼티
 
         /// <summary>
         /// 카테고리 이름
         /// </summary>
-        public string categoryName { get; set; }
+        public string CategoryName { get => _CategoryName; set { _CategoryName = value; NotifyOfPropertyChange(); } }
+        private string _CategoryName;
 
         /// <summary>
         /// 카테고리 값
         /// </summary>
-        public long categoryValue { get; set; }
+        public long CategoryValue { get => _CategoryValue; set { _CategoryValue = value; NotifyOfPropertyChange(); } }
+        private long _CategoryValue;
 
         #endregion 프로퍼티
 
@@ -176,8 +185,8 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
 
         public BuiltInCategoryView(string rvCategoryName, long rvCategoryValue)
         {
-            this.categoryName = rvCategoryName;
-            this.categoryValue = rvCategoryValue;
+            this._CategoryName = rvCategoryName;
+            this._CategoryValue = rvCategoryValue;
         }
 
         #endregion 생성자
@@ -190,19 +199,21 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
     /// <summary>
     /// 입력할 값이 할당된 매개변수 정보
     /// </summary>
-    public class SetParamInfoView
+    public class SetParamInfoView : BindableBase
     {
         #region 프로퍼티
 
         /// <summary>
         /// 매개변수 이름
         /// </summary>
-        public string paramName { get; set; }
+        public string ParamName { get => _ParamName; set { _ParamName = value; NotifyOfPropertyChange(); } }
+        private string _ParamName;
 
         /// <summary>
         /// 매개변수에 입력한 값
         /// </summary>
-        public string paramValue { get; set; }
+        public string ParamValue { get => _ParamValue; set { _ParamValue = value; NotifyOfPropertyChange(); } }
+        private string _ParamValue;
 
         #endregion 프로퍼티
 
@@ -210,8 +221,8 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
 
         public SetParamInfoView(string rvParamName, string rvParamValue)
         {
-            this.paramName = rvParamName;
-            this.paramValue = rvParamValue;
+            this._ParamName = rvParamName;
+            this._ParamValue = rvParamValue;
         }
 
         #endregion 생성자
@@ -224,56 +235,62 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
     /// <summary>
     /// UPDATER_PARAMETERS - MEP Updater 매개변수
     /// </summary>
-    public class Updater_Parameters
+    public class Updater_Parameters : BindableBase
     {
         #region 프로퍼티 
 
         /// <summary>
         /// 매개변수 이름
         /// </summary>
-        public string paramName { get; set; }
+        public string ParamName { get => _ParamName; set { _ParamName = value; NotifyOfPropertyChange(); } }
+        private string _ParamName;
 
         /// <summary>
         /// 매개변수 타입
         /// </summary>
-        public string paramType { get; set; }
+        public string ParamType { get => _ParamType; set { _ParamType = value; NotifyOfPropertyChange(); } }
+        private string _ParamType;
 
-        // TODO : 분야 프로퍼티 "domain" 추후 의미 혼동시 수정 예정 (2024.01.24 jbh)
+        // TODO : 분야 프로퍼티 "Domain" 추후 의미 혼동시 수정 예정 (2024.01.24 jbh)
         // 참고 URL - https://brunch.co.kr/@myner/56
         /// <summary>
-        /// 분야 리스트 - ALL모델(공통)
+        /// 분야 - ALL모델(공통)
         /// </summary>
-        public string domain { get; set; }
+        public string Domain { get => _Domain; set { _Domain = value; NotifyOfPropertyChange(); } }
+        private string _Domain;
 
         /// <summary>
         /// 데이터유형
         /// </summary>
-        public string dataType { get; set; }
+        public string DataType { get => _DataType; set { _DataType = value; NotifyOfPropertyChange(); } }
+        private string _DataType;
 
         /// <summary>
         /// 그룹매개변수 (매개변수 상위 그룹)
         /// </summary>
-        public string definitionGroup { get; set; }
+        public string DefinitionGroup { get => _DefinitionGroup; set { _DefinitionGroup = value; NotifyOfPropertyChange(); } }
+        private string _DefinitionGroup;
 
         /// <summary>
         /// 매개변수 상위 카테고리셋(카테고리 리스트)
         /// </summary>
-        public List<string> categorySet { get; set; }
+        public List<string> CategorySet { get => _CategorySet; set { _CategorySet = value; NotifyOfPropertyChange(); } }
+        private List<string> _CategorySet;
 
         #endregion 프로퍼티 
-
-        #region 생성자
 
         #region 생성자
 
         // TODO : AIS 매개변수 클래스 "Updater_Parameters" 생성자 필요시 구현 예정 (2024.03.12 jbh)
         //public Updater_Parameters()
         //{
-        //    this.paramName = ;
-        //    this.paramType = ;
+        //    this._ParamName = ;
+        //    this._ParamType = ;
+        //    this._Domain    = ;
+        //    this._DataType  = ;
+        //    this._DefinitionGroup = ;
+        //    this._CategorySet = ; 
         //}
-
-        #endregion 생성자 
 
         #endregion 생성자 
     }

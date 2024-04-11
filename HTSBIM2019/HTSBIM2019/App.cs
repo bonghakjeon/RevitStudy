@@ -6,6 +6,7 @@ using System.Reflection;
 using HTSBIM2019.Common.HTSBase;
 using HTSBIM2019.Common.LogBase;
 using HTSBIM2019.Common.RibbonBase;
+using HTSBIM2019.Common.Managers;
 using HTSBIM2019.Settings;
 using HTSBIM2019.Utils.MEPUpdater;
 
@@ -32,6 +33,8 @@ namespace HTSBIM2019
         /// </summary>
         public Result OnStartup(UIControlledApplication application)
         {
+            string dllParentDirPath = string.Empty;              // dll 파일의 부모 폴더 경로
+
             // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2024.01.22 jbh)
             // 참고 URL - https://slaner.tistory.com/73
             // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
@@ -40,7 +43,9 @@ namespace HTSBIM2019
 
             try
             {
-                Logger.ConfigureLogger(HTSHelper.AssemblyName, HTSHelper.LogDirPath);   // Serilog 로그 초기 설정 
+                dllParentDirPath = DirectoryManager.GetDllParentDirectoryPath(HTSHelper.AssemblyFilePath);  // dll 파일(HTSBIM2019.dll)이 속한 부모 폴더 경로 가져오기 
+                //Logger.ConfigureLogger(HTSHelper.AssemblyName, HTSHelper.LogDirPath);   // Serilog 로그 초기 설정 
+                Logger.ConfigureLogger(HTSHelper.AssemblyName, dllParentDirPath);   // Serilog 로그 초기 설정 
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "HTS Revit 업데이터 프로그램 시작");
 

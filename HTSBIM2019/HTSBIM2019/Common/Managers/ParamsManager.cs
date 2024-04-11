@@ -8,7 +8,6 @@ using System.Reflection;
 
 using System.Text;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using HTSBIM2019.Common.LogBase;
@@ -157,7 +156,7 @@ namespace HTSBIM2019.Common.Managers
         public static List<Updater_Parameters> GetMEPUpdaterParameterList(string pDllFilePath)
         {
             // int index = 0;                                       // 어셈블리(.dll) 파일의 상위 폴더 인덱스 
-            string parentDirPath = string.Empty;                 // 어셈블리(.dll) 파일의 상위 부모 폴더 경로 
+            // string parentDirPath = string.Empty;                 // 어셈블리(.dll) 파일의 상위 부모 폴더 경로 
             string jsonPath   = string.Empty;                    // JSON 파일 경로
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록

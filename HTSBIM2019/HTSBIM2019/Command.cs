@@ -2,18 +2,19 @@
 
 using System;
 using System.Reflection;
+using System.Diagnostics;
 
 using HTSBIM2019.Common.LogBase;
 using HTSBIM2019.Common.Managers;
 using HTSBIM2019.Common.HTSBase;
 using HTSBIM2019.UI.MEPUpdater;
 using HTSBIM2019.Settings;
+using HTSBIM2019.Utils.TechnicalSupport;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.ApplicationServices;
-using System.DirectoryServices.AccountManagement;
 
 namespace HTSBIM2019
 {
@@ -58,7 +59,7 @@ namespace HTSBIM2019
         /// <summary>
         /// MEPUpdater 폼 객체 
         /// </summary>
-        private static MEPUpdaterForm MEPUpdaterForm;
+        private static MEPUpdaterForm MEPUpdaterForm { get; set; }
 
         #endregion 프로퍼티
 
@@ -80,28 +81,28 @@ namespace HTSBIM2019
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "HTS Revit 업데이터 Command - Execute 시작");
 
-                UIApplication RevitUIApp = commandData.Application;               // Revit UI 애플리케이션 객체 
-                // Document doc = uiapp.ActiveUIDocument.Document;                // 활성화된 Revit 문서 
-                // AddInId addInId = uiapp.ActiveAddInId;                         // HTS Revit 업데이터 Command 아이디
+                UIApplication revitUIApp = commandData.Application;               // Revit UI 애플리케이션 객체 
+                // Document revitDoc = revitUIApp.ActiveUIDocument.Document;           // 활성화된 Revit 문서 
+                // AddInId addInId = revitUIApp.ActiveAddInId;                    // HTS Revit 업데이터 Command 아이디
 
-                Application RevitApp = RevitUIApp.Application;                    // Revit 애플리케이션 객체 
+                Application revitApp = revitUIApp.Application;                    // Revit 애플리케이션 객체 
 
                 // TODO : 로그인 아이디, 작업자(사용자) 이름 구하기 (2024.03.02 jbh)
                 // 참고 URL   - https://www.revitapidocs.com/2018/8d3b257a-7b99-a6ee-b146-f635c35f425c.htm
                 // 참고 2 URL - https://www.revitapidocs.com/2015/2a7c8664-de0d-7a43-e670-2e733e579609.htm?query=LoginUser        
-                AppSetting.Default.Login.LoginUserId = RevitApp.LoginUserId;      // 로그인 아이디
-                AppSetting.Default.Login.Username    = RevitApp.Username;         // 작업자(사용자) 이름
+                AppSetting.Default.Login.LoginUserId = revitApp.LoginUserId;      // 로그인 아이디
+                AppSetting.Default.Login.Username    = revitApp.Username;         // 작업자(사용자) 이름
 
 
                 // TaskDialog.Show("HTS Revit Update...", "테스트 진행 중...");
 
-                if (RevitUIApp.ActiveUIDocument is null)   // Revit 문서를 열지 않은 경우 
+                if (revitUIApp.ActiveUIDocument is null)   // Revit 문서를 열지 않은 경우 
                     throw new Exception("MEP Updater 기능 실행하기 전에\r\nRevit 문서를 열어 주시기 바랍니다.");
 
                 // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
                 // MEPUpdaterForm.ShowDialog();
                 // MEPUpdaterForm.Show();
-                FormManager.ShowForm(MEPUpdaterForm, RevitUIApp, typeof(MEPUpdaterForm));
+                FormManager.ShowForm(MEPUpdaterForm, revitUIApp, typeof(MEPUpdaterForm));
 
                 // TestMEPUpdater testMEPUpdater = new TestMEPUpdater();
                 // testMEPUpdater.Show();
@@ -140,12 +141,16 @@ namespace HTSBIM2019
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     /// <summary>
-    /// 2. (주)상상진화 기술지원 문의 Command
+    /// 2. (주)상상진화 기술지원 문의 Command - 상상플렉스 커뮤니티
     /// </summary>
     internal class CmdTechnicalSupport : IExternalCommand
     {
         #region 프로퍼티
 
+        /// <summary>
+        /// 상상플렉스 커뮤니티 웹사이트 연결 Utils 객체 
+        /// </summary>
+        private TechnicalSupport TechSupport { get; set; }
 
         #endregion 프로퍼티
 
@@ -167,9 +172,13 @@ namespace HTSBIM2019
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 기술지원 문의 Command - Execute 시작");
 
-                TaskDialog.Show("(주)상상진화 기술지원 문의...", "구현 예정...");
+                // TaskDialog.Show("(주)상상진화 기술지원 문의...", "구현 예정...");
+
+                UIApplication revitUIApp = commandData.Application;               // Revit UI 애플리케이션 객체
+                Document revitDoc = revitUIApp.ActiveUIDocument.Document;         // 활성화된 Revit 문서 
 
                 // TODO : 상상플렉스 웹사이트 URL 주소로 연동 되도록 구현 예정 (2024.04.05 jbh) 
+                TechSupport = new TechnicalSupport(revitDoc, HTSHelper.SangSangFlexURL);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 기술지원 문의 Command - Execute 종료");
 

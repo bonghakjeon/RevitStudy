@@ -108,14 +108,14 @@ namespace HTSBIM2019.Utils.MEPUpdater
                 UpdaterParamList = ParamsManager.GetMEPUpdaterParameterList(dllParentDirPath);
 
                 // 4. MEP Updater 매개변수("객체 생성 날짜", "객체 생성자") 데이터 추출하기 
-                AddParamList = UpdaterParamList.Where(addParam => addParam.paramName == HTSHelper.AddDate
-                                                               || addParam.paramName == HTSHelper.AddWorker)
+                AddParamList = UpdaterParamList.Where(addParam => addParam.ParamName == HTSHelper.AddDate
+                                                               || addParam.ParamName == HTSHelper.AddWorker)
                                                .Select(addParam => addParam)
                                                .ToList();
 
                 // 5. MEP Updater 매개변수("최종 수정 날짜", "최종 수정자") 데이터 추출하기 
-                ModParamList = UpdaterParamList.Where(modParam => modParam.paramName == HTSHelper.LastModDate
-                                                               || modParam.paramName == HTSHelper.LastModWorker)
+                ModParamList = UpdaterParamList.Where(modParam => modParam.ParamName == HTSHelper.LastModDate
+                                                               || modParam.ParamName == HTSHelper.LastModWorker)
                                                .Select(modParam => modParam)
                                                .ToList();
 
@@ -211,7 +211,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
                     {
                         paramValue = string.Empty;
 
-                        switch(addParam.paramName)
+                        switch(addParam.ParamName)
                         {
                             case HTSHelper.AddDate:
                                 paramValue = currentDateTime;
@@ -223,10 +223,10 @@ namespace HTSBIM2019.Utils.MEPUpdater
                                 break;
                         }
 
-                        bResult = ParamsManager.SetParametersValue(addElements, addParam.paramName, paramValue);
+                        bResult = ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
 
                         // if (true == bResult) IsCompleted = true;
-                        if (false == bResult) throw new Exception($"매개변수 {addParam.paramName} 값 입력 실패!!\r\n담당자에게 문의하세요.");  
+                        if (false == bResult) throw new Exception($"매개변수 {addParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");  
                     }
                 }
 
@@ -242,7 +242,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
                     {
                         paramValue = string.Empty;
 
-                        switch (modParam.paramName)
+                        switch (modParam.ParamName)
                         {
                             case HTSHelper.LastModDate:
                                 paramValue = currentDateTime;
@@ -254,10 +254,10 @@ namespace HTSBIM2019.Utils.MEPUpdater
                                 break;
                         }
 
-                        bResult = ParamsManager.SetParametersValue(modElements, modParam.paramName, paramValue);
+                        bResult = ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
 
                         // if (true == bResult) IsCompleted = true;
-                        if (false == bResult) throw new Exception($"매개변수 {modParam.paramName} 값 입력 실패!!\r\n담당자에게 문의하세요.");
+                        if (false == bResult) throw new Exception($"매개변수 {modParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");
                     }
                 }
 

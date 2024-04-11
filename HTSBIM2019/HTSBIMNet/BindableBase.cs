@@ -81,7 +81,7 @@ namespace HTSBIMNet
             if (!this._EnablePropertyChanged)
                 return;
             PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2023.11.24 jbh)
+            // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2024.04.11 jbh)
             // 참고 URL - https://husk321.tistory.com/405
             if (propertyChanged is not null)
                 propertyChanged((object)this, new PropertyChangedEventArgs(name));

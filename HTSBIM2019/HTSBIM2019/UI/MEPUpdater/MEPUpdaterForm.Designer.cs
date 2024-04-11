@@ -56,13 +56,13 @@ namespace HTSBIM2019.UI.MEPUpdater
             // 
             // labelTitle
             // 
-            this.labelTitle.Appearance.Font = new System.Drawing.Font("Tahoma", 15F);
+            this.labelTitle.Appearance.Font = new System.Drawing.Font("Tahoma", 12F);
             this.labelTitle.Appearance.Options.UseFont = true;
-            this.labelTitle.Location = new System.Drawing.Point(2, 2);
+            this.labelTitle.Location = new System.Drawing.Point(5, 5);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(151, 24);
+            this.labelTitle.Size = new System.Drawing.Size(148, 19);
             this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "HTS MEPUpdater";
+            this.labelTitle.Text = "1. MEP 사용 기록 관리";
             // 
             // panelControl2
             // 
