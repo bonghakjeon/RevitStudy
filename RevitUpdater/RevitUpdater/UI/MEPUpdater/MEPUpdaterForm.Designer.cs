@@ -165,7 +165,7 @@ namespace RevitUpdater.UI.MEPUpdater
             this.btnOFF.Text = "OFF";
             this.btnOFF.Click += new System.EventHandler(this.btnOFF_Click);
             // 
-            // MEPUpdater
+            // MEPUpdaterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -174,7 +174,7 @@ namespace RevitUpdater.UI.MEPUpdater
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "MEPUpdater";
+            this.Name = "MEPUpdaterForm";
             this.Tag = "매개변수 이름을 입력하세요.";
             this.Text = "MEPUpdater";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MEPUpdater_FormClosed);

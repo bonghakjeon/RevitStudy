@@ -42,6 +42,12 @@ namespace RevitUpdater.Common.UpdaterBase
         // 로그 파일 경로를 내문서((Environment.SpecialFolder.MyDocuments)가 아니라 임시로 D드라이브로 이동함. (2024.03.22 jbh) 
         // public static string LogDirPath = $"D:\\RevitUpdater\\{AssemblyName}\\Logs";
 
+        /// <summary>
+        /// MEPUpdater Json 파일 경로  
+        /// </summary>
+        public const string MEPUpdaterJsonFilePath = @"\Json\Updater_Parameters.json";
+
+
         #endregion 폴더(디렉토리) 경로 
 
         #region 트랜잭션
@@ -77,9 +83,65 @@ namespace RevitUpdater.Common.UpdaterBase
 
         #endregion TaskDialog 타이틀
 
+        #region 파일 확장자 
+
+        /// <summary>
+        /// 텍스트 파일 확장자
+        /// </summary>
+        public const string TextFile = ".txt";
+
+        #endregion 파일 확장자
+
         #endregion 공통
 
         #region MEPUpdater
+
+        /// <summary>
+        /// Utils - MEPUpdater 업데이터 이름
+        /// </summary>
+        public const string MEPUpdaterName = "MEPUpdater";
+
+        /// <summary>
+        /// MEPUpdater 매개변수 리스트  
+        /// </summary>
+        public const string UPDATER_ParameterList = "UPDATER_PARAMETERS";
+
+        #region MEPUpdater 매개변수 이름
+
+        /// <summary>
+        /// 매개변수 - 객체 생성 날짜
+        /// </summary>
+        public const string AddDate = "객체 생성 날짜";
+
+        /// <summary>
+        /// 매개변수 - 객체 생성자
+        /// </summary>
+        public const string AddWorker = "객체 생성자";
+
+        /// <summary>
+        /// 매개변수 - 최종 수정 날짜
+        /// </summary>
+        public const string LastModDate = "최종 수정 날짜";
+
+        /// <summary>
+        /// 매개변수 - 최종 수정자
+        /// </summary>
+        public const string LastModWorker = "최종 수정자";
+
+        #endregion MEPUpdater 매개변수 이름
+
+        #region MEPUpdater 매개변수 데이터 유형 (자료형)
+
+        /// <summary>
+        /// Text
+        /// </summary>
+        public const string text = "문자";
+
+        #endregion MEPUpdater 매개변수 데이터 유형 (자료형)
+
+        #endregion MEPUpdater
+
+        #region MEPUpdaterForm
 
         /// <summary>
         /// MEPUpdater Modaless 폼 객체 이름 
@@ -121,7 +183,7 @@ namespace RevitUpdater.Common.UpdaterBase
         /// </summary>
         public const string NullText = "카테고리를 선택하세요.";
 
-        #endregion MEPUpdater
+        #endregion MEPUpdaterForm
 
         #region RequestHandler
 

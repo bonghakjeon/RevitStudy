@@ -521,13 +521,13 @@ namespace RevitUpdater.UI.MEPUpdater
                 // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
                 var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
 
-                CategoryInfo = new CategoryInfoView(categoryInfo.categoryName, categoryInfo.category);
+                CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
                 //CategoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView; 
 
                 BuiltInCategory testCategory = CategoryManager.GetBuiltInCategory("배관");
 
-                //BuiltInCategory testCategory = CategoryInfoList.Where(x => x.categoryName.Equals("배관"))
-                //                                               .Select(x => x.category)
+                //BuiltInCategory testCategory = CategoryInfoList.Where(x => x.CategoryName.Equals("배관"))
+                //                                               .Select(x => x.Category)
                 //                                               .FirstOrDefault();
 
 
@@ -561,7 +561,7 @@ namespace RevitUpdater.UI.MEPUpdater
 
                 // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
                 var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
-                CategoryInfo = new CategoryInfoView(categoryInfo.categoryName, categoryInfo.category);
+                CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
 
                 MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
 

@@ -48,6 +48,9 @@
     <Reference Include="DevExpress.XtraGrid.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraLayout.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraPrinting.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="RevitAPI">
       <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -142,6 +145,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Json\Test.json" />
+    <None Include="Json\Updater_Parameters.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +164,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interface\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RevitUpdaterNet\RevitUpdaterNet.csproj">
+      <Project>{e84c0c23-b81f-4fa3-9a2c-3d372bb996dd}</Project>
+      <Name>RevitUpdaterNet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

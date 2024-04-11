@@ -111,12 +111,12 @@ namespace RevitUpdater.Common.Managers
                     CategoryInfoView categoryInfo = new CategoryInfoView(categoryName, category);
 
                     // TODO : 카테고리 정보 리스트 객체 "categoryInfoList"에 Linq 확장 메서드 "Where" , "ToList" 사용해서
-                    //        동일한 카테고리(BuiltInCategory category) 갯수(Count)가 존재하는지 확인
-                    int existCount = categoryInfoList.Where(catInfo => (int)catInfo.category == (int)categoryInfo.category)
+                    //        동일한 카테고리(BuiltInCategory Category) 갯수(Count)가 존재하는지 확인
+                    int existCount = categoryInfoList.Where(catInfo => (int)catInfo.Category == (int)categoryInfo.Category)
                                                      .ToList()
                                                      .Count;
 
-                    // 동일한 카테고리(BuiltInCategory category)가 존재하지 않는 경우
+                    // 동일한 카테고리(BuiltInCategory Category)가 존재하지 않는 경우
                     // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
                     if(existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
 
@@ -137,7 +137,7 @@ namespace RevitUpdater.Common.Managers
                 }
 
                 // 카테고리 정보 리스트 객체 "categoryInfoList" 카테고리 이름 순으로 정렬(OrderBy)
-                List<CategoryInfoView> orderedCategoryInfoList = categoryInfoList.OrderBy(categoryInfo => categoryInfo.categoryName)
+                List<CategoryInfoView> orderedCategoryInfoList = categoryInfoList.OrderBy(categoryInfo => categoryInfo.CategoryName)
                                                                                  .ToList();
 
                 return orderedCategoryInfoList;
@@ -146,9 +146,9 @@ namespace RevitUpdater.Common.Managers
                 //        익명 타입(Anonymous Type) 사용해서 카테고리 이름(categoryInfo.categoryName),
                 //        카테고리 정보 (categoryInfo.category) 중복 제거 처리 (2024.03.25 jbh)
                 // 참고 URL - https://developer-talk.tistory.com/560
-                // var testList = categoryInfoList.Select(categoryInfo => new { categoryInfo.categoryName, categoryInfo.category })
+                // var testList = categoryInfoList.Select(categoryInfo => new { categoryInfo.CategoryName, categoryInfo.Category })
                 //                                .Distinct()
-                //                                .OrderBy(categoryInfo => categoryInfo.categoryName)
+                //                                .OrderBy(categoryInfo => categoryInfo.CategoryName)
                 //                                .ToList();
             }
             catch(Exception ex)
