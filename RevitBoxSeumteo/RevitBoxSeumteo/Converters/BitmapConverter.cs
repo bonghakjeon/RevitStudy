@@ -20,8 +20,6 @@ namespace RevitBoxSeumteo.Converters
         /// <summary>
         /// 리소스에 등록된 이미지 파일(.png, .jpg 등등...)을 BitmapSource으로 convert 처리 해주는 메서드 
         /// </summary>
-        /// <param name="bitmap"></param>
-        /// <returns></returns>
         public static BitmapSource ConvertFromBitmap(Bitmap bitmap)
         {
             // RevitBoxSeumteo 프로젝트 파일 -> 참조 -> WindowsBase.dll 파일 추가  
