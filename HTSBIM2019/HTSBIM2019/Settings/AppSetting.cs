@@ -2,6 +2,18 @@
 
 namespace HTSBIM2019.Settings
 {
+    // TODO : 자바 디자인 패턴 "어댑터 패턴(Adapter Pattern)" 사용해서 클래스 "AppSetting"에 속하는
+    //        어댑터 클래스 "LoginSetting, UpdaterSetting, ImagineBuilderSetting" 구현 (2024.04.12 jbh)
+    // 유튜브 참고 URL - 
+    // https://youtu.be/gJDZ7pcvlAU?si=JwdbdL6BIkMtY35r
+
+    // TODO : 조합(Composition) 사용해서  클래스 "AppSetting"에 속하는 클래스 "LoginSetting, UpdaterSetting, ImagineBuilderSetting" 구현 (2024.04.12 jbh)
+    // 상속 VS 조합 
+    // 참고 URL - https://tecoble.techcourse.co.kr/post/2020-05-18-inheritance-vs-composition/
+
+    /// <summary>
+    /// 응용 프로그램 기본 설정 
+    /// </summary>
     public class AppSetting : BindableBase
     {
         // TODO : AppSetting.cs -> 응용 프로그램 기본 설정 프로퍼티 "Default" 필요시 수정 예정 (2024.04.02 jbh)
@@ -10,10 +22,10 @@ namespace HTSBIM2019.Settings
         /// </summary>
         public static AppSetting Default
         {
-            get => AppSetting._Default ?? (AppSetting._Default = new AppSetting());
+            get => _Default ?? (_Default = new AppSetting());
             set
             {
-                AppSetting._Default = value;
+                _Default = value;
                 BindableBase.StaticChanged(nameof(Default));
             }
         }
@@ -46,6 +58,20 @@ namespace HTSBIM2019.Settings
             }
         }
         private UpdaterSetting _UpdaterBase;
+
+        /// <summary>
+        /// (주)상상진화 기본 설정
+        /// </summary>
+        public ImagineBuilderSetting ImagineBuilderBase
+        {
+            get => this._ImagineBuilderBase ?? (this._ImagineBuilderBase = new ImagineBuilderSetting());
+            set
+            {
+                this._ImagineBuilderBase = value;
+                this.Changed(nameof(ImagineBuilderBase));
+            }
+        }
+        private ImagineBuilderSetting _ImagineBuilderBase;
     }
 
     #region Sample

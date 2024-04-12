@@ -1,16 +1,18 @@
 ﻿using Serilog;
 
 using System;
+using System.IO;
 using System.Reflection;
 
 using HTSBIM2019.Common.LogBase;
-using System.IO;
 using HTSBIM2019.Common.HTSBase;
 
 namespace HTSBIM2019.Common.Managers
 {
     public class DirectoryManager
     {
+        #region GetDllParentDirectoryPath
+
         /// <summary>
         /// DLL 파일의 부모 폴더 경로 구하기 
         /// </summary>
@@ -55,5 +57,11 @@ namespace HTSBIM2019.Common.Managers
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
             }
         }
+
+        #endregion GetDllParentDirectoryPath
+
+        #region Sample
+
+        #endregion Sample
     }
 }

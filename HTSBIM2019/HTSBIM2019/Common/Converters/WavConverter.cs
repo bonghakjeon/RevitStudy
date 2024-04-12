@@ -22,4 +22,8 @@ namespace HTSBIM2019.Common.Converters
     {
 
     }
+
+    #region Sample
+
+    #endregion Sample
 }

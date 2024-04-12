@@ -20,12 +20,22 @@ namespace HTSBIM2019.Common.RibbonBase
         /// <summary>
         /// 리본 패널 (HTS BIM)  
         /// </summary>
-        public const string panelHTSBIM = "HTS BIM";
+        // public const string panelHTS = "HTS";
+
+        /// <summary>
+        /// 리본 패널 (주)상상진화
+        /// </summary>
+        public const string panelImagineBuilder = "(주)상상진화";
 
         /// <summary>
         /// 리본 패널 (Updater BIM)
         /// </summary>
         public const string panelUpdater = "Updater BIM";
+
+        /// <summary>
+        /// 리본 버튼 (기업 홈페이지)
+        /// </summary>
+        public const string 기업홈페이지 = "Home Page";
 
         /// <summary>
         /// 리본 버튼 (1. MEP 사용 기록 관리)
@@ -37,6 +47,10 @@ namespace HTSBIM2019.Common.RibbonBase
         /// </summary>
         public const string 상상진화_기술지원문의 = "2. (주)상상진화 기술지원 문의";
 
+        /// <summary>
+        /// Command 명령 (기업 홈페이지) 실행 위치
+        /// </summary>
+        public const string path_기업홈페이지 = "HTSBIM2019.CmdCompanyHomePage";
 
         /// <summary>
         /// Command 명령 (1. MEP 사용 기록 관리) 실행 위치

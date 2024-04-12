@@ -48,7 +48,7 @@ namespace HTSBIM2019.Common.Managers
 
                             break;
 
-                        default:
+                        default:   // 그외 테스트인 경우 
                             TestRequestHandler testHandler = new TestRequestHandler();
                             break;
                     }
@@ -111,5 +111,9 @@ namespace HTSBIM2019.Common.Managers
         }
 
         #endregion GetForm
+
+        #region Sample
+
+        #endregion Sample
     }
 }

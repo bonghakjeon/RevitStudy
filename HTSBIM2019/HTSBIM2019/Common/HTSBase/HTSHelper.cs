@@ -39,19 +39,21 @@ namespace HTSBIM2019.Common.HTSBase
         // 참고 URL - https://gaeunhan.tistory.com/61
         // TODO : 다른 PC에서도 로그파일 생성 및 기록 기능이 실행될 수 있도록 로그 파일 생성할 전체 경로 중 루트 디렉토리 값을 내문서 폴더 (Environment.SpecialFolder.MyDocuments)로 설정 (2024.03.11 jbh)
         // 참고 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.environment.specialfolder?view=net-7.0
+
+        // TODO : 로그(Logs) 폴더(디렉토리) 경로 "LogDirPath" 필요시 사용 예정 (2024.04.12 jbh)
         /// <summary>
         /// 로그(Logs) 폴더(디렉토리) 경로 
         /// </summary>
-        public static string LogDirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\{AssemblyName}\\Logs";
+        // public static string LogDirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\{AssemblyName}\\Logs";
+
+        // TODO : Revit MEP Updater 실행시 작성되는 로그 기록이 다른 Revit 애드인 프로그램의 로그 파일에 기록되서 꼬이므로,
+        // 로그 파일 경로를 내문서((Environment.SpecialFolder.MyDocuments)가 아니라 임시로 D드라이브로 이동함. (2024.03.22 jbh) 
+        // public static string LogDirPath = $"D:\\RevitUpdater\\{AssemblyName}\\Logs";
 
         /// <summary>
         /// MEPUpdater Json 파일 경로  
         /// </summary>
         public const string MEPUpdaterJsonFilePath = @"\Json\Updater_Parameters.json";
-
-        // TODO : Revit MEP Updater 실행시 작성되는 로그 기록이 다른 Revit 애드인 프로그램의 로그 파일에 기록되서 꼬이므로,
-        // 로그 파일 경로를 내문서((Environment.SpecialFolder.MyDocuments)가 아니라 임시로 D드라이브로 이동함. (2024.03.22 jbh) 
-        // public static string LogDirPath = $"D:\\RevitUpdater\\{AssemblyName}\\Logs";
 
         #endregion 폴더(디렉토리) 경로 
 
@@ -99,12 +101,21 @@ namespace HTSBIM2019.Common.HTSBase
 
         #endregion 공통
 
+        #region CompanyHomePage
+
+        /// <summary>
+        /// (주)상상진화 기업 홈페이지 URL 주소
+        /// </summary>
+        public const string ImagineBuilder_URL = "https://imbu.co.kr";
+
+        #endregion CompanyHomePage
+
         #region MEPUpdater
 
         /// <summary>
         /// Utils - MEPUpdater 업데이터 이름
         /// </summary>
-        public const string MEPUpdaterName        = "MEPUpdater";
+        public const string MEPUpdaterName = "MEPUpdater";
 
         /// <summary>
         /// MEPUpdater 매개변수 리스트  
@@ -208,9 +219,12 @@ namespace HTSBIM2019.Common.HTSBase
         /// <summary>
         /// 상상플렉스 커뮤니티 웹 사이트 URL 주소 
         /// </summary>
-        public const string SangSangFlexURL = "https://www.ssflex.co.kr/community/open";
+        public const string SangSangFlex_URL = "https://www.ssflex.co.kr/community/open";
 
         #endregion TechnicalSupport
 
+        #region Sample
+
+        #endregion Sample
     }
 }

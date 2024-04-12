@@ -67,5 +67,9 @@ namespace HTSBIM2019.Common.Extensions
 
 
         #endregion GetReplaceWhiteSpacesString
+
+        #region Sample
+
+        #endregion Sample
     }
 }

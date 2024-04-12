@@ -39,7 +39,7 @@ namespace HTSBIM2019.Common.Extensions
         #region Parse - TEnum to string
 
         /// <summary>
-        /// Enum 구조체 멤버변수 -> Enum 열거형 구조체 멤버변수 열거형 영어 이름(string) 형변환
+        /// Enum 열거형 구조체 멤버변수 -> Enum 열거형 구조체 멤버변수 열거형 영어 이름(string) 형변환
         /// </summary>
         public static string Parse(TEnum rvEnumMemberVal)
         {
@@ -70,7 +70,7 @@ namespace HTSBIM2019.Common.Extensions
 
             try
             {
-                if (false == typeof(TEnum).IsEnum) return String.Empty;   // Enum 열거형 구조체가 아닐 경우 
+                if (false == typeof(TEnum).IsEnum) return string.Empty;   // Enum 열거형 구조체가 아닐 경우 
                 return Enum.GetName(typeof(TEnum), rvEnumValue);          // Enum 열거형 구조체일 경우 
             }
             catch (Exception ex)
@@ -81,5 +81,9 @@ namespace HTSBIM2019.Common.Extensions
         }
 
         #endregion Parse - int to string
+
+        #region Sample
+
+        #endregion Sample
     }
 }

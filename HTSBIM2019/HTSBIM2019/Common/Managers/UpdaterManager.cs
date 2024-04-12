@@ -12,6 +12,8 @@ namespace HTSBIM2019.Common.Managers
 {
     public class UpdaterManager
     {
+        #region RegisterUpdater
+
         // TODO : static 메서드 "RegisterUpdater" 필요시 추가 수정 및 사용 예정 (2024.03.22 jbh)
         /// <summary>
         /// Revit MEP 업데이터 등록
@@ -37,6 +39,10 @@ namespace HTSBIM2019.Common.Managers
         //         throw;   // 오류 발생시 상위 호출자 예외처리 전달
         //     }
         // }
+
+        #endregion RegisterUpdater
+
+        #region RegisterTriggers
 
         /// <summary>
         /// Revit MEP Triggers 등록
@@ -95,6 +101,10 @@ namespace HTSBIM2019.Common.Managers
             }
         }
 
+        #endregion RegisterTriggers
+
+        #region RemoveSetting
+
         // TODO : static 메서드 "RemoveSetting" 필요시 추가 수정 및 사용 예정 (2024.03.22 jbh)
         /// <summary>
         /// Revit MEP 업데이터 + Triggers 해제 
@@ -121,5 +131,11 @@ namespace HTSBIM2019.Common.Managers
         //         throw;   // 오류 발생시 상위 호출자 예외처리 전달
         //     }
         // }
+
+        #endregion RemoveSetting
+
+        #region Sample
+
+        #endregion Sample
     }
 }

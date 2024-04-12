@@ -4,9 +4,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-
 using System.Text;
+using System.Reflection;
 
 using Newtonsoft.Json.Linq;
 
@@ -478,5 +477,9 @@ namespace HTSBIM2019.Common.Managers
         }
 
         #endregion ClashCheck_InRealTime
+
+        #region Sample
+
+        #endregion Sample
     }
 }

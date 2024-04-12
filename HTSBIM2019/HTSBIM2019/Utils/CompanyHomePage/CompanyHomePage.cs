@@ -10,32 +10,32 @@ using HTSBIM2019.Common.LogBase;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace HTSBIM2019.Utils.TechnicalSupport
+namespace HTSBIM2019.Utils.CompanyHomePage
 {
     /// <summary>
-    /// 2. (주)상상진화 기술지원 문의
+    /// (주)상상진화 기업 홈페이지
     /// </summary>
-    public class TechnicalSupport
+    public class CompanyHomePage
     {
-        #region 프로퍼티
+        #region 프로퍼티 
 
-        #endregion 프로퍼티
+        #endregion 프로퍼티 
 
         #region 생성자
 
-        public TechnicalSupport(Document rvDoc, string pUrl)
+        public CompanyHomePage(Document rvDoc, string pUrl)
         {
-            ConnectSangSangFlex(rvDoc, pUrl);
+            ConnectImagineBuilder(rvDoc, pUrl);
         }
 
         #endregion 생성자
 
-        #region ConnectSangSangFlex
+        #region ConnectImagineBuilder
 
         /// <summary>
-        /// 기술지원 문의 웹사이트(상상플렉스 커뮤니티) 연결
+        /// (주)상상진화 기업 홈페이지 연결
         /// </summary>
-        private void ConnectSangSangFlex(Document rvDoc, string pUrl)
+        private void ConnectImagineBuilder(Document rvDoc, string pUrl)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -49,22 +49,22 @@ namespace HTSBIM2019.Utils.TechnicalSupport
                     // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                     transaction.Start(HTSHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
 
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 기술지원 문의 - 웹사이트 상상플렉스 커뮤니티 연결 시작");
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 홈페이지 연결 시작");
 
-                    // TODO : 기술지원 문의 웹사이트(상상플렉스 커뮤니티) 팝업 화면 출력 구현 (2024.04.11 jbh)
+                    // TODO : (주)상상진화 기업 홈페이지 팝업 화면 출력 구현 (2024.04.11 jbh)
                     // 참고 URL   - https://yongtech.tistory.com/58
                     // 참고 2 URL - https://findfun.tistory.com/485
 
-                    // TODO : 기술지원 문의 웹사이트(상상플렉스 커뮤니티) 구글 크롬(chrome.exe)으로 출력 구현 (2024.04.11 jbh)
+                    // TODO : (주)상상진화 기업 홈페이지 구글 크롬(chrome.exe)으로 출력 구현 (2024.04.11 jbh)
                     // 참고 URL - https://www.codeproject.com/Questions/5286855/How-do-I-open-Google-chrome-in-Csharp
                     // Process.Start("chrome.exe", pUrl);
                     // Process.Start("firefox.exe", pUrl);
 
-                    // TODO : .net FrameWork 말고 .net Core 6.0 이상 버전에서 기술지원 문의 웹사이트(상상플렉스 커뮤니티) 출력 오류시 아래 처럼 구현 (2024.04.11 jbh)
+                    // TODO : .net FrameWork 말고 .net Core 6.0 이상 버전에서  (주)상상진화 기업 홈페이지 출력 오류시 아래 처럼 구현 (2024.04.11 jbh)
                     // 참고 URL - https://endev.tistory.com/m/237
                     Process.Start(new ProcessStartInfo(pUrl) { UseShellExecute = true });
 
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 기술지원 문의 - 웹사이트 상상플렉스 커뮤니티 연결 완료");
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 홈페이지 연결 완료");
 
                     transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
                 }   // 여기서 Dispose (리소스 해제) 처리 
@@ -76,7 +76,7 @@ namespace HTSBIM2019.Utils.TechnicalSupport
             }
         }
 
-        #endregion ConnectSangSangFlex
+        #endregion ConnectImagineBuilder
 
         #region Sample
 

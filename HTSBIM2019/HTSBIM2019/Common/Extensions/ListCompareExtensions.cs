@@ -81,5 +81,8 @@ namespace HTSBIM2019.Common.Extensions
 
         #endregion Equals - ICollection<T> Compare
 
+        #region Sample
+
+        #endregion Sample
     }
 }

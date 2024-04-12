@@ -30,20 +30,20 @@ namespace HTSBIM2019.Common.LogBase
 
         #region ConfigureLogger
 
-        // TODO : C# Serilog 사용해서 로그 남기도록 static 메서드 "ConfigureLogger" 구현 (2024.01.22)
+        // TODO : C# Serilog 사용해서 로그 남기도록 static 메서드 "ConfigureLogger" 구현 (2024.01.22 jbh)
         // 참고 URL - https://afsdzvcx123.tistory.com/entry/C-%EB%AC%B8%EB%B2%95-C-Serilog-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EB%A1%9C%EA%B7%B8-%EB%82%A8%EA%B8%B0%EA%B8%B0
 
         /// <summary>
         /// Serilog 로그 초기 설정 
         /// </summary>
-        /// <param name="rvAssemblyName">로그 기록 남기려는 어셈블리 이름</param>
-        //public static void ConfigureLogger(string rvAssemblyName, string pLogDirPath)
-        public static void ConfigureLogger(string rvAssemblyName, string pDllFilePath)
+        /// <param name="pAssemblyName">로그 기록 남기려는 어셈블리 이름</param>
+        //public static void ConfigureLogger(string pAssemblyName, string pLogDirPath)
+        public static void ConfigureLogger(string pAssemblyName, string pDllFilePath)
         {
             string logDirPath = string.Empty;                                // 로그파일 상위 디렉토리(폴더) 경로 
-            // string filePath = pLogDirPath + $"\\{rvAssemblyName}_" + DateTime.Today.ToString("yyyyMMdd") + ".log";
-            // string filePath = pLogDirPath + $"\\{rvAssemblyName}_.log";   // 로그파일 생성 경로
-            string filePath = string.Empty;                                  // 로그파일 생성 경로
+            // string logFilePath = pLogDirPath + $"\\{pAssemblyName}_" + DateTime.Today.ToString("yyyyMMdd") + ".log";
+            // string logFilePath = pLogDirPath + $"\\{pAssemblyName}_.log";   // 로그파일 생성 경로
+            string logFilePath = string.Empty;                               // 로그파일 생성 경로
 
             // TODO : 로그 파일 갯수 설정 변수 "retainedFileCountLimit"를 프로퍼티(Logger 클래스 객체의 인스턴스 변수)로 구현 안 하고
             //        static 메서드 "ConfigureLogger" 안의 지역변수로 구현해서 static 메서드 "DeleteOldLogFiles(dirPath, retainedFileCountLimit)"의
@@ -62,10 +62,9 @@ namespace HTSBIM2019.Common.LogBase
                 logDirPath = sbLogDirPath.ToString();
 
                 // 상위 디렉토리(폴더) 하위 로그파일 경로 구하기 
-                StringBuilder sbFilePath = new StringBuilder(logDirPath);
-                sbFilePath.Append($"\\{rvAssemblyName}_.log");
-
-                filePath = sbFilePath.ToString();
+                StringBuilder sbLogFilePath = new StringBuilder(logDirPath);
+                sbLogFilePath.Append($"\\{pAssemblyName}_.log");
+                logFilePath = sbLogFilePath.ToString();
 
 
                 // TODO : Stylet Logger 클래스 사용 안하고 Serilog 이용해서 로그 기록 및 로그 파일 생성 (2024.01.22 jbh)
@@ -85,7 +84,7 @@ namespace HTSBIM2019.Common.LogBase
                               // 로그 파일 이름을 날짜 형식(예)"HTSBIM_20231016.log" 으로 로그 파일 생성
                               .WriteTo.File(
                                   // $"Logs\\{Assembly.GetEntryAssembly().GetName().Name}\\{Assembly.GetEntryAssembly().GetName().Name}_{DateTime.Now.ToString("yyyyMMdd")}.log",
-                                  path: filePath,
+                                  path: logFilePath,
                                   Serilog.Events.LogEventLevel.Verbose,
                                   // TODO : 로그 파일에 날짜를 수동으로 지정할 필요 없이 rollingInterval: RollingInterval.Day, 사용해서 로그파일 이름 언더바(_)옆에 로그 생성된 날짜가 추가되도록 구현
                                   //        (이렇게 구현해야 아래 프로퍼티 "retainedFileCountLimit" 사용해서 날짜가 지난 로그파일 삭제 처리 할 수 있음.) (2024.01.22 jbh) 
@@ -126,13 +125,13 @@ namespace HTSBIM2019.Common.LogBase
 
         #region DeleteOldLogFiles
 
-        // TODO : 기간 지난 로그 파일 삭제 ((new LoggerConfiguration() -> .WriteTo.File(retainedFileCountLimit)에 할당된 값(기간) 기준)) 처리 메서드 "" 구현 (2024.02.02 jbh)
+        // TODO : 기간 지난 로그 파일 삭제 ((new LoggerConfiguration() -> .WriteTo.File(retainedFileCountLimit)에 할당된 값(기간) 기준)) 처리 메서드 "DeleteOldLogFiles" 구현 (2024.02.02 jbh)
         // 참고 URL - https://chat.openai.com/c/8791804a-55ca-4bf1-b54e-1a34a68f39b5
         /// <summary>
         /// 기간 지난 로그 파일 삭제
         /// </summary>
-        /// <param name="pDirPath"></param>
-        /// <param name=""></param>
+        /// <param name="pLogDirPath"></param>
+        /// <param name="pRetainedFileCountLimit"></param>
         public static void DeleteOldLogFiles(string pLogDirPath, int pRetainedFileCountLimit)
         {
             string logDirPath = string.Empty;   // 로그 파일이 저장된 디렉토리 경로 
@@ -153,7 +152,7 @@ namespace HTSBIM2019.Common.LogBase
 
                 DirectoryInfo directory = new DirectoryInfo(logDirPath);
 
-                // 3. 디렉터리(directory)가 존재 여부 확인
+                // 3. 디렉터리(directory) 존재 여부 확인
                 if (false == directory.Exists) Directory.CreateDirectory(logDirPath);   // 디렉터리 새로 생성
 
 
@@ -177,10 +176,10 @@ namespace HTSBIM2019.Common.LogBase
                 // 참고 URL - https://www.codegrepper.com/code-examples/csharp/linq+foreach+c%23
 
                 // 날짜 지난 로그 파일이 존재하고
-                // 로그 파일 생성 날짜가 금일 날짜 보다 2일 이전(DateTime.Now.AddDays(-2))이면 로그 파일 삭제
+                // 로그 파일 생성 날짜가 금일 날짜 보다 30일 이전(DateTime.Now.AddDays(-30))이면 로그 파일 삭제
                 // 참고 URL - https://bigenergy.tistory.com/entry/C-%ED%83%80%EC%9D%B4%EB%A8%B8%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%98%A4%EB%9E%98%EB%90%9C-%ED%8C%8C%EC%9D%BC-%EC%82%AD%EC%A0%9C-%EB%A1%9C%EA%B7%B8-%EC%82%AD%EC%A0%9C
                 // 참고 2 URL - https://medialink.tistory.com/44
-                // TODO : 아래 소스코드 실행시 당일 날짜(DateTime.Now) 2일 전일(-2 = retainedFileCountLimit) 이전 로그파일 찾아서 오래된 로그 파일 삭제 처리 구현 (2024.02.02 jbh)
+                // TODO : 아래 소스코드 실행시 당일 날짜(DateTime.Now) 30일 전일(-30 = daysToKeep) 이전 로그파일 찾아서 오래된 로그 파일 삭제 처리 구현 (2024.02.02 jbh)
                 fileList.FindAll(file => file.CreationTime.CompareTo(DateTime.Now.AddDays(daysToKeep)) < 0)
                         .ForEach(file => {
                             if (Path.GetExtension(file.FullName) == ".log") File.Delete(file.FullName);
@@ -203,8 +202,6 @@ namespace HTSBIM2019.Common.LogBase
         /// <summary>
         /// 로그 실행한 Namespace 및 메서드(비동기 메서드 포함) 경로 추출
         /// </summary>
-        /// <param name="currentMethod"></param>
-        /// <returns></returns>
         public static string GetMethodPath(MethodBase pCurrentMethod)
         {
             var fullMethodPath = string.Empty;          // 실행된 메소드 전체 경로  
@@ -214,7 +211,7 @@ namespace HTSBIM2019.Common.LogBase
 
             try
             {
-                // TODO : 테스트 코드 - 강제로 오류 발생하도록 Exception 생성 하도록 구현 (필요시 사용) (2024.01.22 jbh)
+                // TODO : 테스트 코드 - 강제로 오류 발생하도록 Exception 생성 하도록 구현 (필요시 사용) (2024.04.12 jbh)
                 // 참고 URL - https://morm.tistory.com/187
                 // 참고 2 URL - https://learn.microsoft.com/ko-kr/dotnet/csharp/fundamentals/exceptions/creating-and-throwing-exceptions
                 // throw new Exception();
@@ -225,8 +222,9 @@ namespace HTSBIM2019.Common.LogBase
             }
             catch (Exception ex)
             {
-                fullMethodPath = "[" + LoggerMethod.DeclaringType.FullName + " | " + LoggerMethod.Name + "] : ";
-                Log.Error(fullMethodPath + Logger.errorMessage + ex.Message);
+                // fullMethodPath = "[" + LoggerMethod.DeclaringType.FullName + " | " + LoggerMethod.Name + "] : ";
+                // Log.Error(fullMethodPath + Logger.errorMessage + ex.Message);
+                Log.Error(LoggerMethod.Name + Logger.errorMessage + ex.Message);
                 throw;
             }
         }

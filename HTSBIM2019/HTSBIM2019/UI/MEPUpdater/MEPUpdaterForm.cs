@@ -21,6 +21,9 @@ using DevExpress.XtraEditors;
 
 namespace HTSBIM2019.UI.MEPUpdater
 {
+    /// <summary>
+    /// 1. MEP 사용 기록 관리 - Form
+    /// </summary>
     public partial class MEPUpdaterForm : XtraForm// , IUpdater
     {
         #region 프로퍼티
@@ -330,7 +333,8 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
                 var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
 
-                CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
+                if(categoryInfo is not null) CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
+                else throw new Exception("카테고리 선택 후 진행하시기 바랍니다.");
                 //CategoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView; 
 
                 // BuiltInCategory testCategory = CategoryManager.GetBuiltInCategory("배관");
@@ -366,15 +370,19 @@ namespace HTSBIM2019.UI.MEPUpdater
 
             try
             {
-                TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 등록 구현 예정...");
+                TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 등록 테스트 진행 중...");
 
                 // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
                 var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
                 // CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
 
-                AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
+                if(categoryInfo is not null)
+                {
+                    AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
 
-                MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
+                    MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
+                }
+                else throw new Exception("카테고리 선택 후 진행하시기 바랍니다.");
             }
             catch (Exception ex)
             {

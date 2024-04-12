@@ -13,15 +13,7 @@ namespace HTSBIM2019.Settings
         /// <summary>
         /// MEP 업데이터 
         /// </summary>
-        public MEPUpdater MEPUpdater
-        {
-            get => this._MEPUpdater;
-            set
-            {
-                this._MEPUpdater = value;
-                this.Changed(nameof(MEPUpdater));
-            }
-        }
+        public MEPUpdater MEPUpdater { get => _MEPUpdater; set { _MEPUpdater = value; NotifyOfPropertyChange(nameof(MEPUpdater)); } }
         private MEPUpdater _MEPUpdater;
     }
 

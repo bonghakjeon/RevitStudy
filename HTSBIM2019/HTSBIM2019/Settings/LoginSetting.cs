@@ -10,30 +10,14 @@ namespace HTSBIM2019.Settings
         /// <summary>
         /// Revit 로그인 아이디
         /// </summary>
-        public string LoginUserId   
-        {
-            get => this._LoginUserId;
-            set
-            {
-                this._LoginUserId = value;
-                this.Changed(nameof(LoginUserId));
-            }
-        }
+        public string LoginUserId { get => _LoginUserId; set { _LoginUserId = value; NotifyOfPropertyChange(nameof(LoginUserId)); } }
         private string _LoginUserId;
 
 
         /// <summary>
         /// 사용자 이름 
         /// </summary>
-        public string Username
-        {
-            get => this._Username;
-            set
-            {
-                this._Username = value;
-                this.Changed(nameof(Username));
-            }
-        }
+        public string Username { get => _Username; set { _Username = value; NotifyOfPropertyChange(nameof(Username)); } }
         private string _Username;
 
         #region Sample

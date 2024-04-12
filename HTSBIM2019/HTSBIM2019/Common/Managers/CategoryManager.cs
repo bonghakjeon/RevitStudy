@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using HTSBIM2019.Common.LogBase;
 using HTSBIM2019.Common.HTSBase;
 using HTSBIM2019.Models.HTSBase.MEPUpdater;
-using HTSBIM2019.Common.Extensions;
+//using HTSBIM2019.Common.Extensions;
 
 using Autodesk.Revit.DB;
 
@@ -112,7 +112,7 @@ namespace HTSBIM2019.Common.Managers
                 List<CategoryInfoView> categoryInfoList = new List<CategoryInfoView>();
 
 
-                foreach (Element element in geometryList)
+                foreach(Element element in geometryList)
                 {
                     categoryName = string.Empty;
                     categoryName = element.Category.Name;
@@ -137,7 +137,7 @@ namespace HTSBIM2019.Common.Managers
 
 
                     // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.03.25 jbh)
-                    // ParameterSet paramSet   = element.Parameters;
+                    // ParameterSet paramSet = element.Parameters;
 
                     // foreach(Parameter param in paramSet)
                     // {
@@ -196,18 +196,18 @@ namespace HTSBIM2019.Common.Managers
                 List<SharedParameterElement> sharedParameters = ParamsManager.GetSharedParameterList(rvDoc);
 
                 // 2 단계 : 반복문 사용해서 MEP Updater 매개변수 리스트에 존재하는 모든 매개변수 데이터 방문 
-                foreach (var updaterParam in pUpdaterParamList)
+                foreach(var updaterParam in pUpdaterParamList)
                 {
                     // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.04.04 jbh)
                     // MEP Updater 매개변수가 존재하는 경우 
                     // Parameter parameter = pAddElement.LookupParameter(updaterParam.paramName);
                     // if (parameter is not null) continue;
 
-                    // 3 단계 : 새로운 카테고리 셋 객체 catSet 생성 
+                    // 3 단계 : 새로운 카테고리 셋 객체 categorySet 생성 
                     CategorySet categorySet = rvDoc.Application.Create.NewCategorySet();
 
                     // 반복문 사용해서 카테고리 셋 하위에 존재하는 모든 카테고리 방문 
-                    foreach (var category in updaterParam.CategorySet)
+                    foreach(var category in updaterParam.CategorySet)
                     {
                         Category cat = rvDoc.Settings.Categories.get_Item(category);   // string 클래스 객체 "category"와 동일한 카테고리 가져오기 
 
@@ -225,14 +225,13 @@ namespace HTSBIM2019.Common.Managers
                     // 5 단계 : MEP Updater 매개변수 자료형(문자) 가져오기
                     if (updaterParam.DataType.Equals(HTSHelper.text)) paramType = ParameterType.Text;
 
-                    else
-                        throw new Exception($"생성할 공유 매개변수 유형(T): {HTSHelper.text}아닌\r\n다른 유형으로 오입력!\r\n담당자에게 문의하세요.");
+                    else throw new Exception($"생성할 공유 매개변수 유형(T): {HTSHelper.text}아닌\r\n다른 유형으로 오입력!\r\n담당자에게 문의하세요.");
 
                     // TODO : 공유 매개변수와 프로젝트 매개변수 차이 확인하기 (2024.04.02 jbh) 
                     // 참고 URL - https://blog.naver.com/lewis_han/222226274359
 
-                    // 6 단계 : 기존 공유 매개변수 리스트에 AIS 파라미터 추가 
-                    // TODO : using System.Linq; 추가 및 Linq 확장 메서드 "Where" 사용해서 기존 공유 매개변수 리스트에 새로이 추가 하고자 하는 AIS 파라미터 이름과 동일한 공유 매개변수 존재 여부 확인 (2024.02.13 jbh) 
+                    // 6 단계 : 기존 공유 매개변수 리스트에 매개변수("객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자") 추가 
+                    // TODO : using System.Linq; 추가 및 Linq 확장 메서드 "Where" 사용해서 기존 공유 매개변수 리스트에 새로이 추가 하고자 하는 매개변수 이름과 동일한 공유 매개변수 존재 여부 확인 (2024.02.13 jbh) 
                     // 참고 URL - https://yangbengdictionary.tistory.com/3
                     // 참고 2 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.collections.generic.list-1.exists?view=net-8.0
                     // bool isExist = sharedParameters.Exists(sharedParam => sharedParam.Name.Equals(paramName));
@@ -257,5 +256,9 @@ namespace HTSBIM2019.Common.Managers
         }
 
         #endregion CreateCategorySet
+
+        #region Sample
+
+        #endregion Sample
     }
 }
