@@ -10,6 +10,7 @@ using HTSBIM2019.UI.MEPUpdater;
 using HTSBIM2019.Settings;
 using HTSBIM2019.Utils.CompanyHomePage;
 using HTSBIM2019.Utils.TechnicalSupport;
+using HTSBIM2019.Interface.Revit;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -39,9 +40,13 @@ namespace HTSBIM2019
     /// <summary>
     /// (주)상상진화 기업 홈페이지 Command - 상상플렉스 커뮤니티
     /// </summary>
-    internal class CmdCompanyHomePage : IExternalCommand
+    internal class CmdCompanyHomePage : IExternalCommand, IRevitBase
     {
         #region 프로퍼티
+
+        public UIApplication RevitUIApp { get; set; }
+
+        public Document RevitDoc { get; set; }
 
         #endregion 프로퍼티
 
@@ -61,11 +66,11 @@ namespace HTSBIM2019
 
                 // TaskDialog.Show("(주)상상진화 기업 홈페이지...", "구현 예정...");
 
-                UIApplication revitUIApp = commandData.Application;               // Revit UI 애플리케이션 객체
-                Document revitDoc = revitUIApp.ActiveUIDocument.Document;         // 활성화된 Revit 문서 
+                RevitUIApp = commandData.Application;               // Revit UI 애플리케이션 객체
+                RevitDoc = RevitUIApp.ActiveUIDocument.Document;         // 활성화된 Revit 문서 
 
                 // (주)상상진화 기업 홈페이지 URL 주소로 연동
-                AppSetting.Default.ImagineBuilderBase.HomePage = new CompanyHomePage(revitDoc, HTSHelper.ImagineBuilder_URL);
+                AppSetting.Default.ImagineBuilderBase.HomePage = new CompanyHomePage(RevitDoc, HTSHelper.ImagineBuilder_URL);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "(주)상상진화 기업 홈페이지 Command - Execute 종료");
 
@@ -104,7 +109,7 @@ namespace HTSBIM2019
     /// <summary>
     /// 1. MEP 사용 기록 관리 Command
     /// </summary>
-    internal class CmdMEPUpdater : IExternalCommand
+    internal class CmdMEPUpdater : IExternalCommand, IRevitBase
     {
         #region 프로퍼티
 
@@ -112,6 +117,10 @@ namespace HTSBIM2019
         /// MEPUpdater 폼 객체 
         /// </summary>
         private static MEPUpdaterForm MEPUpdaterForm { get; set; }
+
+        public UIApplication RevitUIApp { get; set; }
+
+        public Document RevitDoc { get; set; }
 
         #endregion 프로퍼티
 
@@ -133,11 +142,11 @@ namespace HTSBIM2019
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "1. MEP 사용 기록 관리 Command - Execute 시작");
 
-                UIApplication revitUIApp = commandData.Application;               // Revit UI 애플리케이션 객체 
-                // Document revitDoc = revitUIApp.ActiveUIDocument.Document;           // 활성화된 Revit 문서 
+                RevitUIApp = commandData.Application;                             // Revit UI 애플리케이션 객체 
+                RevitDoc = RevitUIApp.ActiveUIDocument.Document;                  // 활성화된 Revit 문서 
                 // AddInId addInId = revitUIApp.ActiveAddInId;                    // HTS Revit 업데이터 Command 아이디
 
-                Application revitApp = revitUIApp.Application;                    // Revit 애플리케이션 객체 
+                Application revitApp = RevitUIApp.Application;                    // Revit 애플리케이션 객체 
 
                 // TODO : 로그인 아이디, 작업자(사용자) 이름 구하기 (2024.03.02 jbh)
                 // 참고 URL   - https://www.revitapidocs.com/2018/8d3b257a-7b99-a6ee-b146-f635c35f425c.htm
@@ -148,13 +157,15 @@ namespace HTSBIM2019
 
                 // TaskDialog.Show("HTS Revit Update...", "테스트 진행 중...");
 
-                if (revitUIApp.ActiveUIDocument is null)   // Revit 문서를 열지 않은 경우 
-                    throw new Exception("MEP Updater 기능 실행하기 전에\r\nRevit 문서를 열어 주시기 바랍니다.");
+                // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.04.15 jbh)
+                // if (RevitUIApp.ActiveUIDocument is null)   // Revit 문서를 열지 않은 경우 
+                // if (RevitDoc is null)   // Revit 문서를 열지 않은 경우 
+                //     throw new Exception("MEP Updater 기능 실행하기 전에\r\nRevit 문서를 열어 주시기 바랍니다.");
 
                 // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
                 // MEPUpdaterForm.ShowDialog();
                 // MEPUpdaterForm.Show();
-                FormManager.ShowForm(MEPUpdaterForm, revitUIApp, typeof(MEPUpdaterForm));
+                FormManager.ShowModalessForm(MEPUpdaterForm, RevitUIApp, typeof(MEPUpdaterForm));
 
                 // TestMEPUpdater testMEPUpdater = new TestMEPUpdater();
                 // testMEPUpdater.Show();
@@ -195,9 +206,13 @@ namespace HTSBIM2019
     /// <summary>
     /// 2. (주)상상진화 기술지원 문의 Command - 상상플렉스 커뮤니티
     /// </summary>
-    internal class CmdTechnicalSupport : IExternalCommand
+    internal class CmdTechnicalSupport : IExternalCommand, IRevitBase
     {
         #region 프로퍼티
+
+        public UIApplication RevitUIApp { get; set; }
+
+        public Document RevitDoc { get; set; }
 
         #endregion 프로퍼티
 
@@ -217,11 +232,11 @@ namespace HTSBIM2019
 
                 // TaskDialog.Show("(주)상상진화 기술지원 문의...", "구현 예정...");
 
-                UIApplication revitUIApp = commandData.Application;               // Revit UI 애플리케이션 객체
-                Document revitDoc = revitUIApp.ActiveUIDocument.Document;         // 활성화된 Revit 문서 
+                RevitUIApp = commandData.Application;                    // Revit UI 애플리케이션 객체
+                RevitDoc = RevitUIApp.ActiveUIDocument.Document;         // 활성화된 Revit 문서 
 
                 // 상상플렉스 웹사이트 URL 주소로 연동
-                AppSetting.Default.ImagineBuilderBase.TechSupport = new TechnicalSupport(revitDoc, HTSHelper.SangSangFlex_URL);
+                AppSetting.Default.ImagineBuilderBase.TechSupport = new TechnicalSupport(RevitDoc, HTSHelper.SangSangFlex_URL);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "2. (주)상상진화 기술지원 문의 Command - Execute 종료");
 

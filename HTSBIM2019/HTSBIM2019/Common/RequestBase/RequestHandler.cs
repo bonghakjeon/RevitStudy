@@ -23,7 +23,7 @@ namespace HTSBIM2019.Common.RequestBase
 
         public void Execute(UIApplication app)
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         #endregion Execute
@@ -32,7 +32,8 @@ namespace HTSBIM2019.Common.RequestBase
 
         public string GetName()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
+            return "TestForm";
         }
 
         #endregion GetName
@@ -136,7 +137,7 @@ namespace HTSBIM2019.Common.RequestBase
 
 
                 // 3. 인터페이스 "IUpdater" 상속 받는 폼 객체 "MEPUpdater" 찾기 
-                // MEPUpdaterForm mepUpdaterForm = (MEPUpdaterForm)FormManager.GetForm(typeof(IUpdater), typeof(MEPUpdaterForm));
+                // MEPUpdaterForm mepUpdaterForm = (MEPUpdaterForm)FormManager.GetModalessForm(typeof(IUpdater), typeof(MEPUpdaterForm));
 
                 // Revit MEP 업데이터 + Triggers가 등록되어 있는 경우 true 리턴 / Revit MEP 업데이터 + Triggers가 이미 해제되어 있는 경우 false 리턴 
                 isUpdaterRegistered = UpdaterRegistry.IsUpdaterRegistered(updater_Id, RevitDoc);   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 

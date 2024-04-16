@@ -45,7 +45,7 @@ namespace HTSBIM2019
             {
                 dllParentDirPath = DirectoryManager.GetDllParentDirectoryPath(HTSHelper.AssemblyFilePath);  // dll 파일(HTSBIM2019.dll)이 속한 부모 폴더 경로 가져오기 
                 //Logger.ConfigureLogger(HTSHelper.AssemblyName, HTSHelper.LogDirPath);   // Serilog 로그 초기 설정 
-                Logger.ConfigureLogger(HTSHelper.AssemblyName, dllParentDirPath);   // Serilog 로그 초기 설정 
+                Logger.ConfigureLogger(HTSHelper.LogFileCountLimit, HTSHelper.AssemblyName, dllParentDirPath);   // Serilog 로그 초기 설정 
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "HTS Revit 업데이터 프로그램 시작");
 

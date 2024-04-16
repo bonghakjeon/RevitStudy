@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
+using HTSBIM2019.Common.HTSBase;
+
 namespace HTSBIM2019.Common.LogBase
 {
     // TODO : Revit AddIn 개발 소스를 비쥬얼스튜디오 2022 .net Core 버전(8.0)을 사용하려면 Revit 2025 버전 부터 사용이 가능하므로 현 시점에서 해당 소스는 .net FrameWork 4.8에서만 구동시킬 수 있다. (2024.03.11 jbh)
@@ -38,7 +40,8 @@ namespace HTSBIM2019.Common.LogBase
         /// </summary>
         /// <param name="pAssemblyName">로그 기록 남기려는 어셈블리 이름</param>
         //public static void ConfigureLogger(string pAssemblyName, string pLogDirPath)
-        public static void ConfigureLogger(string pAssemblyName, string pDllFilePath)
+        //public static void ConfigureLogger(string pAssemblyName, string pDllFilePath)
+        public static void ConfigureLogger(int pLogFileCountLimit, string pAssemblyName, string pDllFilePath)
         {
             string logDirPath = string.Empty;                                // 로그파일 상위 디렉토리(폴더) 경로 
             // string logFilePath = pLogDirPath + $"\\{pAssemblyName}_" + DateTime.Today.ToString("yyyyMMdd") + ".log";
@@ -52,7 +55,7 @@ namespace HTSBIM2019.Common.LogBase
             //        하기 때문이다.
             // static 메서드 유튜브 참고 URL - https://youtu.be/Fl4TzjPKAMU?si=KUrhqTCO8jrNzicy
             // TODO : 테스트 완료 후 로그 파일 갯수 설정 프로퍼티 "retainedFileCountLimit" 기간 30으로 수정 예정 (2024.02.02 jbh)
-            int retainedFileCountLimit = 30;   // 로그 파일 갯수 설정 (테스트용 30일 이전)
+            // int retainedFileCountLimit = HTSHelper.LogFileCountLimit;   // 로그 파일 갯수 설정 (테스트용 30일 이전)
 
             try
             {
@@ -94,7 +97,7 @@ namespace HTSBIM2019.Common.LogBase
                                                                // TODO : 테스트 용 로그 파일 갯수 2개(2일치 로그) 설정(2일 이상 지난 오래된 로그는 삭제 처리)
                                                                //        2일 지난 로그 파일 정상적으로 삭제 처리시 아래 주석 처리된 소스코드 "retainedFileCountLimit: 62,"로 다시 구현해야 함. (2024.01.22 jbh)
                                                                // 참고 URL - https://stackoverflow.com/questions/44577336/how-do-i-automatically-tail-delete-older-logs-using-serilog-in-a-net-wpf-appl
-                                  retainedFileCountLimit: retainedFileCountLimit,
+                                  retainedFileCountLimit: pLogFileCountLimit,
                                   // retainedFileCountLimit: 62,  // 로그 파일 갯수 62개(2달치 로그) 설정(2달 지난 오래된 로그는 삭제 처리) - 기본 31개 설정 가능, null 옵션 가능
                                   encoding: Encoding.UTF8
                               )
@@ -103,7 +106,7 @@ namespace HTSBIM2019.Common.LogBase
 
                 // 기간 지난 로그 파일 삭제 (new LoggerConfiguration() -> .WriteTo.File(retainedFileCountLimit)에 할당된 값(기간) 기준)
                 //DeleteOldLogFiles(pLogDirPath, retainedFileCountLimit);
-                DeleteOldLogFiles(logDirPath, retainedFileCountLimit);
+                DeleteOldLogFiles(pLogFileCountLimit, logDirPath);
 
                 // 로그 레벨 기록 예시
                 //Log.Information($"Info name = {System.Reflection.Assembly.GetEntryAssembly().GetName().Name}");
@@ -132,7 +135,7 @@ namespace HTSBIM2019.Common.LogBase
         /// </summary>
         /// <param name="pLogDirPath"></param>
         /// <param name="pRetainedFileCountLimit"></param>
-        public static void DeleteOldLogFiles(string pLogDirPath, int pRetainedFileCountLimit)
+        public static void DeleteOldLogFiles(int pLogFileCountLimit, string pLogDirPath)
         {
             string logDirPath = string.Empty;   // 로그 파일이 저장된 디렉토리 경로 
 
@@ -148,7 +151,7 @@ namespace HTSBIM2019.Common.LogBase
             {
                 logDirPath = pLogDirPath;                                   // 1. 로그 파일이 저장된 디렉토리 경로 할당
 
-                daysToKeep = (-1) * pRetainedFileCountLimit;                // 2. 로그 파일 삭제할 기간 설정 (로그파일 삭제하려면 음수로 값 할당 처리 필요)
+                daysToKeep = (-1) * pLogFileCountLimit;                     // 2. 로그 파일 삭제할 기간 설정 (로그파일 삭제하려면 음수로 값 할당 처리 필요)
 
                 DirectoryInfo directory = new DirectoryInfo(logDirPath);
 

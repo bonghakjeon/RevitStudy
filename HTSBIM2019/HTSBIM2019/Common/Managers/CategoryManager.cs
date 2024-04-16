@@ -53,15 +53,18 @@ namespace HTSBIM2019.Common.Managers
 
                     CategoryInfoView categoryInfo = new CategoryInfoView(categoryName, builtInCategory);
 
+                    categoryInfoList.Add(categoryInfo);
+
+                    // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.04.15 jbh)
                     // TODO : 카테고리 정보 리스트 객체 "categoryInfoList"에 Linq 확장 메서드 "Where" , "ToList" 사용해서
                     //        동일한 카테고리(BuiltInCategory Category) 갯수(Count)가 존재하는지 확인
-                    existCount = categoryInfoList.Where(catInfo => (int)catInfo.Category == (int)categoryInfo.Category)
-                                                 .ToList()
-                                                 .Count;
+                    // existCount = categoryInfoList.Where(catInfo => (int)catInfo.Category == (int)categoryInfo.Category)
+                    //                              .ToList()
+                    //                              .Count;
 
                     // 동일한 카테고리(BuiltInCategory Category)가 존재하지 않는 경우
                     // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
-                    if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
+                    // if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
                 }
 
                 // 카테고리 정보 리스트 객체 "categoryInfoList" 카테고리 이름 순으로 정렬(OrderBy)
@@ -124,15 +127,18 @@ namespace HTSBIM2019.Common.Managers
 
                     CategoryInfoView categoryInfo = new CategoryInfoView(categoryName, category);
 
+                    categoryInfoList.Add(categoryInfo);
+
+                    // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.04.15 jbh)
                     // TODO : 카테고리 정보 리스트 객체 "categoryInfoList"에 Linq 확장 메서드 "Where" , "ToList" 사용해서
                     //        동일한 카테고리(BuiltInCategory Category) 갯수(Count)가 존재하는지 확인
-                    int existCount = categoryInfoList.Where(catInfo => (int)catInfo.Category == (int)categoryInfo.Category)
-                                                     .ToList()
-                                                     .Count;
+                    // int existCount = categoryInfoList.Where(catInfo => (int)catInfo.Category == (int)categoryInfo.Category)
+                    //                                  .ToList()
+                    //                                  .Count;
 
                     // 동일한 카테고리(BuiltInCategory Category)가 존재하지 않는 경우
                     // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
-                    if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
+                    // if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
 
 
 
@@ -177,12 +183,13 @@ namespace HTSBIM2019.Common.Managers
         #region CreateCategorySet
 
         /// <summary>
-        /// 활성화된 Revit 문서에 MEP Updater 전용 카테고리셋 생성 
+        /// 활성화 된 Revit 문서에 MEP Updater 전용 카테고리셋 생성 
         /// </summary>
         public static void CreateCategorySet(Document rvDoc, List<Updater_Parameters> pUpdaterParamList)
         {
             string paramName = string.Empty;                     // MEP Updater 매개변수 이름
-            ParameterType paramType = ParameterType.Invalid;     // 생성할 매개변수 유형
+            ParameterType paramType = ParameterType.Invalid;     // 생성할 매개변수 자료형(유형)
+
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록하기
 
             try
@@ -220,7 +227,7 @@ namespace HTSBIM2019.Common.Managers
                     paramName = string.Empty;
                     paramName = updaterParam.ParamName;
 
-                    paramType = ParameterType.Invalid;   // MEP Updater 매개변수 유형 초기화
+                    paramType = ParameterType.Invalid;   // MEP Updater 매개변수 자료형(유형) 초기화
 
                     // 5 단계 : MEP Updater 매개변수 자료형(문자) 가져오기
                     if (updaterParam.DataType.Equals(HTSHelper.text)) paramType = ParameterType.Text;
@@ -239,7 +246,13 @@ namespace HTSBIM2019.Common.Managers
 
                     // 6 - 1 : 기존 공유 매개변수 리스트에 새로이 추가 하고자 하는 MEPUpdater 매개변수가 존재하지 않는 경우 
                     if (false == isExist)
-                        ParamsManager.CreateParameter(rvDoc, categorySet, paramName, paramType, false);  // MEPUpdater 매개변수 생성 (pUserModifiable = false 설정. 왜냐하면 사용자가 화면 상에서 매개변수에 매핑된 값 수정 불가 설정)
+                    {
+                        CreateParamView createParam = new CreateParamView(categorySet, paramName, paramType, false);
+
+                        // ParamsManager.CreateParameter(rvDoc, categorySet, paramName, paramType, false);  // MEPUpdater 매개변수 생성 (pUserModifiable = false 설정. 왜냐하면 사용자가 화면 상에서 매개변수에 매핑된 값 수정 불가 설정)
+                        ParamsManager.CreateParameter(rvDoc, createParam);  // MEPUpdater 매개변수 생성 (pUserModifiable = false 설정. 왜냐하면 사용자가 화면 상에서 매개변수에 매핑된 값 수정 불가 설정)
+                    }
+                        
 
                     // TODO : 아래 주석친 코드 필요시 참고 (2024.04.04 jbh)
                     // 6 - 2 : 기존 공유 매개변수 리스트에 새로이 추가 하고자 하는 MEPUpdater 매개변수가 존재하는 경우 

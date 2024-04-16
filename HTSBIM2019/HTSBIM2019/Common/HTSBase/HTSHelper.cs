@@ -33,6 +33,15 @@ namespace HTSBIM2019.Common.HTSBase
 
         #endregion 어셈블리
 
+        #region 로그 파일
+
+        /// <summary>
+        /// 로그 파일 갯수 설정 (테스트용 30일 이전)
+        /// </summary>
+        public const int LogFileCountLimit = 30;   
+
+        #endregion 로그 파일
+
         #region 폴더(디렉토리) 경로 
 
         // TODO : C# 문자열 보간 기능 사용해서 로그파일 생성할 상위 폴더 경로 문자열로 변환 (2024.01.22 jbh)

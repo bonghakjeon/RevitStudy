@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 
-using Autodesk.Revit.DB;
+//using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
 using HTSBIM2019.Common.LogBase;
@@ -22,7 +22,7 @@ namespace HTSBIM2019.Common.Managers
         /// <summary>
         /// Modaless 폼(.Show()) 형식 화면 출력 
         /// </summary>
-        public static void ShowForm(System.Windows.Forms.Form pModalessForm, UIApplication rvUIApp, Type pModalessFormType)
+        public static void ShowModalessForm(System.Windows.Forms.Form pModalessForm, UIApplication rvUIApp, Type pModalessFormType)
         {
             string modalessFormName = string.Empty;               // Modaless 폼 객체 이름
 
@@ -65,16 +65,16 @@ namespace HTSBIM2019.Common.Managers
 
         #endregion ShowForm
 
-        #region GetForm
+        #region GetModalessForm
 
-        // TODO : 특정 인터페이스를 상속 받는 폼 객체 찾기 메서드 "GetForm" 구현 (2024.03.20 jbh)
+        // TODO : 특정 인터페이스를 상속 받는 폼 객체 찾기 메서드 "GetModalessForm" 구현 (2024.03.20 jbh)
         // 참고 URL - https://blog.naver.com/jskimmail/222706926984
         // 참고 2 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.type.getinterface?view=net-8.0
 
         /// <summary>
-        /// 특정 인터페이스를 상속 받는 현재 실행중인 폼 객체 찾기
+        /// 특정 인터페이스를 상속 받는 현재 실행중인 Modaless 폼(.Show()) 객체 찾기
         /// </summary>
-        public static System.Windows.Forms.Form GetForm(Type pInterfaceType, Type pModalessFormType)
+        public static System.Windows.Forms.Form GetModalessForm(Type pInterfaceType, Type pModalessFormType)
         {
             System.Windows.Forms.Form form = null;                // 특정 인터페이스를 상속 받는 폼 객체
             var currentMethod = MethodBase.GetCurrentMethod();    // 로그 기록시 현재 실행 중인 메서드 위치 
@@ -110,7 +110,7 @@ namespace HTSBIM2019.Common.Managers
             }
         }
 
-        #endregion GetForm
+        #endregion GetModalessForm
 
         #region Sample
 

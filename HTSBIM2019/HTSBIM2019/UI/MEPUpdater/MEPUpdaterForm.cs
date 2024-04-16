@@ -1,7 +1,6 @@
 ﻿using Serilog;
 
 using System;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
@@ -110,8 +109,8 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 // TODO : 화면 상단 바 버튼 "최소화", "최대화" 비활성화 구현 (2024.03.14 jbh)
                 // 참고 URL - https://zelits.tistory.com/690
-                this.MinimizeBox = false;                            // 버튼 "최소화" 비활성화
-                this.MaximizeBox = false;                            // 버튼 "최대화" 비활성화
+                // this.MinimizeBox = false;                            // 버튼 "최소화" 비활성화
+                // this.MaximizeBox = false;                            // 버튼 "최대화" 비활성화
 
                 // Behind Code "MEPUpdater.cs"에서 폼 화면(MEPUpdater) Width, Height 고정 
                 // 참고 URL - https://kdsoft-zeros.tistory.com/3
@@ -150,11 +149,11 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // 참고 URL - https://thebuildingcoder.typepad.com/blog/2016/04/stable-reference-string-magic-voodoo.html
                 GeometryOpt = rvUIApp.Application.Create.NewGeometryOptions();
                 GeometryOpt.DetailLevel = ViewDetailLevel.Fine;
-                GeometryOpt.ComputeReferences = true;           // 각 Geometry 객체에 대해 GeometryObject.Reference 속성을 활성화하도록 Revit을 설정
+                GeometryOpt.ComputeReferences = true;              // 각 Geometry 객체에 대해 GeometryObject.Reference 속성을 활성화하도록 Revit을 설정
 
 
                 // CategoryDataCreate(Collector, GeometryOpt);     // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
-                CategoryDataCreate(RevitDoc);     // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                CategoryDataCreate(RevitDoc);                      // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
 
                 // 8. GUID 생성 
                 // Guid guId = new Guid(HTSHelper.GId);
@@ -208,7 +207,7 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // TODO : ComboBox(comboBoxCategory)안에 있는 텍스트를 수정 못 하도록 "ComboBoxStyle.DropDownList"로 설정 (2024.03.26 jbh)
                 // 참고 URL - https://milkoon1.tistory.com/73
                 this.comboBoxCategory.DropDownStyle = ComboBoxStyle.DropDownList;
-                this.comboBoxCategory.SelectedIndex = -1;
+                this.comboBoxCategory.SelectedIndex = (int)EnumCategoryInfo.OST_PIPE_CURVES;
 
                 this.comboBoxCategory.Refresh();   // 변경 사항 반영 하도록 comboBoxCategory 컨트롤 Refresh
             }
@@ -236,8 +235,8 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 // Revit Updater Modaless 폼(MEPUpdater) 화면 닫기 전에 외부 이벤트 프로퍼티 "ExEvent" 리소스 해제 
                 ExEvent.Dispose();
-                ExEvent = null;   // 외부 이벤트 null로 초기화
-                RequestHandler = null;   // 외부 요청 핸들러 null로 초기화
+                ExEvent = null;             // 외부 이벤트 null로 초기화
+                RequestHandler = null;      // 외부 요청 핸들러 null로 초기화
 
                 // base.OnFormClosed(e);    // 폼화면 닫기 (해당 메서드 base.OnFormClosed(e); 호출시 이벤트 메서드 MEPUpdater_FormClosed 두번 실행되서 오류 발생하므로 주석처리 진행)
 
@@ -296,7 +295,7 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// </summary>
         private void EnableCommands(bool pStatus)
         {
-            foreach (System.Windows.Forms.Control ctrl in this.Controls)
+            foreach(System.Windows.Forms.Control ctrl in this.Controls)
             {
                 ctrl.Enabled = pStatus;
             }
@@ -328,13 +327,13 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 // var paramList = ParamsManager.GetMEPUpdaterParameterList(dllParentDirPath);
 
-                var testCategoryList = CategoryManager.GetCategoryInfoList(RevitDoc); 
+                // var testCategoryList = CategoryManager.GetCategoryInfoList(RevitDoc); 
 
                 // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
-                var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
+                // var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
 
-                if(categoryInfo is not null) CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
-                else throw new Exception("카테고리 선택 후 진행하시기 바랍니다.");
+                // if(categoryInfo is not null) CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
+                // else throw new Exception("카테고리 정보 존재하지 않습니다.\r\n담당자에게 문의 하시기 바랍니다.");
                 //CategoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView; 
 
                 // BuiltInCategory testCategory = CategoryManager.GetBuiltInCategory("배관");
@@ -382,7 +381,7 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                     MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
                 }
-                else throw new Exception("카테고리 선택 후 진행하시기 바랍니다.");
+                else throw new Exception("카테고리 정보 존재하지 않습니다.\r\n담당자에게 문의 하시기 바랍니다.");
             }
             catch (Exception ex)
             {

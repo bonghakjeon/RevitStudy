@@ -34,13 +34,11 @@ namespace HTSBIM2019.Common.Managers
 
             try
             {
+                // TODO : 아래 소스코드는 Revit2019 버전에서 사용 불가 코드로 확인되어 주석 처리 진행 (2024.04.15 jbh)
                 // TODO : BuiltInParameter -> ForgeTypeId 구하기 (2024.03.14 jbh)
                 //        아래 URL 주소와 연동된 PDF 문서 5 Page -> "ParameterUtils.GetParameterTypeId(BuiltInParameter)" 참고
                 // 참고 URL - https://thebuildingcoder.typepad.com/files/revit_platform_api_changes_and_additions_2022.pdf
                 // ForgeTypeId forgeTypeId = ParameterUtils.GetParameterTypeId(pBuiltInParam);
-
-                
-
                 // builtInParamName = LabelUtils.GetLabelForBuiltInParameter(forgeTypeId, LanguageType.Korean);   // BuiltInParameter 매개변수 이름 할당
 
                 builtInParamName = LabelUtils.GetLabelFor(pBuiltInParam);
@@ -215,8 +213,8 @@ namespace HTSBIM2019.Common.Managers
             {
                 // Revit 문서(rvDoc) 안에 포함된 객체(Element)만 필터링 처리
                 // 주의사항 - 메서드 "WhereElementIsElementType", "WhereElementIsNotElementType" 둘 다 테스트해서 사용해 보고 둘 중 어느 것으로 사용할지 진행
-                // FilteredElementCollector collector = new FilteredElementCollector(rvDoc).WhereElementIsElementType();         // 객체 유형(Element Types)인 객체(Element)만 필터링 
-                FilteredElementCollector collector = new FilteredElementCollector(rvDoc).WhereElementIsNotElementType();   // 객체 유형(Element Types)이 아닌 객체(Element)만 필터링
+                // FilteredElementCollector collector = new FilteredElementCollector(rvDoc).WhereElementIsElementType();   // 객체 유형(Element Type)인 객체(Element)만 필터링 
+                FilteredElementCollector collector = new FilteredElementCollector(rvDoc).WhereElementIsNotElementType();   // 객체 유형(Element Type)이 아닌 객체(Element)만 필터링
 
 
 
@@ -243,7 +241,8 @@ namespace HTSBIM2019.Common.Managers
         /// 활성화된 Revit 문서 카테고리 하위 MEPUpdater 전용 매개변수 생성(추가) 
         /// 메서드 파라미터 "rvDataType" 넣어서 새로 구현하기 
         /// </summary>
-        public static void CreateParameter(Document rvDoc, CategorySet rvCatSet, string rvParamName, ParameterType rvParamType, bool pUserModifiable)
+        public static void CreateParameter(Document rvDoc, CreateParamView pCreateParam)
+        //public static void CreateParameter(Document rvDoc, CategorySet rvCatSet, string rvParamName, ParameterType rvParamType, bool rvUserModifiable)
         {
             // Autodesk Revit에는 공유 매개변수 파일이 없으므로 공유 매개변수 파일 객체에 액세스 하기 전에
             // string 클래스 객체 "oriFile"에 공유 매개변수 파일 전체 경로 프로퍼티 "SharedParametersFilename" 할당하기 
@@ -285,14 +284,14 @@ namespace HTSBIM2019.Common.Managers
 
                 // 새로운 공유 매개변수 정의를 생성 하기 위해 ExternalDefinitionCreationOptions 옵션 클래스 객체 opt 생성 
                 //ExternalDefinitionCreationOptions opt = new ExternalDefinitionCreationOptions(rvParamName, SpecTypeId.String.Text);
-                ExternalDefinitionCreationOptions opt = new ExternalDefinitionCreationOptions(rvParamName, rvParamType);
+                ExternalDefinitionCreationOptions opt = new ExternalDefinitionCreationOptions(pCreateParam.ParamName, pCreateParam.ParameterType);
                 //opt.Visible = visible;
                 opt.Visible = true;        // 새로운 공유 매개변수가 사용자에게 표시 되도록 true 할당
 
                 // TODO : 프로퍼티 "UserModifiable" 사용해서 사용자가 새로 생성한 공유 매개변수에 매핑된 값을 화면상에서 수정 여부 설정 구현 (2024.04.04 jbh)
                 // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
                 // 참고 2 URL - https://www.revitapidocs.com/2018/99e14a83-f976-2465-6464-ed3f8a159000.htm
-                opt.UserModifiable = pUserModifiable;     
+                opt.UserModifiable = pCreateParam.UserModifiable;     
 
 
                 // 3 단계 : 외부 정의 클래스 ExternalDefinition 객체 exDef에 defGroup.Definitions.Create(opt) as ExternalDefinition 할당 
@@ -315,7 +314,7 @@ namespace HTSBIM2019.Common.Managers
 
                 // 메서드 "NewInstanceBinding" 사용시 탭 "관리" -> 버튼 "프로젝트 매개변수" -> 매개변수 클릭 (예)AIS_걸레받이마감
                 // 팝업화면 "매개변수 특성" 출력 -> 항목 "매개변수 데이터"에 속하는 매개변수 타입(AIS_Parameters.json - "paramType")은 "인스턴스"로 체크된다.
-                binding = rvDoc.Application.Create.NewInstanceBinding(rvCatSet);
+                binding = rvDoc.Application.Create.NewInstanceBinding(pCreateParam.CategorySet);
 
                 // TODO : 점심 먹고나서 아래 부터 로직 분석 진행하기 (2024.01.24 jbh)
                 // 6 단계 : Document.ParameterBindings 개체를 사용 문서에 새로운 공유 매개변수 바인딩 및 정의 추가 (map.Insert(exDef, binding))
@@ -347,7 +346,7 @@ namespace HTSBIM2019.Common.Managers
         {
             bool bResult = false;                                // 매개변수에 입력할 값 할당 완료 여부 false로 초기화
 
-            List<SetParamInfoView> setCompletedParameters = new List<SetParamInfoView>();     // 매개변수 값 할당 완료된 객체(이름, 값) 리스트 객체 생성 
+            List<SetParamView> setCompletedParameters = new List<SetParamView>();     // 매개변수 값 할당 완료된 객체(이름, 값) 리스트 객체 생성 
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록 
 
@@ -414,7 +413,7 @@ namespace HTSBIM2019.Common.Managers
                     // 매개변수에 값 입력 완료한 경우 
                     if (true == bResult)
                     {
-                        SetParamInfoView setCompletedParameter = new SetParamInfoView(rvParamName, rvParamValue);
+                        SetParamView setCompletedParameter = new SetParamView(rvParamName, rvParamValue);
 
                         setCompletedParameters.Add(setCompletedParameter);
                     }

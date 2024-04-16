@@ -66,12 +66,33 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
     /// <summary>
     /// 동일 카테고리 존재여부 확인
     /// </summary>
-    public enum EnumCategoryInfo : int
+    public enum EnumEqualCategoryInfo : int
     {
         [Description("동일 카테고리 존재 안 함.")]
         NONE = 0,
         [Description("동일 카테고리 존재함.")]
         EXIST = 1
+    }
+
+    #endregion EnumCategoryInfo
+
+    #region EnumCategoryInfo
+
+    /// <summary>
+    /// 카테고리 종류
+    /// </summary>
+    public enum EnumCategoryInfo : int
+    {
+        [Description("없음")]
+        NONE = -1,
+        [Description("배관")]
+        OST_PIPE_CURVES = 0,
+        [Description("배관 단열재")]
+        OST_PIPE_INSULATIONS = 1,
+        [Description("배관 밸브류")]
+        OST_PIPE_ACCESSORY = 2,
+        [Description("배관 부속류")]
+        OST_PIPE_FITTING = 3,
     }
 
     #endregion EnumCategoryInfo
@@ -194,12 +215,63 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
 
     #endregion BuiltInCategoryView
 
-    #region SetParamInfoView
+    #region CreateParamView
+
+    /// <summary>
+    /// 새로 생성할 매개변수 정보
+    /// </summary>
+    public class CreateParamView : BindableBase
+    {
+        #region 프로퍼티
+    
+        /// <summary>
+        /// 매개변수가 속한 상위 카테고리 셋
+        /// </summary>
+        public CategorySet CategorySet { get => _CategorySet; set { _CategorySet = value; NotifyOfPropertyChange(); } }
+        private CategorySet _CategorySet;
+    
+        /// <summary>
+        /// 매개변수 이름
+        /// </summary>
+        public string ParamName { get => _ParamName; set { _ParamName = value; NotifyOfPropertyChange(); } }
+        private string _ParamName;
+    
+        /// <summary>
+        /// 매개변수 자료형(유형)
+        /// </summary>
+        public ParameterType ParameterType { get => _ParameterType; set { _ParameterType = value; NotifyOfPropertyChange(); } }
+        private ParameterType _ParameterType;
+    
+        /// <summary>
+        /// 사용자가 화면 상에서 매개변수에 매핑된 값 수정 가능 여부
+        /// </summary>
+        public bool UserModifiable { get => _UserModifiable; set { _UserModifiable = value; NotifyOfPropertyChange(); } }
+        private bool _UserModifiable;
+    
+        #endregion 프로퍼티
+    
+        #region 생성자
+    
+        public CreateParamView(CategorySet rvCatSet, string rvParamName, ParameterType rvParamType, bool rvUserModifiable)
+        {
+            this._CategorySet = rvCatSet;
+            this._ParamName = rvParamName;
+            this._ParameterType = rvParamType;
+            this._UserModifiable = rvUserModifiable;
+        }
+    
+        #endregion 생성자
+    
+    }
+
+    #endregion CreateParamView
+
+    #region SetParamView
 
     /// <summary>
     /// 입력할 값이 할당된 매개변수 정보
     /// </summary>
-    public class SetParamInfoView : BindableBase
+    public class SetParamView : BindableBase
     {
         #region 프로퍼티
 
@@ -219,7 +291,7 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
 
         #region 생성자
 
-        public SetParamInfoView(string rvParamName, string rvParamValue)
+        public SetParamView(string rvParamName, string rvParamValue)
         {
             this._ParamName = rvParamName;
             this._ParamValue = rvParamValue;
@@ -228,7 +300,7 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
         #endregion 생성자
     }
 
-    #endregion SetParamInfoView
+    #endregion SetParamView
 
     #region Updater_Parameters
 

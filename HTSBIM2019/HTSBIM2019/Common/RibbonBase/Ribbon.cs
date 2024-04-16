@@ -50,15 +50,16 @@ namespace HTSBIM2019.Common.RibbonBase
                 Dictionary<string, RibbonPanel> PanelDic = new Dictionary<string, RibbonPanel>();
                 PanelDic.Add(RibbonHelper.panelImagineBuilder, rvUIControlledApp.CreateRibbonPanel(RibbonHelper.tabName, RibbonHelper.panelImagineBuilder));
                 PanelDic.Add(RibbonHelper.panelUpdater, rvUIControlledApp.CreateRibbonPanel(RibbonHelper.tabName, RibbonHelper.panelUpdater));
-                
 
-                List<RibbonItem> ButtonList = new List<RibbonItem>();
 
-                // 3 단계 : 리본 패널 ("HTS") 버튼 추가 X (추후 한수테크니컬서비스(주) 이미지 추가 예정) (2024.04.05 jbh)
+                // 3 단계 : 리본 패널 ("HTS") 버튼 "홈페이지" 추가 ((주)상상진화 기업 로고 이미지 추가) (2024.04.15 jbh)
+                // 버튼 기업 홈페이지
                 PushButtonData pdbLogo = new PushButtonData(RibbonHelper.기업홈페이지, RibbonHelper.기업홈페이지, HTSHelper.AssemblyFilePath, RibbonHelper.path_기업홈페이지);
                 pdbLogo.LargeImage = BitmapConverter.ConvertFromBitmap(HTSBIM2019.Properties.Resources.Logo); // 아이콘 셋팅
 
                 PanelDic[RibbonHelper.panelImagineBuilder].AddItem(pdbLogo);
+
+                List<RibbonItem> ButtonList = new List<RibbonItem>();
 
                 // 4 단계 : 리본 패널 ("Updater BIM") 버튼 추가 
                 // 1. MEP 사용 기록 관리

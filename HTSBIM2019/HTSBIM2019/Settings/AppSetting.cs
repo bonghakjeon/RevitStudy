@@ -36,10 +36,10 @@ namespace HTSBIM2019.Settings
         /// </summary>
         public LoginSetting Login
         {
-            get => this._Login ?? (this._Login = new LoginSetting());
+            get => _Login ?? (_Login = new LoginSetting());
             set
             {
-                this._Login = value;
+                _Login = value;
                 this.Changed(nameof(Login));
             }
         }
@@ -50,10 +50,10 @@ namespace HTSBIM2019.Settings
         /// </summary>
         public UpdaterSetting UpdaterBase
         {
-            get => this._UpdaterBase ?? (this._UpdaterBase = new UpdaterSetting());
+            get => _UpdaterBase ?? (_UpdaterBase = new UpdaterSetting());
             set
             {
-                this._UpdaterBase = value;
+                _UpdaterBase = value;
                 this.Changed(nameof(UpdaterBase));
             }
         }
@@ -64,10 +64,10 @@ namespace HTSBIM2019.Settings
         /// </summary>
         public ImagineBuilderSetting ImagineBuilderBase
         {
-            get => this._ImagineBuilderBase ?? (this._ImagineBuilderBase = new ImagineBuilderSetting());
+            get => _ImagineBuilderBase ?? (_ImagineBuilderBase = new ImagineBuilderSetting());
             set
             {
-                this._ImagineBuilderBase = value;
+                _ImagineBuilderBase = value;
                 this.Changed(nameof(ImagineBuilderBase));
             }
         }

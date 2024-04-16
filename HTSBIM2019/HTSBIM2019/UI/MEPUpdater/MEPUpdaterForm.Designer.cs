@@ -135,6 +135,9 @@ namespace HTSBIM2019.UI.MEPUpdater
             this.Controls.Add(this.panelControl3);
             this.Controls.Add(this.panelControl2);
             this.Controls.Add(this.panelTitle);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MEPUpdaterForm";
             this.Text = "MEPUpdater";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MEPUpdater_FormClosed);

@@ -180,6 +180,14 @@ namespace HTSBIM2019.Utils.MEPUpdater
                 List<string> modElementNames = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
 
 
+                // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
+                // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
+                // 프로퍼티 "UserModifiable" 설명
+                // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
+                // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
+                CategoryManager.CreateCategorySet(RevitDoc, UpdaterParamList);
+
+
                 // TODO : Revit API 사용해서 로그인 정보에 속한 작업자 이름(로그인 계정 - 영문 또는 한글) 가져오기 (2024.04.02 jbh)
                 // workerId   = AppSetting.Default.Login.LoginUserId;   // 작업자(사용자) 아이디
                 workerName = AppSetting.Default.Login.Username;      // 작업자(사용자) 이름
@@ -192,14 +200,6 @@ namespace HTSBIM2019.Utils.MEPUpdater
                 if (addElementIds.Count >= (int)EnumExistElements.EXIST
                     && addElementNames.Count >= (int)EnumExistElements.EXIST)
                 {
-                    // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
-                    // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
-                    // 프로퍼티 "UserModifiable" 설명
-                    // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
-                    // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
-                    CategoryManager.CreateCategorySet(RevitDoc, UpdaterParamList);
-
-
                     // TODO : 신규 Triggers 실행시 매개변수 2가지("객체 생성 날짜", "객체 생성자")에 입력할 값으로
                     //        "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 (2024.04.02 jbh)
                     // static 메서드 "SetParametersValue" 기능
