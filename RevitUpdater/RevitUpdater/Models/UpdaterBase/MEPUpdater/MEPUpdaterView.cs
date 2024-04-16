@@ -194,12 +194,62 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
 
     #endregion BuiltInCategoryView
 
-    #region SetParamInfoView
+    #region CreateParamView
+
+    /// <summary>
+    /// 새로 생성할 매개변수 정보
+    /// </summary>
+    public class CreateParamView : BindableBase
+    {
+        #region 프로퍼티
+
+        /// <summary>
+        /// 매개변수가 속한 상위 카테고리 셋
+        /// </summary>
+        public CategorySet CategorySet { get => _CategorySet; set { _CategorySet = value; NotifyOfPropertyChange(); } }
+        private CategorySet _CategorySet;
+
+        /// <summary>
+        /// 매개변수 이름
+        /// </summary>
+        public string ParamName { get => _ParamName; set { _ParamName = value; NotifyOfPropertyChange(); } }
+        private string _ParamName;
+
+        /// <summary>
+        /// 매개변수 식별자
+        /// </summary>
+        public ForgeTypeId ForgeTypeId { get => _ForgeTypeId; set { _ForgeTypeId = value; NotifyOfPropertyChange(); } }
+        private ForgeTypeId _ForgeTypeId;
+
+        /// <summary>
+        /// 사용자가 화면 상에서 매개변수에 매핑된 값 수정 가능 여부
+        /// </summary>
+        public bool UserModifiable { get => _UserModifiable; set { _UserModifiable = value; NotifyOfPropertyChange(); } }
+        private bool _UserModifiable;
+
+        #endregion 프로퍼티
+
+        #region 생성자
+
+        public CreateParamView(CategorySet rvCatSet, string rvParamName, ForgeTypeId rvForgeTypeId, bool rvUserModifiable)
+        {
+            this._CategorySet = rvCatSet;
+            this._ParamName = rvParamName;
+            this._ForgeTypeId = rvForgeTypeId;
+            this._UserModifiable = rvUserModifiable;
+        }
+
+        #endregion 생성자
+    }
+
+    #endregion CreateParamView
+
+    #region SetParamView
 
     /// <summary>
     /// 입력할 값이 할당된 매개변수 정보
     /// </summary>
-    public class SetParamInfoView : BindableBase
+    public class SetParamView : BindableBase
     {
         #region 프로퍼티
 
@@ -219,7 +269,7 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
 
         #region 생성자
 
-        public SetParamInfoView(string rvParamName, string rvParamValue)
+        public SetParamView(string rvParamName, string rvParamValue)
         {
             this._ParamName = rvParamName;
             this._ParamValue = rvParamValue;
@@ -228,7 +278,7 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
         #endregion 생성자
     }
 
-    #endregion SetParamInfoView
+    #endregion SetParamView
 
     #region Updater_Parameters
 

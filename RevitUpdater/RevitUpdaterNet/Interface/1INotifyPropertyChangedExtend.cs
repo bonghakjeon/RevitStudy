@@ -8,10 +8,11 @@ namespace RevitUpdaterNet.Interface
     public interface INotifyPropertyChangedExtend : INotifyPropertyChanged
     {
         [JsonIgnore]
-        bool _EnablePropertyChanged { get; set; }
+        bool EnablePropertyChanged { get; set; }
 
-        [JsonIgnore]
-        bool _IsPropertyChanged { get; set; }
+        // TODO : 추후 필요시 프로퍼티 "IsPropertyChanged" 사용 예정 (2024.04.15 jbh)
+        // [JsonIgnore]
+        // bool IsPropertyChanged { get; set; }
 
         void Changed([CallerMemberName] string name = "");
 

@@ -13,8 +13,6 @@ namespace RevitUpdaterNet
 {
     public abstract class BindableBase : INotifyPropertyChangedExtend
     {
-        private bool _isPropertyChanged;
-
         public static event PropertyChangedEventHandler StaticPropertyChanged;
 
         public static void StaticChanged([CallerMemberName] string name = null)
@@ -30,14 +28,15 @@ namespace RevitUpdaterNet
         public event PropertyChangedEventHandler PropertyChanged;
 
         [JsonIgnore]
-        public bool _EnablePropertyChanged { get; set; } = true;
+        public bool EnablePropertyChanged { get; set; } = true;
 
-        [JsonIgnore]
-        public bool _IsPropertyChanged
-        {
-            get => this._isPropertyChanged && !(this._isPropertyChanged = false);
-            set => this._isPropertyChanged = value;
-        }
+        //[JsonIgnore]
+        //public bool IsPropertyChanged
+        //{
+        //    get => this._IsPropertyChanged && !(this._IsPropertyChanged = false);
+        //    set => this._IsPropertyChanged = value;
+        //}
+        //private bool _IsPropertyChanged;
 
         public void Changed<TProperty>(Expression<Func<TProperty>> property) => this.OnPropertyChanged(property.GetMemberInfo().Name);
 
@@ -76,17 +75,31 @@ namespace RevitUpdaterNet
             return true;
         }
 
-        protected virtual void OnPropertyChanged(string name)
+        // TODO : 이벤트 메서드 OnPropertyChanged 구현 (2024.04.15 jbh)
+        // 참고 URL - https://nomadcoder.tistory.com/entry/WPF-%EC%B4%88%EA%B0%84%EB%8B%A8-INotifyPropertyChanged-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0#google_vignette
+
+        protected virtual void OnPropertyChanged(string propertyName)
         {
-            // if (!this._EnablePropertyChanged)
-            if (false == this._EnablePropertyChanged)
+            // if (!this.EnablePropertyChanged)
+            if (false == this.EnablePropertyChanged)
                 return;
             PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
             // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2024.04.11 jbh)
             // 참고 URL - https://husk321.tistory.com/405
-            if (propertyChanged is not null)
-                propertyChanged((object)this, new PropertyChangedEventArgs(name));
-            this._IsPropertyChanged = true;
+            //if (propertyChanged is not null)
+            //    // PropertyChangedEventArgs 클래스의 새 인스턴스(이벤트 핸들러 - propertyChanged) 초기화
+            //    // 참고 URL - https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.propertychangedeventargs?view=net-8.0
+            //    // 참고 2 URL - https://fusionit.tistory.com/26
+            //    propertyChanged((object)this, new PropertyChangedEventArgs(name));
+
+            // PropertyChanged 가 null이 아니면 Invoke를 호출한다
+            // 참고 URL - https://m.cafe.daum.net/aspdotnet/6TQG/3149
+            // 참고 2 URL - https://hwigyeom.ntils.com/3
+            // 참고 3 URL - https://cafe.daum.net/aspdotnet/WJSu/65
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+            // TODO : 추후 필요시 프로퍼티 "IsPropertyChanged" 사용 예정 (2024.04.15 jbh)
+            // this.IsPropertyChanged = true;
         }
 
         public PropertyChangedDisableSection StartPropertyChangedDisableSection() => new PropertyChangedDisableSection(this);

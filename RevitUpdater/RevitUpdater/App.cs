@@ -8,6 +8,7 @@ using Autodesk.Revit.UI;
 
 using RevitUpdater.Common.LogBase;
 using RevitUpdater.Common.UpdaterBase;
+using RevitUpdater.Common.Managers;
 
 namespace RevitUpdater
 {
@@ -28,6 +29,8 @@ namespace RevitUpdater
         /// </summary>
         public Result OnStartup(UIControlledApplication application)
         {
+            string dllParentDirPath = string.Empty;              // dll 파일의 부모 폴더 경로
+
             // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2024.01.22 jbh)
             // 참고 URL - https://slaner.tistory.com/73
             // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
@@ -36,9 +39,12 @@ namespace RevitUpdater
 
             try
             {
+                dllParentDirPath = DirectoryManager.GetDllParentDirectoryPath(UpdaterHelper.AssemblyFilePath);  // dll 파일(HTSBIM2019.dll)이 속한 부모 폴더 경로 가져오기 
+
                 Log.Information(Logger.GetMethodPath(currentMethod) + "RevitBox 업데이터 프로그램 시작");
 
-                Logger.ConfigureLogger(UpdaterHelper.AssemblyName, UpdaterHelper.LogDirPath);   // Serilog 로그 초기 설정 
+                // Logger.ConfigureLogger(UpdaterHelper.AssemblyName, UpdaterHelper.LogDirPath);   // Serilog 로그 초기 설정 
+                Logger.ConfigureLogger(UpdaterHelper.LogFileCountLimit, UpdaterHelper.AssemblyName, dllParentDirPath);   // Serilog 로그 초기 설정 
 
                 return Result.Succeeded;
             }

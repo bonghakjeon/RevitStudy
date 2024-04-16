@@ -25,7 +25,22 @@ namespace RevitUpdater.Common.UpdaterBase
         // public static string AssemblyName = $"{Assembly.GetExecutingAssembly().GetName().Name}";
         public static string AssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 
+        // TODO : 추후 NSIS 셋업 프로그램 사용해서 해당 HTSBIM2019 인스톨 파일 만들어서 임의의 PC/노트북에 설치 후 dll 파일을 제대로 잘 찾는지 테스트 진행 예정 (2024.04.05 jbh)
+        /// <summary>
+        /// 어셈블리(.dll 파일) 경로
+        /// </summary>
+        public static string AssemblyFilePath = Assembly.GetExecutingAssembly().Location;
+
         #endregion 어셈블리
+
+        #region 로그 파일
+
+        /// <summary>
+        /// 로그 파일 갯수 설정 (테스트용 30일 이전)
+        /// </summary>
+        public const int LogFileCountLimit = 30;
+
+        #endregion 로그 파일
 
         #region 폴더(디렉토리) 경로 
 

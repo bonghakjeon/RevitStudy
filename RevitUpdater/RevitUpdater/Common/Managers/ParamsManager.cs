@@ -343,7 +343,7 @@ namespace RevitUpdater.Common.Managers
         {
             bool bResult = false;                                // 매개변수에 입력할 값 할당 완료 여부 false로 초기화
 
-            List<SetParamInfoView> setCompletedParameters = new List<SetParamInfoView>();     // 매개변수 값 할당 완료된 객체(이름, 값) 리스트 객체 생성 
+            List<SetParamView> setCompletedParameters = new List<SetParamView>();     // 매개변수 값 할당 완료된 객체(이름, 값) 리스트 객체 생성 
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록 
 
@@ -410,7 +410,7 @@ namespace RevitUpdater.Common.Managers
                     // 매개변수에 값 입력 완료한 경우 
                     if(true == bResult)
                     {
-                        SetParamInfoView setCompletedParameter = new SetParamInfoView(rvParamName, rvParamValue);
+                        SetParamView setCompletedParameter = new SetParamView(rvParamName, rvParamValue);
 
                         setCompletedParameters.Add(setCompletedParameter);
                     }

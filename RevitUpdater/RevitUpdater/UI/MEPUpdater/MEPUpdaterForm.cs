@@ -142,8 +142,8 @@ namespace RevitUpdater.UI.MEPUpdater
 
                 // TODO : 화면 상단 바 버튼 "최소화", "최대화" 비활성화 구현 (2024.03.14 jbh)
                 // 참고 URL - https://zelits.tistory.com/690
-                this.MinimizeBox = false;                            // 버튼 "최소화" 비활성화
-                this.MaximizeBox = false;                            // 버튼 "최대화" 비활성화
+                // this.MinimizeBox = false;                            // 버튼 "최소화" 비활성화
+                // this.MaximizeBox = false;                            // 버튼 "최대화" 비활성화
 
                 // Behind Code "MEPUpdater.cs"에서 폼 화면(MEPUpdater) Width, Height 고정 
                 // 참고 URL - https://kdsoft-zeros.tistory.com/3

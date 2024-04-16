@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using RevitUpdater.Common.UpdaterBase;
+
 namespace RevitUpdater.Common.LogBase
 {
     // TODO : Revit AddIn 개발 소스를 비쥬얼스튜디오 2022 .net Core 버전(8.0)을 사용하려면 Revit 2025 버전 부터 사용이 가능하므로 현 시점에서 해당 소스는 .net FrameWork 4.8에서만 구동시킬 수 있다. (2024.03.11 jbh)
@@ -37,10 +39,13 @@ namespace RevitUpdater.Common.LogBase
         /// Serilog 로그 초기 설정 
         /// </summary>
         /// <param name="rvAssemblyName">로그 기록 남기려는 어셈블리 이름</param>
-        public static void ConfigureLogger(string rvAssemblyName, string pLogDirPath)
+        //public static void ConfigureLogger(string rvAssemblyName, string pLogDirPath)
+        public static void ConfigureLogger(int pLogFileCountLimit, string pAssemblyName, string pDllFilePath)
         {
+            string logDirPath = string.Empty;                                // 로그파일 상위 디렉토리(폴더) 경로 
+            string logFilePath = string.Empty;                               // 로그파일 생성 경로
             // string filePath = pLogDirPath + $"\\{rvAssemblyName}_" + DateTime.Today.ToString("yyyyMMdd") + ".log";
-            string filePath = pLogDirPath + $"\\{rvAssemblyName}_.log";
+            // string filePath = pLogDirPath + $"\\{rvAssemblyName}_.log";
 
             // TODO : 로그 파일 갯수 설정 변수 "retainedFileCountLimit"를 프로퍼티(Logger 클래스 객체의 인스턴스 변수)로 구현 안 하고
             //        static 메서드 "ConfigureLogger" 안의 지역변수로 구현해서 static 메서드 "DeleteOldLogFiles(dirPath, retainedFileCountLimit)"의
@@ -49,10 +54,20 @@ namespace RevitUpdater.Common.LogBase
             //        하기 때문이다.
             // static 메서드 유튜브 참고 URL - https://youtu.be/Fl4TzjPKAMU?si=KUrhqTCO8jrNzicy
             // TODO : 테스트 완료 후 로그 파일 갯수 설정 프로퍼티 "retainedFileCountLimit" 기간 30으로 수정 예정 (2024.02.02 jbh)
-            int retainedFileCountLimit = 7;   // 로그 파일 갯수 설정 (테스트용 7일 이전)
+            // int retainedFileCountLimit = UpdaterHelper.LogFileCountLimit;   // 로그 파일 갯수 설정 (테스트용 30일 이전)
 
             try
             {
+                // 로그파일 상위 디렉토리(폴더) 경로 구하기
+                StringBuilder sbLogDirPath = new StringBuilder(pDllFilePath);
+                sbLogDirPath.Append($"\\Logs");
+                logDirPath = sbLogDirPath.ToString();
+
+                // 상위 디렉토리(폴더) 하위 로그파일 경로 구하기 
+                StringBuilder sbLogFilePath = new StringBuilder(logDirPath);
+                sbLogFilePath.Append($"\\{pAssemblyName}_.log");
+                logFilePath = sbLogFilePath.ToString();
+
                 // TODO : Stylet Logger 클래스 사용 안하고 Serilog 이용해서 로그 기록 및 로그 파일 생성 (2024.01.22 jbh)
                 // 참고 URL - https://m.blog.naver.com/wolfre/221713399852
                 // 참고 2 URL - https://afsdzvcx123.tistory.com/entry/C-%EB%AC%B8%EB%B2%95-C-Serilog-%EC%82%AC%EC%9A%A9%ED%95%98%EC%97%AC-%EB%A1%9C%EA%B7%B8-%EB%82%A8%EA%B8%B0%EA%B8%B0
@@ -70,7 +85,7 @@ namespace RevitUpdater.Common.LogBase
                               // 로그 파일 이름을 날짜 형식(예)"AABIM_20231016.log" 으로 로그 파일 생성
                               .WriteTo.File(
                                   // $"Logs\\{Assembly.GetEntryAssembly().GetName().Name}\\{Assembly.GetEntryAssembly().GetName().Name}_{DateTime.Now.ToString("yyyyMMdd")}.log",
-                                  path: filePath,
+                                  path: logFilePath,
                                   Serilog.Events.LogEventLevel.Verbose,
                                   // TODO : 로그 파일에 날짜를 수동으로 지정할 필요 없이 rollingInterval: RollingInterval.Day, 사용해서 로그파일 이름 언더바(_)옆에 로그 생성된 날짜가 추가되도록 구현
                                   //        (이렇게 구현해야 아래 프로퍼티 "retainedFileCountLimit" 사용해서 날짜가 지난 로그파일 삭제 처리 할 수 있음.) (2024.01.22 jbh) 
@@ -80,7 +95,7 @@ namespace RevitUpdater.Common.LogBase
                                                                // TODO : 테스트 용 로그 파일 갯수 2개(2일치 로그) 설정(2일 이상 지난 오래된 로그는 삭제 처리)
                                                                //        2일 지난 로그 파일 정상적으로 삭제 처리시 아래 주석 처리된 소스코드 "retainedFileCountLimit: 62,"로 다시 구현해야 함. (2024.01.22 jbh)
                                                                // 참고 URL - https://stackoverflow.com/questions/44577336/how-do-i-automatically-tail-delete-older-logs-using-serilog-in-a-net-wpf-appl
-                                  retainedFileCountLimit: retainedFileCountLimit,
+                                  retainedFileCountLimit: pLogFileCountLimit,
                                   // retainedFileCountLimit: 62,  // 로그 파일 갯수 62개(2달치 로그) 설정(2달 지난 오래된 로그는 삭제 처리) - 기본 31개 설정 가능, null 옵션 가능
                                   encoding: Encoding.UTF8
                               )
@@ -88,7 +103,8 @@ namespace RevitUpdater.Common.LogBase
                 Log.Logger = log;             // Serilog를 AABIM2024에서 사용할 수 있도록 설정 (전역 로그)
 
                 // 기간 지난 로그 파일 삭제 (new LoggerConfiguration() -> .WriteTo.File(retainedFileCountLimit)에 할당된 값(기간) 기준)
-                DeleteOldLogFiles(pLogDirPath, retainedFileCountLimit);
+                //DeleteOldLogFiles(pLogDirPath, retainedFileCountLimit);
+                DeleteOldLogFiles(pLogFileCountLimit, logDirPath);
 
                 // 로그 레벨 기록 예시
                 //Log.Information($"Info name = {System.Reflection.Assembly.GetEntryAssembly().GetName().Name}");
@@ -117,7 +133,8 @@ namespace RevitUpdater.Common.LogBase
         /// </summary>
         /// <param name="pDirPath"></param>
         /// <param name=""></param>
-        public static void DeleteOldLogFiles(string pDirPath, int pRetainedFileCountLimit)
+        //public static void DeleteOldLogFiles(string pDirPath, int pRetainedFileCountLimit)
+        public static void DeleteOldLogFiles(int pLogFileCountLimit, string pLogDirPath)
         {
             string logDirPath = string.Empty;   // 로그 파일이 저장된 디렉토리 경로 
 
@@ -131,9 +148,9 @@ namespace RevitUpdater.Common.LogBase
 
             try
             {
-                logDirPath = pDirPath;                                      // 1. 로그 파일이 저장된 디렉토리 경로 할당
+                logDirPath = pLogDirPath;                                   // 1. 로그 파일이 저장된 디렉토리 경로 할당
 
-                daysToKeep = (-1) * pRetainedFileCountLimit;                // 2. 로그 파일 삭제할 기간 설정 (로그파일 삭제하려면 음수로 값 할당 처리 필요)
+                daysToKeep = (-1) * pLogFileCountLimit;                     // 2. 로그 파일 삭제할 기간 설정 (로그파일 삭제하려면 음수로 값 할당 처리 필요)
 
                 DirectoryInfo directory = new DirectoryInfo(logDirPath);
 
@@ -161,10 +178,10 @@ namespace RevitUpdater.Common.LogBase
                 // 참고 URL - https://www.codegrepper.com/code-examples/csharp/linq+foreach+c%23
 
                 // 날짜 지난 로그 파일이 존재하고
-                // 로그 파일 생성 날짜가 금일 날짜 보다 2일 이전(DateTime.Now.AddDays(-2))이면 로그 파일 삭제
+                // 로그 파일 생성 날짜가 금일 날짜 보다 30일 이전(DateTime.Now.AddDays(-30))이면 로그 파일 삭제
                 // 참고 URL - https://bigenergy.tistory.com/entry/C-%ED%83%80%EC%9D%B4%EB%A8%B8%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%98%A4%EB%9E%98%EB%90%9C-%ED%8C%8C%EC%9D%BC-%EC%82%AD%EC%A0%9C-%EB%A1%9C%EA%B7%B8-%EC%82%AD%EC%A0%9C
                 // 참고 2 URL - https://medialink.tistory.com/44
-                // TODO : 아래 소스코드 실행시 당일 날짜(DateTime.Now) 2일 전일(-2 = retainedFileCountLimit) 이전 로그파일 찾아서 오래된 로그 파일 삭제 처리 구현 (2024.02.02 jbh)
+                // TODO : 아래 소스코드 실행시 당일 날짜(DateTime.Now) 30일 전일(-30 = daysToKeep) 이전 로그파일 찾아서 오래된 로그 파일 삭제 처리 구현 (2024.02.02 jbh)
                 fileList.FindAll(file => file.CreationTime.CompareTo(DateTime.Now.AddDays(daysToKeep)) < 0)
                         .ForEach(file => {
                             if(Path.GetExtension(file.FullName) == ".log") File.Delete(file.FullName);

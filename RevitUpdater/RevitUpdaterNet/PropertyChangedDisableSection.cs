@@ -13,8 +13,8 @@ namespace RevitUpdaterNet
         public PropertyChangedDisableSection(BindableBase bindable)
         {
             this.Target = new WeakReference<BindableBase>(bindable);
-            this.EnableStateWhenStart = bindable._EnablePropertyChanged;
-            bindable._EnablePropertyChanged = false;
+            this.EnableStateWhenStart = bindable.EnablePropertyChanged;
+            bindable.EnablePropertyChanged = false;
         }
 
         public void Dispose()
@@ -25,10 +25,10 @@ namespace RevitUpdaterNet
             switch (this.EndMode)
             {
                 case PropertyChangedSectionEndMode.AbsoluteEnable:
-                    target._EnablePropertyChanged = true;
+                    target.EnablePropertyChanged = true;
                     break;
                 case PropertyChangedSectionEndMode.RestoreEnable:
-                    target._EnablePropertyChanged = this.EnableStateWhenStart;
+                    target.EnablePropertyChanged = this.EnableStateWhenStart;
                     break;
             }
         }

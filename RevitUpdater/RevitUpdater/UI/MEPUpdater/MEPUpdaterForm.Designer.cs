@@ -174,6 +174,8 @@ namespace RevitUpdater.UI.MEPUpdater
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MEPUpdaterForm";
             this.Tag = "매개변수 이름을 입력하세요.";
             this.Text = "MEPUpdater";
