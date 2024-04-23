@@ -10,7 +10,7 @@ using HTSBIM2019.UI.MEPUpdater;
 using HTSBIM2019.Settings;
 using HTSBIM2019.Utils.CompanyHomePage;
 using HTSBIM2019.Utils.TechnicalSupport;
-using HTSBIM2019.Interface.Revit;
+using HTSBIM2019.Interface.Command;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -26,7 +26,7 @@ namespace HTSBIM2019
     /// <summary>
     /// Test Command
     /// </summary>
-    internal class CmdTest
+    internal class CmdTestUpdater
     {
 
     }
@@ -40,12 +40,18 @@ namespace HTSBIM2019
     /// <summary>
     /// (주)상상진화 기업 홈페이지 Command - 상상플렉스 커뮤니티
     /// </summary>
-    internal class CmdCompanyHomePage : IExternalCommand, IRevitBase
+    internal class CmdCompanyHomePage : IExternalCommand, IHTSCommand
     {
         #region 프로퍼티
 
+        /// <summary>
+        /// Revit UI 애플리케이션 객체
+        /// </summary>
         public UIApplication RevitUIApp { get; set; }
 
+        /// <summary>
+        /// 활성화된 Revit 문서 
+        /// </summary>
         public Document RevitDoc { get; set; }
 
         #endregion 프로퍼티
@@ -109,7 +115,7 @@ namespace HTSBIM2019
     /// <summary>
     /// 1. MEP 사용 기록 관리 Command
     /// </summary>
-    internal class CmdMEPUpdater : IExternalCommand, IRevitBase
+    internal class CmdMEPUpdater : IExternalCommand, IHTSCommand
     {
         #region 프로퍼티
 
@@ -118,9 +124,20 @@ namespace HTSBIM2019
         /// </summary>
         private static MEPUpdaterForm MEPUpdaterForm { get; set; }
 
+        /// <summary>
+        /// Revit UI 애플리케이션 객체
+        /// </summary>
         public UIApplication RevitUIApp { get; set; }
 
+        /// <summary>
+        /// 활성화된 Revit 문서 
+        /// </summary>
         public Document RevitDoc { get; set; }
+
+        /// <summary>
+        /// Revit 애플리케이션 언어 타입(영문, 한글 등등...)
+        /// </summary>
+        public LanguageType RevitLanguageType { get; set; }
 
         #endregion 프로퍼티
 
@@ -147,6 +164,7 @@ namespace HTSBIM2019
                 // AddInId addInId = revitUIApp.ActiveAddInId;                    // HTS Revit 업데이터 Command 아이디
 
                 Application revitApp = RevitUIApp.Application;                    // Revit 애플리케이션 객체 
+                RevitLanguageType = RevitUIApp.Application.Language; // Revit 애플리케이션 언어 타입(영문, 한글 등등...)
 
                 // TODO : 로그인 아이디, 작업자(사용자) 이름 구하기 (2024.03.02 jbh)
                 // 참고 URL   - https://www.revitapidocs.com/2018/8d3b257a-7b99-a6ee-b146-f635c35f425c.htm
@@ -165,7 +183,7 @@ namespace HTSBIM2019
                 // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
                 // MEPUpdaterForm.ShowDialog();
                 // MEPUpdaterForm.Show();
-                FormManager.ShowModalessForm(MEPUpdaterForm, RevitUIApp, typeof(MEPUpdaterForm));
+                FormManager.ShowModalessForm(MEPUpdaterForm, RevitUIApp, RevitLanguageType, typeof(MEPUpdaterForm));
 
                 // TestMEPUpdater testMEPUpdater = new TestMEPUpdater();
                 // testMEPUpdater.Show();
@@ -206,12 +224,18 @@ namespace HTSBIM2019
     /// <summary>
     /// 2. (주)상상진화 기술지원 문의 Command - 상상플렉스 커뮤니티
     /// </summary>
-    internal class CmdTechnicalSupport : IExternalCommand, IRevitBase
+    internal class CmdTechnicalSupport : IExternalCommand, IHTSCommand
     {
         #region 프로퍼티
 
+        /// <summary>
+        /// Revit UI 애플리케이션 객체
+        /// </summary>
         public UIApplication RevitUIApp { get; set; }
 
+        /// <summary>
+        /// 활성화된 Revit 문서 
+        /// </summary>
         public Document RevitDoc { get; set; }
 
         #endregion 프로퍼티

@@ -112,7 +112,7 @@ namespace RevitUpdater.UI.MEPUpdater
         /// <summary>
         /// 매개변수 값 입력 완료 여부 
         /// </summary>
-        private bool IsCompleted { get; set; }
+        // private bool IsCompleted { get; set; }
 
         #endregion 프로퍼티
 
@@ -191,7 +191,7 @@ namespace RevitUpdater.UI.MEPUpdater
                 Updater_Id  = new UpdaterId(rvAddInId, guId);
 
                 // 10. 매개변수 값 입력 완료 여부 false 초기화
-                IsCompleted = false;
+                // IsCompleted = false;
 
                 // 11. 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 
                 PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
@@ -340,11 +340,11 @@ namespace RevitUpdater.UI.MEPUpdater
                 Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 시작");
 
                 // 매개변수 값 입력 완료 여부 확인 
-                if(true == IsCompleted)
-                {
-                    IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
-                    return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
-                }
+                // if(true == IsCompleted)
+                // {
+                //     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
+                //     return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
+                // }
 
 
                 RevitDoc = rvData.GetDocument();   // UpdaterData 클래스 객체 rvData와 연관된 Document 개체 반환
@@ -377,25 +377,29 @@ namespace RevitUpdater.UI.MEPUpdater
                     // 1."targetParamName"과 동일한 이름의 매개변수 추출하기 
                     // 2."targetParamName"과 동일한 이름의 매개변수에 값“현재 날짜 시간 조합 문자”입력하기 
                     // 3."targetParamName"과 동일한 이름의 매개변수에 입력 완료된 값“현재 날짜 시간 조합 문자”메시지 출력하기 
-                    IsCompleted = ParamsManager.SetParametersValue(addElements, targetParamName, currentDateTime);
+                    //IsCompleted = ParamsManager.SetParametersValue(addElements, targetParamName, currentDateTime);
+                    ParamsManager.SetParametersValue(addElements, targetParamName, currentDateTime);
 
+                    // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                     // 신규 추가 완료된 객체 이름 리스트(addElementNames) 메세지 출력 
-                    if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
 
                     // 신규 업데이트 실패한 경우 
-                    else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
+                    // else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
                 if(modElementIds.Count >= (int)EnumExistElements.EXIST
                     && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
                 {
                     // 수정된 객체 리스트(modElements)에 속하는 "targetParamName"과 동일한 이름의 매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
-                    IsCompleted = ParamsManager.SetParametersValue(modElements, targetParamName, currentDateTime);
+                    //IsCompleted = ParamsManager.SetParametersValue(modElements, targetParamName, currentDateTime);
+                    ParamsManager.SetParametersValue(modElements, targetParamName, currentDateTime);
 
+                    // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                     // 수정 업데이트 완료된 객체 이름 리스트(modElementNames) 메세지 출력 
-                    if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {targetParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
                     // 수정 업데이트 실패한 경우 
-                    else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
+                    // else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater Execute 종료");
@@ -409,6 +413,7 @@ namespace RevitUpdater.UI.MEPUpdater
             {
                 // TODO : finally문 안에 코드 필요시 구현 예정 (2024.03.14 jbh)
             }
+            return;   // 콜백함수 Execute 종료
         }
 
         /// <summary>

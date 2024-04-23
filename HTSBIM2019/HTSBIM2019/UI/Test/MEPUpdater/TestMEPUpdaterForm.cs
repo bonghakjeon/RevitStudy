@@ -19,12 +19,12 @@ using Autodesk.Revit.ApplicationServices;
 
 using DevExpress.XtraEditors;
 
-namespace HTSBIM2019.UI.MEPUpdater
+namespace HTSBIM2019.UI.Test.MEPUpdater
 {
     /// <summary>
     /// 1. MEP 사용 기록 관리 - Form
     /// </summary>
-    public partial class MEPUpdaterForm : XtraForm// , IUpdater
+    public partial class TestMEPUpdaterForm : XtraForm// , IUpdater
     {
         #region 프로퍼티
 
@@ -89,7 +89,7 @@ namespace HTSBIM2019.UI.MEPUpdater
         #region 생성자
 
         //public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
-        public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, LanguageType rvLanguageType)
+        public TestMEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, LanguageType rvLanguageType)
         {
             InitializeComponent();
 
@@ -157,12 +157,11 @@ namespace HTSBIM2019.UI.MEPUpdater
                 GeometryOpt.DetailLevel = ViewDetailLevel.Fine;
                 GeometryOpt.ComputeReferences = true;              // 각 Geometry 객체에 대해 GeometryObject.Reference 속성을 활성화하도록 Revit을 설정
 
-
                 // 8. Revit 애플리케이션 언어 타입(영문, 한글 등등...) 할당 
                 RevitLanguageType = rvLanguageType;
 
-                // CategoryDataCreate(Collector, GeometryOpt);     // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
-                CategoryDataCreate(RevitDoc);                      // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                // CategoryDataCreate(Collector, GeometryOpt);     // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                CategoryDataCreate(RevitDoc);                      // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
 
                 // 9. GUID 생성 
                 // Guid guId = new Guid(HTSHelper.GId);
@@ -187,49 +186,38 @@ namespace HTSBIM2019.UI.MEPUpdater
 
         #region CategoryDataCreate
 
-        // TODO : TreeView 컨트롤(treeViewCategory)에 카테고리 이름 데이터를 Node로 바인딩 할 수 있도록 구현 (2024.04.19 jbh)
-        // 참고 URL - https://www.csharpstudy.com/WinForms/WinForms-treeview.aspx
-        // 유튜브 참고 URL - https://youtu.be/PNIZDLFPmXE?si=TXd8f6fvEWwQV08k
-
         /// <summary>
-        /// TreeView 컨트롤(treeViewCategory)에 데이터 생성 및 출력
+        /// ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
         /// </summary>
+        // private void CategoryDataCreate(FilteredElementCollector rvCollector, Options rvGeometryOpt)
         private void CategoryDataCreate(Document rvDoc)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
-                Log.Information(Logger.GetMethodPath(currentMethod) + "카테고리 데이터 생성 시작");
-
                 List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(rvDoc);
 
-                // TODO : TreeView (treeViewCategory)에 바인딩할 리스트에 데이터 할당 구현 (2024.03.26 jbh)
+                // TODO : ComboBox(comboBoxCategory)에 바인딩할 리스트에 데이터 할당 구현 (2024.03.26 jbh)
                 GeometryCategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화
                 // CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
-                //GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals(HTSHelper.배관)
-                //                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관단열재)
-                //                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관부속류)
-                //                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관밸브류))
-                //                                           .ToList();
-
-                // TODO : Revit 한글, 영문판 모두에서 카테고리 리스트를 가져올 수 있도록 필요한 카테고리 리스트를 Where 조건절로 추출할 때, 
-                //        categoryInfo.CategoryName이 아닌 categoryInfo.Category로
-                //        "배관 - OST_PipeCurves", "배관 단열재 - OST_PipeInsulations", "배관 부속류 - OST_PipeAccessory", "배관 밸브류 - OST_PipeFitting" 추출하기 (2024.04.23 jbh)
-                GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.Category.Equals(BuiltInCategory.OST_PipeCurves)
-                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeInsulations)
-                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeFitting)
-                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeAccessory))
-                                                           .OrderByDescending(categoryInfo => categoryInfo.CategoryName)
+                GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals(HTSHelper.배관)
+                                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관단열재)
+                                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관부속류)
+                                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관밸브류))
                                                            .ToList();
 
-                GeometryCategoryInfoList.ForEach(CategoryInfo => { 
-                                            this.treeViewCategory.Nodes.Add(CategoryInfo.CategoryName);
-                                        });
 
-                this.treeViewCategory.CheckBoxes = true;   // TreeView 컨트롤(treeViewCategory)에 속한 모든 노드들을 체크박스로 변경 
+                this.comboBoxCategory.DataSource    = GeometryCategoryInfoList;
+                this.comboBoxCategory.ValueMember   = HTSHelper.Category;
+                this.comboBoxCategory.DisplayMember = HTSHelper.CategoryName;
 
-                Log.Information(Logger.GetMethodPath(currentMethod) + "카테고리 데이터 생성 완료");
+                // TODO : ComboBox(comboBoxCategory)안에 있는 텍스트를 수정 못 하도록 "ComboBoxStyle.DropDownList"로 설정 (2024.03.26 jbh)
+                // 참고 URL - https://milkoon1.tistory.com/73
+                this.comboBoxCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+                this.comboBoxCategory.SelectedIndex = (int)EnumCategoryInfo.OST_PIPE_CURVES;
+
+                this.comboBoxCategory.Refresh();   // 변경 사항 반영 하도록 comboBoxCategory 컨트롤 Refresh
             }
             catch (Exception ex)
             {
@@ -238,54 +226,14 @@ namespace HTSBIM2019.UI.MEPUpdater
             }
         }
 
-        /// <summary>
-        /// ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
-        /// </summary>
-        // private void CategoryDataCreate(FilteredElementCollector rvCollector, Options rvGeometryOpt)
-        //private void CategoryDataCreate(Document rvDoc)
-        //{
-        //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
-
-        //    try
-        //    {
-        //        List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(rvDoc);
-
-        //        // TODO : ComboBox(comboBoxCategory)에 바인딩할 리스트에 데이터 할당 구현 (2024.03.26 jbh)
-        //        GeometryCategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화
-        //        // CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
-        //        GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals(HTSHelper.배관)
-        //                                                                       || categoryInfo.CategoryName.Equals(HTSHelper.배관단열재)
-        //                                                                       || categoryInfo.CategoryName.Equals(HTSHelper.배관부속류)
-        //                                                                       || categoryInfo.CategoryName.Equals(HTSHelper.배관밸브류))
-        //                                                   .ToList();
-
-
-        //        this.comboBoxCategory.DataSource    = GeometryCategoryInfoList;
-        //        this.comboBoxCategory.ValueMember   = HTSHelper.Category;
-        //        this.comboBoxCategory.DisplayMember = HTSHelper.CategoryName;
-
-        //        // TODO : ComboBox(comboBoxCategory)안에 있는 텍스트를 수정 못 하도록 "ComboBoxStyle.DropDownList"로 설정 (2024.03.26 jbh)
-        //        // 참고 URL - https://milkoon1.tistory.com/73
-        //        this.comboBoxCategory.DropDownStyle = ComboBoxStyle.DropDownList;
-        //        this.comboBoxCategory.SelectedIndex = (int)EnumCategoryInfo.OST_PIPE_CURVES;
-
-        //        this.comboBoxCategory.Refresh();   // 변경 사항 반영 하도록 comboBoxCategory 컨트롤 Refresh
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
-        //        throw;   // 오류 발생시 상위 호출자 예외처리 전달
-        //    }
-        //}
-
         #endregion CategoryDataCreate
 
-        #region MEPUpdater_FormClosed
+        #region TestMEPUpdater_FormClosed
 
         /// <summary>
         /// Revit 업데이터 종료 이벤트 
         /// </summary>
-        private void MEPUpdater_FormClosed(object sender, FormClosedEventArgs e)
+        private void TestMEPUpdater_FormClosed(object sender, FormClosedEventArgs e)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -308,7 +256,7 @@ namespace HTSBIM2019.UI.MEPUpdater
             }
         }
 
-        #endregion MEPUpdater_FormClosed
+        #endregion TestMEPUpdater_FormClosed
 
         #region MakeRequest
 
@@ -377,48 +325,11 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// </summary>
         private void btnTest_Click(object sender, EventArgs e)
         {
-            var currentMethod = MethodBase.GetCurrentMethod();              // 로그 기록시 현재 실행 중인 메서드 위치 기록
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
                 TaskDialog.Show(HTSHelper.NoticeTitle, "테스트 진행 중...");
-
-                // var testCheckedList = testList.Where(treeNode => true == treeNode.Checked).ToList();
-                var testCheckedList = this.treeViewCategory.Nodes.OfType<TreeNode>()
-                                                                 .Where(treeNode => true == treeNode.Checked)
-                                                                 .ToList();
-
-                // 카테고리 체크한 경우 
-                if(testCheckedList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
-                {
-                    AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
-                    // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
-
-                    foreach(TreeNode checkedNode in testCheckedList)
-                    {
-                        string chkCategoryName = checkedNode.Text;   // TreeView 체크박스에서 체크한 카테고리 이름 
-
-                        BuiltInCategory chkBuiltInCategory = CategoryManager.GetCategory(RevitDoc, chkCategoryName);    // TreeView 체크박스에서 체크한 카테고리(BuiltInCategory)
-
-                        CategoryInfoView categoryInfo = new CategoryInfoView(chkCategoryName, chkBuiltInCategory);   // CategoryInfoView 클래스 객체 categoryInfo 생성
-
-                        AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Add(categoryInfo);  // 소스파일 "MEPUpdater.cs"에 존재하는  -> CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가 
-                    }
-
-                    List<Updater_Parameters> updaterParamList = AppSetting.Default.UpdaterBase.MEPUpdater.UpdaterParamList;
-
-                    // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
-                    // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
-                    // 프로퍼티 "UserModifiable" 설명
-                    // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
-                    // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
-                    CategoryManager.CreateCategorySet(RevitDoc, updaterParamList, RevitLanguageType);
-
-                    MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
-                }
-                else TaskDialog.Show(HTSHelper.NoticeTitle, "카테고리 체크 하시기 바랍니다.");
-
-
 
                 // string dllParentDirPath = DirectoryManager.GetDllParentDirectoryPath(HTSHelper.AssemblyFilePath);
 
@@ -468,31 +379,15 @@ namespace HTSBIM2019.UI.MEPUpdater
             {
                 TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 등록 테스트 진행 중...");
 
-                // 체크한 카테고리 목록 리스트로 변환
-                var checkedCategoryList = this.treeViewCategory.Nodes.OfType<TreeNode>()
-                                                                     .Where(treeNode => true == treeNode.Checked)
-                                                                     .ToList();
+                // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
+                var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
+                // CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
 
-                // 카테고리 체크한 경우 
-                if(checkedCategoryList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
+                if(categoryInfo is not null)
                 {
-                    AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
-                    // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
-
-                    foreach(TreeNode checkedNode in checkedCategoryList)
-                    {
-                        string chkCategoryName = checkedNode.Text;   // TreeView 체크박스에서 체크한 카테고리 이름 
-
-                        BuiltInCategory chkBuiltInCategory = CategoryManager.GetCategory(RevitDoc, chkCategoryName);    // TreeView 체크박스에서 체크한 카테고리(BuiltInCategory)
-
-                        CategoryInfoView categoryInfo = new CategoryInfoView(chkCategoryName, chkBuiltInCategory);   // CategoryInfoView 클래스 객체 categoryInfo 생성
-
-                        AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Add(categoryInfo);  // 소스파일 "MEPUpdater.cs"에 존재하는  -> CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가 
-                    }
+                    AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
 
                     List<Updater_Parameters> updaterParamList = AppSetting.Default.UpdaterBase.MEPUpdater.UpdaterParamList;
-
-                    //string language = RevitDoc.GetUnits().GetFormatOptions(UnitType.UT_Length).DisplayUnits.ToString();
 
                     // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
                     // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
@@ -503,30 +398,9 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                     MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
                 }
-                else TaskDialog.Show(HTSHelper.NoticeTitle, "카테고리 체크 하시기 바랍니다.");
-
-                // 카테고리 정보 RequestHandler.cs 소스파일로 넘겨서 업데이터 + Triggers 등록 및 해제 구현하기 
-                // var categoryInfo = this.comboBoxCategory.SelectedItem as CategoryInfoView;
-                // CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
-
-                //if(categoryInfo is not null)
-                //{
-                //    AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
-
-                //    List<Updater_Parameters> updaterParamList = AppSetting.Default.UpdaterBase.MEPUpdater.UpdaterParamList;
-
-                //    // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
-                //    // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
-                //    // 프로퍼티 "UserModifiable" 설명
-                //    // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
-                //    // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
-                //    CategoryManager.CreateCategorySet(RevitDoc, updaterParamList);
-
-                //    MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
-                //}
-                //else TaskDialog.Show(HTSHelper.NoticeTitle, "카테고리 체크 하시기 바랍니다.");
+                else throw new Exception("카테고리 정보 존재하지 않습니다.\r\n담당자에게 문의 하시기 바랍니다.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);

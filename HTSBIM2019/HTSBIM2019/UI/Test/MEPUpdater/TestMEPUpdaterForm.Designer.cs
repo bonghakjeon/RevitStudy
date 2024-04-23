@@ -1,7 +1,7 @@
 ﻿
-namespace HTSBIM2019.UI.MEPUpdater
+namespace HTSBIM2019.UI.Test.MEPUpdater
 {
-    partial class MEPUpdaterForm
+    partial class TestMEPUpdaterForm
     {
         /// <summary>
         /// Required designer variable.
@@ -35,7 +35,7 @@ namespace HTSBIM2019.UI.MEPUpdater
             this.btnON = new DevExpress.XtraEditors.SimpleButton();
             this.btnTest = new DevExpress.XtraEditors.SimpleButton();
             this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
-            this.treeViewCategory = new System.Windows.Forms.TreeView();
+            this.comboBoxCategory = new System.Windows.Forms.ComboBox();
             this.labelCategory = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.panelTitle)).BeginInit();
             this.panelTitle.SuspendLayout();
@@ -99,7 +99,7 @@ namespace HTSBIM2019.UI.MEPUpdater
             // 
             // panelControl3
             // 
-            this.panelControl3.Controls.Add(this.treeViewCategory);
+            this.panelControl3.Controls.Add(this.comboBoxCategory);
             this.panelControl3.Controls.Add(this.labelCategory);
             this.panelControl3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControl3.Location = new System.Drawing.Point(0, 30);
@@ -107,24 +107,27 @@ namespace HTSBIM2019.UI.MEPUpdater
             this.panelControl3.Size = new System.Drawing.Size(398, 188);
             this.panelControl3.TabIndex = 2;
             // 
-            // treeViewCategory
+            // comboBoxCategory
             // 
-            this.treeViewCategory.Location = new System.Drawing.Point(89, 36);
-            this.treeViewCategory.Name = "treeViewCategory";
-            this.treeViewCategory.Size = new System.Drawing.Size(220, 134);
-            this.treeViewCategory.TabIndex = 2;
+            this.comboBoxCategory.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.comboBoxCategory.FormattingEnabled = true;
+            this.comboBoxCategory.ItemHeight = 16;
+            this.comboBoxCategory.Location = new System.Drawing.Point(124, 77);
+            this.comboBoxCategory.Name = "comboBoxCategory";
+            this.comboBoxCategory.Size = new System.Drawing.Size(220, 24);
+            this.comboBoxCategory.TabIndex = 1;
             // 
             // labelCategory
             // 
             this.labelCategory.Appearance.Font = new System.Drawing.Font("Tahoma", 15F);
             this.labelCategory.Appearance.Options.UseFont = true;
-            this.labelCategory.Location = new System.Drawing.Point(89, 6);
+            this.labelCategory.Location = new System.Drawing.Point(41, 73);
             this.labelCategory.Name = "labelCategory";
-            this.labelCategory.Size = new System.Drawing.Size(64, 24);
+            this.labelCategory.Size = new System.Drawing.Size(77, 24);
             this.labelCategory.TabIndex = 0;
-            this.labelCategory.Text = "카테고리";
+            this.labelCategory.Text = "카테고리 :";
             // 
-            // MEPUpdaterForm
+            // TestMEPUpdaterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -135,9 +138,9 @@ namespace HTSBIM2019.UI.MEPUpdater
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "MEPUpdaterForm";
-            this.Text = "MEPUpdater";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MEPUpdater_FormClosed);
+            this.Name = "TestMEPUpdaterForm";
+            this.Text = "TestMEPUpdater";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TestMEPUpdater_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.panelTitle)).EndInit();
             this.panelTitle.ResumeLayout(false);
             this.panelTitle.PerformLayout();
@@ -159,6 +162,6 @@ namespace HTSBIM2019.UI.MEPUpdater
         private DevExpress.XtraEditors.SimpleButton btnTest;
         private DevExpress.XtraEditors.SimpleButton btnON;
         private DevExpress.XtraEditors.LabelControl labelCategory;
-        private System.Windows.Forms.TreeView treeViewCategory;
+        private System.Windows.Forms.ComboBox comboBoxCategory;
     }
 }

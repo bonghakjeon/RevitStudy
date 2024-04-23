@@ -3,8 +3,6 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 
-//using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
 
 using HTSBIM2019.Common.LogBase;
 using HTSBIM2019.Common.HTSBase;
@@ -12,6 +10,10 @@ using HTSBIM2019.Common.HTSBase;
 using HTSBIM2019.Common.RequestBase;
 
 using HTSBIM2019.UI.MEPUpdater;
+
+//using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.ApplicationServices;
 
 namespace HTSBIM2019.Common.Managers
 {
@@ -22,7 +24,7 @@ namespace HTSBIM2019.Common.Managers
         /// <summary>
         /// Modaless 폼(.Show()) 형식 화면 출력 
         /// </summary>
-        public static void ShowModalessForm(System.Windows.Forms.Form pModalessForm, UIApplication rvUIApp, Type pModalessFormType)
+        public static void ShowModalessForm(System.Windows.Forms.Form pModalessForm, UIApplication rvUIApp, LanguageType rvLanguageType, Type pModalessFormType)
         {
             string modalessFormName = string.Empty;               // Modaless 폼 객체 이름
 
@@ -44,7 +46,7 @@ namespace HTSBIM2019.Common.Managers
                             ExternalEvent exEvent = ExternalEvent.Create(mepHandler);                // MEP 업데이터 폼 객체가 사용할 외부 이벤트 생성 
 
                             // pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp, addInId); // MEP 업데이터 폼 객체 생성
-                            pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp); // MEP 업데이터 폼 객체 생성
+                            pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp, rvLanguageType); // MEP 업데이터 폼 객체 생성
 
                             break;
 
@@ -84,7 +86,7 @@ namespace HTSBIM2019.Common.Managers
                 Log.Information(Logger.GetMethodPath(currentMethod) + $"인터페이스 {pInterfaceType.Name} 상속 받은 폼 객체 {pModalessFormType.Name} 찾기 시작");
 
                 // Revit 응용 프로그램에서 현재 실행 중인 모든 폼 화면 목록 가져오도록 구현  
-                FormCollection openForms = Application.OpenForms;
+                FormCollection openForms = System.Windows.Forms.Application.OpenForms;
 
                 foreach (System.Windows.Forms.Form openForm in openForms)
                 {

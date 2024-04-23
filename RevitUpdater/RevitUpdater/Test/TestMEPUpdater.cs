@@ -31,6 +31,14 @@ namespace RevitUpdater.Test
         // private UpdaterId Updater_Id { get; }
         private UpdaterId Updater_Id { get; set; }
 
+        // Modal VS Modaless 차이
+        // 참고 URL   - https://blog.naver.com/PostView.naver?blogId=wlsdml1103&logNo=220512538948
+        // 참고 2 URL - https://greensul.tistory.com/37
+        /// <summary>
+        /// Revit 문서 
+        /// </summary>
+        public Document RevitDoc { get; set; }
+
         /// <summary>
         /// 카테고리 필터 (벽 - OST_Walls)
         /// </summary>
@@ -48,10 +56,11 @@ namespace RevitUpdater.Test
         private ElementCategoryFilter PipeFittingCategoryFilter { get; set; }
 
 
+        // TODO : 매개변수 값 입력 완료 여부 프로퍼티 "IsCompleted" 필요시 사용 예정 (2024.04.18 jbh)
         /// <summary>
         /// 매개변수 값 입력 완료 여부 
         /// </summary>
-        private bool IsCompleted { get; set; }
+        // private bool IsCompleted { get; set; }
 
 
         #endregion 프로퍼티 
@@ -82,7 +91,7 @@ namespace RevitUpdater.Test
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 시작");
 
                 // 1. 매개변수 값 입력 완료 여부 false 초기화
-                IsCompleted = false;
+                // IsCompleted = false;
 
                 // 2. 객체 "벽"(BuiltInCategory.OST_Walls)만 필터링 처리 
                 WallCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_Walls);
@@ -146,24 +155,38 @@ namespace RevitUpdater.Test
                 Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater 콜백 함수 Execute 시작");
 
                 // 매개변수 값 입력 완료 여부 확인 
-                if(true == IsCompleted)
-                {
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater 콜백 함수 Execute 종료");
-                    IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
-                    return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
-                }
+                // if(true == IsCompleted)
+                // {
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater 콜백 함수 Execute 종료");
+                //     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
+                //     return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
+                // }
 
 
-                var revitDoc = pData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
+                RevitDoc = pData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
 
                 var addElementIds            = pData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
-                List<Element> addElements    = addElementIds.Select(addElementId => revitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
-                List<string> addElementNames = addElementIds.Select(addElementId => revitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
+                List<Element> addElements    = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
+                List<string> addElementNames = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
 
+                // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(modElementIds)에 존재하는 요소들 중 타입이 "FamilySymbol"인 요소만 추출 
+                // List<FamilySymbol> addFamilySymbols = addElementIds.Where(addElementId => RevitDoc.GetElement(addElementId) as FamilySymbol is not null)
+                //                                                    .Select(addElementId => RevitDoc.GetElement(addElementId) as FamilySymbol)
+                //                                                    .ToList();
 
                 var modElementIds            = pData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
-                List<Element> modElements    = modElementIds.Select(modElementId => revitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
-                List<string> modElementNames = modElementIds.Select(modElementId => revitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
+                List<Element> modElements    = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
+                List<string> modElementNames = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
+
+                // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds)에 존재하는 요소들 중 타입이 "FamilySymbol"인 요소만 추출 
+                // List<FamilySymbol> modFamilySymbols = modElementIds.Where(modElementId => RevitDoc.GetElement(modElementId) as FamilySymbol is not null)
+                //                                                    .Select(modElementId => RevitDoc.GetElement(modElementId) as FamilySymbol)
+                //                                                    .ToList();
+
+                // TODO : 클래스 "ElementId" 타입 Collection 객체 "addElementIds", "modElementIds"에 존재하는 타입이 "FamilyInstance"가 아니고 "FamilySymbol"일 경우 
+                //        Revit 문서(RevitDoc)에 아직 실제로 생성된 객체는 아니기 때문에 매개변수 "객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자"가 존재하지 않음.
+                //        하여 이런 경우엔 메서드 Execute를 종료할 수 있도록 return 처리 진행 (2024.04.17 jbh)
+                // if (addFamilySymbols.Count >= (int)EnumExistFamilySymbols.EXIST || modFamilySymbols.Count >= (int)EnumExistFamilySymbols.EXIST) return;
 
                 builtInParamName = ParamsManager.GetBuiltInParameterName(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);   // BuiltInParameter 매개변수 이름 "해설" 가져오기
 
@@ -180,13 +203,15 @@ namespace RevitUpdater.Test
                     // 1.“해설”매개변수 추출하기 
                     // 2.“해설”매개변수에 값“현재 날짜 시간 조합 문자”입력하기 
                     // 3.“해설”매개변수에 입력 완료된 값“현재 날짜 시간 조합 문자”메시지 출력하기 
-                    IsCompleted = ParamsManager.SetParametersValue(addElements, builtInParamName, currentDateTime);
+                    //IsCompleted = ParamsManager.SetParametersValue(addElements, builtInParamName, currentDateTime);
+                    ParamsManager.SetParametersValue(addElements, builtInParamName, currentDateTime);
 
+                    // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                     // 신규 추가 완료된 객체 이름 리스트(addElementNames) 메세지 출력 
-                    if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
 
                     // 신규 업데이트 실패한 경우 
-                    else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
+                    // else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
                 if(modElementIds.Count >= (int)EnumExistElements.EXIST
@@ -194,12 +219,15 @@ namespace RevitUpdater.Test
                 {
 
                     // 수정된 객체 리스트(modElements)에 속하는 BuiltInParameter“해설”매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
-                    IsCompleted = ParamsManager.SetParametersValue(modElements, builtInParamName, currentDateTime);
+                    //IsCompleted = ParamsManager.SetParametersValue(modElements, builtInParamName, currentDateTime);
+                    ParamsManager.SetParametersValue(modElements, builtInParamName, currentDateTime);
 
+                    // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                     // 수정 업데이트 완료된 객체 이름 리스트(modElementNames) 메세지 출력 
-                    if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+
                     // 수정 업데이트 실패한 경우 
-                    else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
+                    // else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
             }
             catch(Exception ex)
@@ -207,6 +235,7 @@ namespace RevitUpdater.Test
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(UpdaterHelper.ErrorTitle, ex.Message);
             }
+            return;   // 콜백함수 Execute 종료
         }
 
         /// <summary>

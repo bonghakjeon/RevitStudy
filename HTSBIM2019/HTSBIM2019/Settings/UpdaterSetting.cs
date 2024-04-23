@@ -10,6 +10,10 @@ namespace HTSBIM2019.Settings
     public class UpdaterSetting : BindableBase
     {
         // TODO : MEP 업데이터 필요시 싱글톤 객체로 구현 예정 (2024.04.02 jbh)
+        // [자바 디자인 패턴 이해] 
+        // 5강 싱글톤 패턴(Singleton Pattern)
+        // 유튜브 참고 URL - 
+        // https://youtu.be/5jgpu9-ywtY?si=rImw66r7Y4_DRHM9
         /// <summary>
         /// MEP 업데이터 
         /// </summary>

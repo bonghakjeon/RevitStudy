@@ -47,10 +47,11 @@ namespace HTSBIM2019.Test
         private ElementCategoryFilter PipeFittingCategoryFilter { get; set; }
 
 
+        // TODO : 매개변수 값 입력 완료 여부 프로퍼티 "IsCompleted" 필요시 사용 예정 (2024.04.18 jbh)
         /// <summary>
         /// 매개변수 값 입력 완료 여부 
         /// </summary>
-        private bool IsCompleted { get; set; }
+        // private bool IsCompleted { get; set; }
 
 
         #endregion 프로퍼티 
@@ -72,7 +73,7 @@ namespace HTSBIM2019.Test
         /// <summary>
         /// 업데이터 초기 셋팅
         /// </summary>
-        private void InitSetting(Document rvDoc, UpdaterId pUpdaterId)
+        private void InitSetting(Document rvDoc, UpdaterId rvUpdaterId)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -81,7 +82,7 @@ namespace HTSBIM2019.Test
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 시작");
 
                 // 1. 매개변수 값 입력 완료 여부 false 초기화
-                IsCompleted = false;
+                // IsCompleted = false;
 
                 // 2. 객체 "벽"(BuiltInCategory.OST_Walls)만 필터링 처리 
                 WallCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_Walls);
@@ -92,11 +93,11 @@ namespace HTSBIM2019.Test
                 // 4. 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 
                 PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
 
-                RegisterUpdater(rvDoc, pUpdaterId);                         // 업데이터 등록 
+                RegisterUpdater(rvDoc, rvUpdaterId);                         // 업데이터 등록 
 
-                // RegisterTriggers(pUpdaterId, WallCategoryFilter);          // 객체 "벽" Triggers 등록 
-                // RegisterTriggers(pUpdaterId, PipeCurvesCategoryFilter);    // 객체 "배관" Triggers 등록
-                // RegisterTriggers(pUpdaterId, PipeFittingCategoryFilter);   // 객체 "배관 부속류" Triggers 등록
+                // RegisterTriggers(rvUpdaterId, WallCategoryFilter);          // 객체 "벽" Triggers 등록 
+                // RegisterTriggers(rvUpdaterId, PipeCurvesCategoryFilter);    // 객체 "배관" Triggers 등록
+                // RegisterTriggers(rvUpdaterId, PipeFittingCategoryFilter);   // 객체 "배관 부속류" Triggers 등록
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
 
@@ -144,11 +145,11 @@ namespace HTSBIM2019.Test
                 Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater Execute 시작");
 
                 // 매개변수 값 입력 완료 여부 확인 
-                if (true == IsCompleted)
-                {
-                    IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
-                    return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
-                }
+                // if (true == IsCompleted)
+                // {
+                //     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
+                //     return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
+                // }
 
 
                 var revitDoc = pData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
@@ -175,26 +176,29 @@ namespace HTSBIM2019.Test
                     // 1.“해설”매개변수 추출하기 
                     // 2.“해설”매개변수에 값“현재 날짜 시간 조합 문자”입력하기 
                     // 3.“해설”매개변수에 입력 완료된 값“현재 날짜 시간 조합 문자”메시지 출력하기 
-                    IsCompleted = ParamsManager.SetParametersValue(addElements, builtInParamName, currentDateTime);
+                    // IsCompleted = ParamsManager.SetParametersValue(addElements, builtInParamName, currentDateTime);
+                    ParamsManager.SetParametersValue(addElements, builtInParamName, currentDateTime);
 
+                    // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                     // 신규 추가 완료된 객체 이름 리스트(addElementNames) 메세지 출력 
-                    if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
 
                     // 신규 업데이트 실패한 경우 
-                    else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
+                    // else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
                 if (modElementIds.Count >= (int)EnumExistElements.EXIST
                     && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
                 {
-
                     // 수정된 객체 리스트(modElements)에 속하는 BuiltInParameter“해설”매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
-                    IsCompleted = ParamsManager.SetParametersValue(modElements, builtInParamName, currentDateTime);
+                    // IsCompleted = ParamsManager.SetParametersValue(modElements, builtInParamName, currentDateTime);
+                    ParamsManager.SetParametersValue(modElements, builtInParamName, currentDateTime);
 
+                    // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                     // 수정 업데이트 완료된 객체 이름 리스트(modElementNames) 메세지 출력 
-                    if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
                     // 수정 업데이트 실패한 경우 
-                    else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
+                    // else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater Execute 완료");
@@ -204,6 +208,7 @@ namespace HTSBIM2019.Test
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
             }
+            return;   // 콜백함수 Execute 종료  
         }
 
         /// <summary>
@@ -245,7 +250,7 @@ namespace HTSBIM2019.Test
         /// <summary>
         /// 업데이터 등록 
         /// </summary>
-        private void RegisterUpdater(Document rvDoc, UpdaterId pUpdaterId)
+        private void RegisterUpdater(Document rvDoc, UpdaterId rvUpdaterId)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -253,10 +258,10 @@ namespace HTSBIM2019.Test
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 시작");
 
-                if (UpdaterRegistry.IsUpdaterRegistered(pUpdaterId, rvDoc))   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
+                if (UpdaterRegistry.IsUpdaterRegistered(rvUpdaterId, rvDoc))   // Revit 문서(rvDoc)에 해당 rvUpdaterId를 가진 업데이터가 등록된 경우 
                 {
-                    UpdaterRegistry.RemoveAllTriggers(pUpdaterId);            // 지정된 pUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
-                    UpdaterRegistry.UnregisterUpdater(pUpdaterId, rvDoc);     // Revit 문서(rvDoc)에 지정된 pUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
+                    UpdaterRegistry.RemoveAllTriggers(rvUpdaterId);            // 지정된 rvUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
+                    UpdaterRegistry.UnregisterUpdater(rvUpdaterId, rvDoc);     // Revit 문서(rvDoc)에 지정된 rvUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
                 }
 
                 UpdaterRegistry.RegisterUpdater(this, rvDoc);   // 업데이터 등록
@@ -279,7 +284,7 @@ namespace HTSBIM2019.Test
         /// <summary>
         /// Triggers 등록 
         /// </summary>
-        //private void RegisterTriggers(UpdaterId pUpdaterId, ElementCategoryFilter pElementCategoryFilter)
+        //private void RegisterTriggers(UpdaterId rvUpdaterId, ElementCategoryFilter rvElementCategoryFilter)
         //{
         //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -287,19 +292,19 @@ namespace HTSBIM2019.Test
         //    {
         //        Log.Information(Logger.GetMethodPath(currentMethod) + "Triggers 등록 시작");
 
-        //        BuiltInCategory builtInCategory = (BuiltInCategory)pElementCategoryFilter.CategoryId.Value;
+        //        BuiltInCategory builtInCategory = (BuiltInCategory)rvElementCategoryFilter.CategoryId.Value;
 
         //        string builtInCategoryName = LabelUtils.GetLabelFor(builtInCategory);   // BuiltInCategory 이름 가져오기 
 
         //        // 해당 업데이터 아이디가 존재하고, 업데이터가 등록되어 있는 경우 
-        //        if (pUpdaterId is not null
-        //            && UpdaterRegistry.IsUpdaterRegistered(pUpdaterId))
+        //        if (rvUpdaterId is not null
+        //            && UpdaterRegistry.IsUpdaterRegistered(rvUpdaterId))
         //        {
         //            var changeTypeAny = Element.GetChangeTypeAny();                                       // 객체가 수정 방식으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
-        //            UpdaterRegistry.AddTrigger(pUpdaterId, pElementCategoryFilter, changeTypeAny);        // 지정된 pUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(pElementCategoryFilter) 및 changeTypeAny을 이용해서 수정 트리거 추가
+        //            UpdaterRegistry.AddTrigger(rvUpdaterId, rvElementCategoryFilter, changeTypeAny);        // 지정된 rvUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(rvElementCategoryFilter) 및 changeTypeAny을 이용해서 수정 트리거 추가
 
         //            var changeTypeAddition = Element.GetChangeTypeElementAddition();                      // 객체가 새로 추가된 방식으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
-        //            UpdaterRegistry.AddTrigger(pUpdaterId, pElementCategoryFilter, changeTypeAddition);   // 지정된 pUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(pElementCategoryFilter) 및 changeTypeAddition을 이용해서 새로 추가 트리거 추가
+        //            UpdaterRegistry.AddTrigger(rvUpdaterId, rvElementCategoryFilter, changeTypeAddition);   // 지정된 rvUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(rvElementCategoryFilter) 및 changeTypeAddition을 이용해서 새로 추가 트리거 추가
 
         //            Log.Information(Logger.GetMethodPath(currentMethod) + $"테스트 {builtInCategoryName} Triggers 등록 완료");
         //            TaskDialog.Show("테스트 MEP Updater", $"테스트 {builtInCategoryName} Triggers 등록 완료");

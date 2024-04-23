@@ -40,7 +40,8 @@ namespace RevitUpdater.Common.LogBase
         /// </summary>
         /// <param name="rvAssemblyName">로그 기록 남기려는 어셈블리 이름</param>
         //public static void ConfigureLogger(string rvAssemblyName, string pLogDirPath)
-        public static void ConfigureLogger(int pLogFileCountLimit, string pAssemblyName, string pDllFilePath)
+        // public static void ConfigureLogger(int pLogFileCountLimit, string pAssemblyName, string pDllFilePath)
+        public static void ConfigureLogger(int pLogFileCountLimit, string pAssemblyName, string pLogDirPath)
         {
             string logDirPath = string.Empty;                                // 로그파일 상위 디렉토리(폴더) 경로 
             string logFilePath = string.Empty;                               // 로그파일 생성 경로
@@ -59,8 +60,8 @@ namespace RevitUpdater.Common.LogBase
             try
             {
                 // 로그파일 상위 디렉토리(폴더) 경로 구하기
-                StringBuilder sbLogDirPath = new StringBuilder(pDllFilePath);
-                sbLogDirPath.Append($"\\Logs");
+                StringBuilder sbLogDirPath = new StringBuilder(pLogDirPath);
+                //sbLogDirPath.Append($"\\Logs");
                 logDirPath = sbLogDirPath.ToString();
 
                 // 상위 디렉토리(폴더) 하위 로그파일 경로 구하기 

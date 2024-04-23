@@ -47,6 +47,8 @@
     <Reference Include="DevExpress.Printing.v20.1.Core, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Utils.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraEditors.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraTreeList.v20.1, Version=20.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -122,8 +124,10 @@
     <Compile Include="Controls\Text\WaterMarkTextControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Interface\RevitBase\IRevitBase.cs" />
+    <Compile Include="Interface\Request\IHTSRequest.cs" />
+    <Compile Include="Interface\Command\IHTSCommand.cs" />
     <Compile Include="Models\HTSBase\MEPUpdater\MEPUpdaterView.cs" />
+    <Compile Include="Models\HTSBase\Request\RequestView.cs" />
     <Compile Include="Models\HTSInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -132,16 +136,29 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\AppSetting.cs" />
+    <Compile Include="Settings\DirectorySetting.cs" />
     <Compile Include="Settings\ImagineBuilderSetting.cs" />
     <Compile Include="Settings\LoginSetting.cs" />
     <Compile Include="Settings\UpdaterSetting.cs" />
     <Compile Include="Test\States.cs" />
     <Compile Include="Test\TestMEPUpdater.cs" />
+    <Compile Include="UI\CreateParams\CreateParams.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\CreateParams\CreateParams.Designer.cs">
+      <DependentUpon>CreateParams.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\MEPUpdater\MEPUpdaterForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\MEPUpdater\MEPUpdaterForm.Designer.cs">
       <DependentUpon>MEPUpdaterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Test\MEPUpdater\TestMEPUpdaterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Test\MEPUpdater\TestMEPUpdaterForm.Designer.cs">
+      <DependentUpon>TestMEPUpdaterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\CompanyHomePage\CompanyHomePage.cs" />
     <Compile Include="Utils\MEPUpdater\MEPUpdater.cs" />
@@ -153,16 +170,21 @@
     <None Include="Json\Updater_Parameters.json" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="UI\Test\" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\CreateParams\CreateParams.resx">
+      <DependentUpon>CreateParams.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\MEPUpdater\MEPUpdaterForm.resx">
       <DependentUpon>MEPUpdaterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Test\MEPUpdater\TestMEPUpdaterForm.resx">
+      <DependentUpon>TestMEPUpdaterForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

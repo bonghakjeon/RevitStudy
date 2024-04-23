@@ -41,7 +41,8 @@ namespace HTSBIM2019.Common.LogBase
         /// <param name="pAssemblyName">로그 기록 남기려는 어셈블리 이름</param>
         //public static void ConfigureLogger(string pAssemblyName, string pLogDirPath)
         //public static void ConfigureLogger(string pAssemblyName, string pDllFilePath)
-        public static void ConfigureLogger(int pLogFileCountLimit, string pAssemblyName, string pDllFilePath)
+        //public static void ConfigureLogger(int pLogFileCountLimit, string pAssemblyName, string pDllFilePath)
+        public static void ConfigureLogger(int pLogFileCountLimit, string pAssemblyName, string pLogDirPath)
         {
             string logDirPath = string.Empty;                                // 로그파일 상위 디렉토리(폴더) 경로 
             // string logFilePath = pLogDirPath + $"\\{pAssemblyName}_" + DateTime.Today.ToString("yyyyMMdd") + ".log";
@@ -60,8 +61,8 @@ namespace HTSBIM2019.Common.LogBase
             try
             {
                 // 로그파일 상위 디렉토리(폴더) 경로 구하기
-                StringBuilder sbLogDirPath = new StringBuilder(pDllFilePath);
-                sbLogDirPath.Append($"\\Logs");
+                StringBuilder sbLogDirPath = new StringBuilder(pLogDirPath);
+                // sbLogDirPath.Append($"\\Logs");
                 logDirPath = sbLogDirPath.ToString();
 
                 // 상위 디렉토리(폴더) 하위 로그파일 경로 구하기 

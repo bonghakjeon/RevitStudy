@@ -30,6 +30,20 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
 
     #endregion EnumExistElements
 
+    #region EnumExistFamilySymbols
+
+    /// <summary>
+    /// 타입 FamilySymbol 존재 여부 확인
+    /// </summary>
+    public enum EnumExistFamilySymbols : int
+    {
+        [Description("FamilySymbol 존재 안 함.")]
+        NONE = 0,
+        [Description("FamilySymbol 존재함.")]
+        EXIST = 1
+    }
+
+    #endregion EnumExistFamilySymbols
 
     #region EnumExistParameters
 
@@ -96,6 +110,21 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
     }
 
     #endregion EnumCategoryInfo
+
+    #region EnumCheckedCategoryInfo
+
+    /// <summary>
+    /// 카테고리 체크 여부
+    /// </summary>
+    public enum EnumCheckedCategoryInfo : int
+    {
+        [Description("카테고리 체크 안 함.")]
+        NONE = 0,
+        [Description("카테고리 체크함.")]
+        EXIST = 1
+    }
+
+    #endregion EnumCheckedCategoryInfo
 
     #region BuiltInParamView
 
@@ -346,8 +375,26 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
         /// <summary>
         /// 매개변수 상위 카테고리셋(카테고리 리스트)
         /// </summary>
-        public List<string> CategorySet { get => _CategorySet; set { _CategorySet = value; NotifyOfPropertyChange(); } }
-        private List<string> _CategorySet;
+        // public List<string> CategorySet { get => _CategorySet; set { _CategorySet = value; NotifyOfPropertyChange(); } }
+        // private List<string> _CategorySet;
+
+        /// <summary>
+        /// Revit 애플리케이션 한글 - 매개변수 상위 카테고리셋(카테고리 리스트)
+        /// </summary>
+        public List<string> KOR_CategorySet { get => _KOR_CategorySet; set { _KOR_CategorySet = value; NotifyOfPropertyChange(); } }
+        private List<string> _KOR_CategorySet;
+
+        /// <summary>
+        /// Revit 애플리케이션 미국 영문 - 매개변수 상위 카테고리셋(카테고리 리스트)
+        /// </summary>
+        public List<string> ENU_CategorySet { get => _ENU_CategorySet; set { _ENU_CategorySet = value; NotifyOfPropertyChange(); } }
+        private List<string> _ENU_CategorySet;
+
+        /// <summary>
+        /// Revit 애플리케이션 영국 영문 - 매개변수 상위 카테고리셋(카테고리 리스트)
+        /// </summary>
+        public List<string> ENG_CategorySet { get => _ENG_CategorySet; set { _ENG_CategorySet = value; NotifyOfPropertyChange(); } }
+        private List<string> _ENG_CategorySet;
 
         #endregion 프로퍼티 
 

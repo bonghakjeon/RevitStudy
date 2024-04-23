@@ -46,6 +46,20 @@ namespace HTSBIM2019.Settings
         private LoginSetting _Login;
 
         /// <summary>
+        /// 디렉토리(폴더) 설정
+        /// </summary>
+        public DirectorySetting DirectoryBase
+        {
+            get => _DirectoryBase ?? (_DirectoryBase = new DirectorySetting());
+            set 
+            {
+                _DirectoryBase = value;
+                this.Changed(nameof(DirectoryBase));
+            }
+        }
+        private DirectorySetting _DirectoryBase;
+
+        /// <summary>
         /// 업데이터 설정
         /// </summary>
         public UpdaterSetting UpdaterBase

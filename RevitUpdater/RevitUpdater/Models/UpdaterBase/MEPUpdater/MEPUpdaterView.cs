@@ -30,6 +30,21 @@ namespace RevitUpdater.Models.UpdaterBase.MEPUpdater
 
     #endregion EnumExistElements
 
+    #region EnumExistFamilySymbols
+
+    /// <summary>
+    /// 타입 FamilySymbol 존재 여부 확인
+    /// </summary>
+    public enum EnumExistFamilySymbols : int
+    {
+        [Description("FamilySymbol 존재 안 함.")]
+        NONE = 0,
+        [Description("FamilySymbol 존재함.")]
+        EXIST = 1
+    }
+
+    #endregion EnumExistFamilySymbols
+
 
     #region EnumExistParameters
 

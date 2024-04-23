@@ -53,7 +53,7 @@ namespace HTSBIM2019.Common.HTSBase
         /// <summary>
         /// 로그(Logs) 폴더(디렉토리) 경로 
         /// </summary>
-        // public static string LogDirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\{AssemblyName}\\Logs";
+        public static string LogDirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\{AssemblyName}\\Logs";
 
         // TODO : Revit MEP Updater 실행시 작성되는 로그 기록이 다른 Revit 애드인 프로그램의 로그 파일에 기록되서 꼬이므로,
         // 로그 파일 경로를 내문서((Environment.SpecialFolder.MyDocuments)가 아니라 임시로 D드라이브로 이동함. (2024.03.22 jbh) 
@@ -183,25 +183,103 @@ namespace HTSBIM2019.Common.HTSBase
         /// </summary>
         public const string ElementType = "Element";
 
+        #region 카테고리 종류 - 배관
+
         /// <summary>
-        /// ComboBox 컨트롤(comboBoxCategory)에 바인딩할 대상 카테고리 - 배관
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 배관
         /// </summary>
         public const string 배관 = "배관";
 
         /// <summary>
-        /// ComboBox 컨트롤(comboBoxCategory)에 바인딩할 대상 카테고리 - 배관 부속류
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 배관 부속류
         /// </summary>
         public const string 배관부속류 = "배관 부속류";
 
         /// <summary>
-        /// ComboBox 컨트롤(comboBoxCategory)에 바인딩할 대상 카테고리 - 배관 단열재
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 배관 단열재
         /// </summary>
         public const string 배관단열재 = "배관 단열재";
 
         /// <summary>
-        /// ComboBox 컨트롤(comboBoxCategory)에 바인딩할 대상 카테고리 - 배관 밸브류
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 배관 밸브류
         /// </summary>
         public const string 배관밸브류 = "배관 밸브류";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 일반 모델
+        /// </summary>
+        
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 기계장비
+        /// </summary>
+
+        #endregion 카테고리 종류 - 배관
+
+        #region 카테고리 종류 - 전기/제어
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 케이블 트레이
+        /// </summary>
+        // public const string = "케이블 트레이";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 케이블 트레이 부속류
+        /// </summary>
+        // public const string = "케이블 트레이 부속류";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "덕트";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "덕트 부속";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "덕트 액세서리";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "배관 밸브류";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "일반 모델";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "전기 설비";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "전기 시설물";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "전선관";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "전선관 부속류";
+
+        /// <summary>
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
+        /// </summary>
+        // public const string = "전화 장치";
+
+        #endregion 카테고리 종류 - 전기/제어
+
 
         /// <summary>
         /// ComboBox 컨트롤(comboBoxCategory) - ValueMember

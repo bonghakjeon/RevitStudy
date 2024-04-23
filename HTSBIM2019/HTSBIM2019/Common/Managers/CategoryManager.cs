@@ -11,11 +11,82 @@ using HTSBIM2019.Models.HTSBase.MEPUpdater;
 //using HTSBIM2019.Common.Extensions;
 
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.ApplicationServices;
 
 namespace HTSBIM2019.Common.Managers
 {
     public class CategoryManager
     {
+        #region GetCategoryName
+
+        /// <summary>
+        /// BuiltInCategory 이름 가져오기 
+        /// </summary>
+        public static string GetCategoryName(Document rvDoc, BuiltInCategory rvBuiltInCategory)
+        {
+            string builtInCategoryName = string.Empty;           // BuiltInCategory 이름
+
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // TODO : BuiltInCategory 열거형 구조체 객체 builtInCategory의 이름 가져오기 (2024.04.01 jbh)
+                // 참고 URL - https://chat.openai.com/c/32ce8d83-d39a-48d7-af9a-44c408b64fe0
+                // string builtInCategoryName = LabelUtils.GetLabelFor(builtInCategory);   // BuiltInCategory 이름 가져오기 
+                Categories categories = rvDoc.Settings.Categories;
+
+                Category category = categories.get_Item(rvBuiltInCategory);
+
+                builtInCategoryName = category.Name;   // BuiltInCategory 이름 가져오기 
+
+                // builtInCategoryName = LabelUtils.GetLabelFor(builtInCategory);   // BuiltInCategory 이름 가져오기 
+
+                return builtInCategoryName;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
+            }
+        }
+
+        #endregion GetCategoryName
+
+        #region GetCategory
+
+        /// <summary>
+        /// 카테고리 이름에 맞는 BuiltInCategory 가져오기 
+        /// </summary>
+        public static BuiltInCategory GetCategory(Document rvDoc, string rvCategoryName)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // 1 단계 : Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
+                // 참고 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.linq.enumerable.oftype?view=net-8.0
+                // 참고 2 URL - https://chopstick-91.tistory.com/25
+                List<Category> categories = rvDoc.Settings.Categories.OfType<Category>().ToList();
+
+                // 2 단계 : BuiltInCategory 정보 리스트에서 카테고리 이름에 맞는 BuiltInCategory 데이터 중 시퀀스 첫번째 요소 추출하기 (2024.04.19 jbh)
+                // 참고 URL - https://afsdzvcx123.tistory.com/entry/C-%EB%AC%B8%EB%B2%95-C-LINQ-First-FirstOrDefault-Single-SingleOrDefault-%EC%B0%A8%EC%9D%B4%EC%A0%90
+                BuiltInCategory builtInCategory = categories.Where(category => category.Name.Equals(rvCategoryName))
+                                                            .Select(category => (BuiltInCategory)category.Id.IntegerValue)
+                                                            .FirstOrDefault();   // 시퀀스 첫번째 요소 추출 
+
+                return builtInCategory;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
+            }
+        }
+
+
+        #endregion GetCategory
+
         #region GetCategoryInfoList
 
         /// <summary>
@@ -31,6 +102,8 @@ namespace HTSBIM2019.Common.Managers
 
             try
             {
+                Log.Information(Logger.GetMethodPath(currentMethod) + "BuiltInCategory 정보 리스트 가져오기 시작");
+
                 // 1 단계 : Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
                 // Categories categories = rvDoc.Settings.Categories;
                 List<Category> categories = rvDoc.Settings.Categories.OfType<Category>().ToList();
@@ -72,6 +145,8 @@ namespace HTSBIM2019.Common.Managers
                                                                                  // .Select(categoryInfo => categoryInfo)
                                                                                  .OrderBy(categoryInfo => categoryInfo.CategoryName)
                                                                                  .ToList();
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "BuiltInCategory 정보 리스트 가져오기 완료");
 
                 return orderedCategoryInfoList;
             }
@@ -185,12 +260,39 @@ namespace HTSBIM2019.Common.Managers
         /// <summary>
         /// 활성화 된 Revit 문서에 MEP Updater 전용 카테고리셋 생성 
         /// </summary>
-        public static void CreateCategorySet(Document rvDoc, List<Updater_Parameters> pUpdaterParamList)
+        public static void CreateCategorySet(Document rvDoc)
         {
             string paramName = string.Empty;                     // MEP Updater 매개변수 이름
             ParameterType paramType = ParameterType.Invalid;     // 생성할 매개변수 자료형(유형)
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록하기
+
+            try
+            {
+
+                TaskDialog.Show(HTSHelper.NoticeTitle, "테스트!!\r\nMEP 사용 기록 관리 매개변수 생성 완료!");
+            }
+            catch(Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+            }
+        }
+
+        #endregion CreateCategorySet
+
+        #region CreateCategorySet
+
+        /// <summary>
+        /// 활성화 된 Revit 문서에 MEP Updater 전용 카테고리셋 생성 
+        /// </summary>
+        public static void CreateCategorySet(Document rvDoc, List<Updater_Parameters> pUpdaterParamList, LanguageType rvLanguageType)
+        {
+            string paramName = string.Empty;                        // MEP Updater 매개변수 이름
+            ParameterType paramType = ParameterType.Invalid;        // 생성할 매개변수 자료형(유형)
+            List<string> updaterCategorySet = new List<string>();   // pUpdaterParamList 리스트에서 언어 타입에 매핑되는 카테고리셋 리스트 
+
+            var currentMethod = MethodBase.GetCurrentMethod();      // 로그 기록시 현재 실행 중인 메서드 위치 기록하기
 
             try
             {
@@ -202,8 +304,29 @@ namespace HTSBIM2019.Common.Managers
                 // 1 단계 : 공유 매개변수 리스트 가져오기 
                 List<SharedParameterElement> sharedParameters = ParamsManager.GetSharedParameterList(rvDoc);
 
+                // Revit 응용 프로그램의 언어 타입(영문, 한글 등등...)에 따라 pUpdaterParamList 리스트에서 언어 타입에 매핑되는 카테고리셋 가져오기 
+                // if () mepCategorySet = 
+                // else mepCategorySet = 
+
+                // switch ~ case 사용하여 Revit 응용 프로그램의 언어 타입(미국 영문, 영국 영문, 한글 등등...)에 따라
+                // pUpdaterParamList 리스트에서 언어 타입에 매핑되는 카테고리셋 리스트 가져오기
+                switch (rvLanguageType)
+                {
+                    case LanguageType.Korean:
+                        updaterCategorySet = pUpdaterParamList.Select(updaterParam => updaterParam.KOR_CategorySet).FirstOrDefault();   // FirstOrDefault - 시퀀스 첫번째 요소 가져오기
+                        break;
+                    case LanguageType.English_USA:
+                        updaterCategorySet = pUpdaterParamList.Select(updaterParam => updaterParam.ENU_CategorySet).FirstOrDefault();   // FirstOrDefault - 시퀀스 첫번째 요소 가져오기
+                        break;
+                    case LanguageType.English_GB:
+                        updaterCategorySet = pUpdaterParamList.Select(updaterParam => updaterParam.ENG_CategorySet).FirstOrDefault();   // FirstOrDefault - 시퀀스 첫번째 요소 가져오기
+                        break;
+                    default:
+                        throw new Exception("Revit 언어 타입(영문 또는 한글) 변경 후\r\n프로그램 재실행 해주시기 바랍니다.");
+                }
+
                 // 2 단계 : 반복문 사용해서 MEP Updater 매개변수 리스트에 존재하는 모든 매개변수 데이터 방문 
-                foreach(var updaterParam in pUpdaterParamList)
+                foreach (var updaterParam in pUpdaterParamList)
                 {
                     // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.04.04 jbh)
                     // MEP Updater 매개변수가 존재하는 경우 
@@ -214,7 +337,8 @@ namespace HTSBIM2019.Common.Managers
                     CategorySet categorySet = rvDoc.Application.Create.NewCategorySet();
 
                     // 반복문 사용해서 카테고리 셋 하위에 존재하는 모든 카테고리 방문 
-                    foreach(var category in updaterParam.CategorySet)
+                    //foreach(var category in updaterParam.KOR_CategorySet)
+                    foreach (var category in updaterCategorySet)
                     {
                         Category cat = rvDoc.Settings.Categories.get_Item(category);   // string 클래스 객체 "category"와 동일한 카테고리 가져오기 
 

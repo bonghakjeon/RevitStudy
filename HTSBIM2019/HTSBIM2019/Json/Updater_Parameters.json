@@ -1,36 +1,44 @@
 ﻿{
 	"UPDATER_PARAMETERS": [
 		{
-			"paramName": "객체 생성 날짜",
-			"paramType": "인스턴스",
-			"domain": "공통",
-			"dataType": "문자",
-			"definitionGroup": "기타",
-			"categorySet": ["배관", "배관 단열재", "배관 부속류", "배관 밸브류"]
+			"ParamName": "객체 생성 날짜",
+			"ParamType": "인스턴스",
+			"Domain": "공통",
+			"DataType": "문자",
+			"DefinitionGroup": "기타",
+			"KOR_CategorySet": [ "배관", "배관 단열재", "배관 부속류", "배관 밸브류" ],
+			"ENU_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ],
+			"ENG_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ]
 		},
 		{
-			"paramName": "객체 생성자",
-			"paramType": "인스턴스",
-			"domain": "공통",
-			"dataType": "문자",
-			"definitionGroup": "기타",
-			"categorySet": ["배관", "배관 단열재", "배관 부속류", "배관 밸브류"]
+			"ParamName": "객체 생성자",
+			"ParamType": "인스턴스",
+			"Domain": "공통",
+			"DataType": "문자",
+			"DefinitionGroup": "기타",
+			"KOR_CategorySet": [ "배관", "배관 단열재", "배관 부속류", "배관 밸브류" ],
+			"ENU_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ],
+			"ENG_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ]
 		},
 		{
-			"paramName": "최종 수정 날짜",
-			"paramType": "인스턴스",
-			"domain": "공통",
-			"dataType": "문자",
-			"definitionGroup": "기타",
-			"categorySet": ["배관", "배관 단열재", "배관 부속류", "배관 밸브류"]
+			"ParamName": "최종 수정 날짜",
+			"ParamType": "인스턴스",
+			"Domain": "공통",
+			"DataType": "문자",
+			"DefinitionGroup": "기타",
+			"KOR_CategorySet": [ "배관", "배관 단열재", "배관 부속류", "배관 밸브류" ],
+			"ENU_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ],
+			"ENG_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ]
 		},
 		{
-			"paramName": "최종 수정자",
-			"paramType": "인스턴스",
-			"domain": "공통",
-			"dataType": "문자",
-			"definitionGroup": "기타",
-			"categorySet": ["배관", "배관 단열재", "배관 부속류", "배관 밸브류"]
+			"ParamName": "최종 수정자",
+			"ParamType": "인스턴스",
+			"Domain": "공통",
+			"DataType": "문자",
+			"DefinitionGroup": "기타",
+			"KOR_CategorySet": [ "배관", "배관 단열재", "배관 부속류", "배관 밸브류" ],
+			"ENU_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ],
+			"ENG_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ]
 		}
 	]
 }

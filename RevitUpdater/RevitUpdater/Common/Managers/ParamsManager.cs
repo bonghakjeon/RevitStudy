@@ -339,7 +339,8 @@ namespace RevitUpdater.Common.Managers
         /// <summary>
         /// 매개변수에 값 입력하기
         /// </summary>
-        public static bool SetParametersValue(List<Element> pElementList, string rvParamName, string rvParamValue)
+        //public static bool SetParametersValue(List<Element> rvElementList, string rvParamName, string rvParamValue)
+        public static void SetParametersValue(List<Element> rvElementList, string rvParamName, string rvParamValue)
         {
             bool bResult = false;                                // 매개변수에 입력할 값 할당 완료 여부 false로 초기화
 
@@ -350,17 +351,18 @@ namespace RevitUpdater.Common.Managers
             try
             {
                 // 1 단계 : 매개변수 리스트 구하기 
-                List<Parameter> targetParameters = pElementList.FindAll(element => element.LookupParameter(rvParamName) is not null)
-                                                               .Select(element => element.LookupParameter(rvParamName))
-                                                               .ToList();
+                List<Parameter> targetParameters = rvElementList.FindAll(element => element.LookupParameter(rvParamName) is not null)
+                                                                .Select(element => element.LookupParameter(rvParamName))
+                                                                .ToList();
 
                 // 2 단계 : 매개변수가 존재하지 않는 경우 
                 if(targetParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
-                    // TODO : 테스트 하면서 추후 값을 입력하려는 매개변수가 존재하지 않는 경우 메시지 박스 (TaskDialog.Show)로 출력할지 아니면 오류 처리 (throw new Exception)로 진행할 지 결정 후 로직 다시 수정하기 (2024.03.14 jbh)
-                    // TaskDialog.Show(AABIMHelper.NoticeTitle, $"매개변수 {rvParamName}가 존재하지 않습니다.\r\n다시 선택하시기 바랍니다.");
-                    // return;
-                    throw new Exception($"Revit 문서의 모든 객체(Element)에\r\n매개변수 - {rvParamName}\r\n이/가 존재하지 않습니다.\r\n다시 확인 바랍니다.");
+                    // TODO : 테스트 하면서 추후 값을 입력하려는 매개변수가 존재하지 않는 경우 메시지 박스 (TaskDialog.Show) 출력 필요 없으면 주석처리 진행하기 (2024.04.18 jbh)    
+                    Log.Information(Logger.GetMethodPath(currentMethod) + $"매개변수 - {rvParamName}\r\n이/가 존재 안 함. 매개변수 값 입력 실패!");
+                    TaskDialog.Show(UpdaterHelper.NoticeTitle, $"매개변수 - {rvParamName}이/가 존재하지 않습니다.\r\n담당자에게 문의 하시기 바랍니다.");
+                    return;
+                    // throw new Exception($"Revit 문서의 모든 객체(Element)에\r\n매개변수 - {rvParamName}\r\n이/가 존재하지 않습니다.\r\n담당자에게 확인 바랍니다.");
                 }
 
                 // TODO : 그리디 알고리즘(욕심쟁이 탐욕법) 참고해서 foreach 문에서 리스트 "targetParameters"에 속한 요소(매개변수)를 방문하여
@@ -434,14 +436,13 @@ namespace RevitUpdater.Common.Managers
 
                 // TODO : 아래 테스트용 결과 메시지 필요시 사용 예정 (2024.02.21 jbh) 
                 // TaskDialog.Show(UpdaterHelper.CompletedTitle, $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
-
-                return true;
             }
             catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
-                return false;
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
             }
+            return;   // 메서드 SetParametersValue 종료
         }
 
         #endregion SetParametersValue

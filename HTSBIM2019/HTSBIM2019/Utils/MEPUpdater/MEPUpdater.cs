@@ -52,19 +52,27 @@ namespace HTSBIM2019.Utils.MEPUpdater
         public CategoryInfoView CategoryInfo { get; set; }
 
         /// <summary>
+        /// 카테고리 정보 리스트
+        /// </summary>
+        public List<CategoryInfoView> CategoryInfoList { get; set; } = new List<CategoryInfoView>();
+
+        /// <summary>
         /// MEP Updater 매개변수 리스트
         /// </summary>
-        private List<Updater_Parameters> UpdaterParamList { get; set; } = new List<Updater_Parameters>();
+        //private List<Updater_Parameters> UpdaterParamList { get; set; } = new List<Updater_Parameters>();
+        public List<Updater_Parameters> UpdaterParamList { get; set; } = new List<Updater_Parameters>();
 
         /// <summary>
         /// MEP Updater 매개변수("객체 생성 날짜", "객체 생성자") 리스트  
         /// </summary>
-        private List<Updater_Parameters> AddParamList { get; set; } = new List<Updater_Parameters>();
+        //private List<Updater_Parameters> AddParamList { get; set; } = new List<Updater_Parameters>();
+        public List<Updater_Parameters> AddParamList { get; set; } = new List<Updater_Parameters>();
 
         /// <summary>
         /// MEP Updater 매개변수("최종 수정 날짜", "최종 수정자") 리스트  
         /// </summary>
-        private List<Updater_Parameters> ModParamList { get; set; } = new List<Updater_Parameters>();
+        //private List<Updater_Parameters> ModParamList { get; set; } = new List<Updater_Parameters>();
+        public List<Updater_Parameters> ModParamList { get; set; } = new List<Updater_Parameters>();
 
         // TODO : 매개변수 값 입력 완료 여부 프로퍼티 "IsCompleted" 필요시 사용 예정 (2024.04.04 jbh)
         /// <summary>
@@ -107,7 +115,8 @@ namespace HTSBIM2019.Utils.MEPUpdater
 
                 // TODO : 추후 초기화할 대상 생기면 메서드 "InitSetting" 몸체 안에 초기화 로직 구현 예정 (2024.04.02 jbh)
                 // 3. MEP Updater 매개변수 리스트 가져오기  
-                dllParentDirPath = DirectoryManager.GetDllParentDirectoryPath(HTSHelper.AssemblyFilePath);  // dll 파일(HTSBIM2019.dll)이 속한 부모 폴더 경로 가져오기 
+                // dllParentDirPath = DirectoryManager.GetDllParentDirectoryPath(HTSHelper.AssemblyFilePath);  // dll 파일(HTSBIM2019.dll)이 속한 부모 폴더 경로 가져오기 
+                dllParentDirPath = AppSetting.Default.DirectoryBase.ParentDirPath;   // dll 파일(HTSBIM2019.dll)이 속한 부모 폴더 경로 가져오기 
                 UpdaterParamList = ParamsManager.GetMEPUpdaterParameterList(dllParentDirPath);
 
                 // 4. MEP Updater 매개변수("객체 생성 날짜", "객체 생성자") 데이터 추출하기 
@@ -174,18 +183,27 @@ namespace HTSBIM2019.Utils.MEPUpdater
                 List<Element> addElements    = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
                 List<string> addElementNames = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
 
+                // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(modElementIds)에 존재하는 요소들 중 타입이 "FamilySymbol"인 요소만 추출 
+                // List<FamilySymbol> addFamilySymbols = addElementIds.Where(addElementId => RevitDoc.GetElement(addElementId) as FamilySymbol is not null)
+                //                                                    .Select(addElementId => RevitDoc.GetElement(addElementId) as FamilySymbol)
+                //                                                    .ToList();
 
                 var modElementIds            = pData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
                 List<Element> modElements    = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
                 List<string> modElementNames = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
 
+                // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds)에 존재하는 요소들 중 타입이 "FamilySymbol"인 요소만 추출 
+                // List<FamilySymbol> modFamilySymbols = modElementIds.Where(modElementId => RevitDoc.GetElement(modElementId) as FamilySymbol is not null)
+                //                                                    .Select(modElementId => RevitDoc.GetElement(modElementId) as FamilySymbol)
+                //                                                    .ToList();
 
-                // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
-                // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
-                // 프로퍼티 "UserModifiable" 설명
-                // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
-                // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
-                CategoryManager.CreateCategorySet(RevitDoc, UpdaterParamList);
+                // elementId List -> FamiliySymbol 유형이 존재하면 -> 얘네들만 제외하고 다른 ElementId 요소값만 따로 추출해서 진행 
+
+                // TODO : 클래스 "ElementId" 타입 Collection 객체 "addElementIds", "modElementIds"에 존재하는 타입이 "FamilyInstance"가 아니고 "FamilySymbol"일 경우 
+                //        Revit 문서(RevitDoc)에 아직 실제로 생성된 객체는 아니기 때문에 매개변수 "객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자"가 존재하지 않음.
+                //        하여 이런 경우엔 메서드 Execute를 종료할 수 있도록 return 처리 진행 (2024.04.17 jbh)
+                // if(addFamilySymbols.Count >= (int)EnumExistFamilySymbols.EXIST || modFamilySymbols.Count >= (int)EnumExistFamilySymbols.EXIST) return;
+
 
 
                 // TODO : Revit API 사용해서 로그인 정보에 속한 작업자 이름(로그인 계정 - 영문 또는 한글) 가져오기 (2024.04.02 jbh)
@@ -210,7 +228,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
                     
 
                     // 매개변수에 매핑된 값 입력하기  
-                    foreach (var addParam in AddParamList)
+                    foreach(var addParam in AddParamList)
                     {
                         paramValue = string.Empty;
 
@@ -226,10 +244,12 @@ namespace HTSBIM2019.Utils.MEPUpdater
                                 break;
                         }
 
-                        bResult = ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
+                        // bResult = ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
+                        ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
 
+                        // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                         // if (true == bResult) IsCompleted = true;
-                        if (false == bResult) throw new Exception($"매개변수 {addParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");  
+                        // if (false == bResult) throw new Exception($"매개변수 {addParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");  
                     }
                 }
 
@@ -241,7 +261,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
                     //        "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 (2024.04.02 jbh)
 
                     // 매개변수에 매핑된 값 입력하기  
-                    foreach (var modParam in ModParamList)
+                    foreach(var modParam in ModParamList)
                     {
                         paramValue = string.Empty;
 
@@ -257,15 +277,17 @@ namespace HTSBIM2019.Utils.MEPUpdater
                                 break;
                         }
 
-                        bResult = ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
+                        // bResult = ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
+                        ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
 
+                        // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                         // if (true == bResult) IsCompleted = true;
-                        if (false == bResult) throw new Exception($"매개변수 {modParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");
+                        // if (false == bResult) throw new Exception($"매개변수 {modParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");
                     }
                 }
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
