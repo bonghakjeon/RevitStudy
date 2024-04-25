@@ -134,35 +134,49 @@ namespace RevitUpdater.Common.RequestBase
                 Guid guId  = new Guid(UpdaterHelper.GId);
                 Updater_Id = new UpdaterId(addInId, guId);
 
-                // 3. 인터페이스 "IUpdater" 상속 받는 폼 객체 "MEPUpdater" 찾기 
-                MEPUpdaterForm mepUpdaterForm = (MEPUpdaterForm)FormManager.GetForm(typeof(IUpdater), typeof(MEPUpdaterForm));
-
-                // Revit MEP 업데이터 + Triggers가 등록되어 있는 경우 true 리턴 / Revit MEP 업데이터 + Triggers가 이미 해제되어 있는 경우 false 리턴 
-                isUpdaterRegistered = UpdaterRegistry.IsUpdaterRegistered(Updater_Id, RevitDoc);   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
-
-                // TODO : 부모 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어할 수 있도록 구현 예정 (2024.03.15 jbh)
-                EnumMEPUpdaterRequestId requestIdValue = Request.Take();
-
-                switch(requestIdValue)
+                // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
+                // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
+                using(Transaction transaction = new Transaction(RevitDoc))
                 {
-                    case EnumMEPUpdaterRequestId.NONE:   // 요청이 없는 경우 -> 즉시 종료
-                        return;
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "Request 작업 시작");
 
-                    case EnumMEPUpdaterRequestId.REGISTER:
-                        if(true == isUpdaterRegistered) RemoveMEP(RevitDoc, Updater_Id);
-                        RegisterMEP(mepUpdaterForm, RevitDoc, Updater_Id);
-                        break;
+                    // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                    transaction.Start(UpdaterHelper.Start);  // 해당 "AABIM2024" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
 
-                    case EnumMEPUpdaterRequestId.REMOVE:
-                        if(true == isUpdaterRegistered) RemoveMEP(RevitDoc, Updater_Id);
-                        // Revit MEP 업데이터 + Triggers가 이미 해제되어 있는 경우 
-                        else TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 + Triggers 이미 해제 완료되었습니다.");
-                        break;
 
-                    default:
-                        TaskDialog.Show(UpdaterHelper.NoticeTitle, $"요청 아이디{requestIdValue}이/가 존재하지 않습니다.\r\n담당자에게 문의하시기 바랍니다.");
-                        break;
-                }
+                    // 3. 인터페이스 "IUpdater" 상속 받는 폼 객체 "MEPUpdater" 찾기 
+                    MEPUpdaterForm mepUpdaterForm = (MEPUpdaterForm)FormManager.GetForm(typeof(IUpdater), typeof(MEPUpdaterForm));
+
+                    // Revit MEP 업데이터 + Triggers가 등록되어 있는 경우 true 리턴 / Revit MEP 업데이터 + Triggers가 이미 해제되어 있는 경우 false 리턴 
+                    isUpdaterRegistered = UpdaterRegistry.IsUpdaterRegistered(Updater_Id, RevitDoc);   // Revit 문서(rvDoc)에 해당 pUpdaterId를 가진 업데이터가 등록된 경우 
+
+                    // TODO : 부모 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어할 수 있도록 구현 예정 (2024.03.15 jbh)
+                    EnumMEPUpdaterRequestId requestIdValue = Request.Take();
+
+                    switch(requestIdValue)
+                    {
+                        case EnumMEPUpdaterRequestId.NONE:   // 요청이 없는 경우 -> 즉시 종료
+                            return;
+
+                        case EnumMEPUpdaterRequestId.REGISTER:
+                            if(true == isUpdaterRegistered) RemoveMEP(RevitDoc, Updater_Id);
+                            RegisterMEP(mepUpdaterForm, RevitDoc, Updater_Id);
+                            break;
+
+                        case EnumMEPUpdaterRequestId.REMOVE:
+                            if(true == isUpdaterRegistered) RemoveMEP(RevitDoc, Updater_Id);
+                            // Revit MEP 업데이터 + Triggers가 이미 해제되어 있는 경우 
+                            else TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 + Triggers 이미 해제 완료되었습니다.");
+                            break;
+
+                        default:
+                            TaskDialog.Show(UpdaterHelper.NoticeTitle, $"요청 아이디{requestIdValue}이/가 존재하지 않습니다.\r\n담당자에게 문의하시기 바랍니다.");
+                            break;
+                    }
+                    transaction.Commit();    // 해당 "AABIM2024" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
+
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "Request 작업 완료");
+                }   // 여기서 Dispose (리소스 해제) 처리 
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "메서드 Execute 완료");
             }
@@ -191,27 +205,16 @@ namespace RevitUpdater.Common.RequestBase
 
             try
             {
-                // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
-                // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
-                // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
-                using(Transaction transaction = new Transaction(rvDoc))
-                {
-                    // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
-                    transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
+                // TODO : static 메서드 "UpdaterManager.RemoveSetting" 필요시 추가 수정 및 사용 예정 (2024.03.22 jbh)
+                // UpdaterManager.RemoveSetting(rvDoc, pUpdaterId);   // Revit MEP 업데이터 + Triggers 해제 
 
-                    // TODO : static 메서드 "UpdaterManager.RemoveSetting" 필요시 추가 수정 및 사용 예정 (2024.03.22 jbh)
-                    // UpdaterManager.RemoveSetting(rvDoc, pUpdaterId);   // Revit MEP 업데이터 + Triggers 해제 
+                Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 해제 시작");
 
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 해제 시작");
+                UpdaterRegistry.RemoveAllTriggers(pUpdaterId);            // 지정된 pUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
+                UpdaterRegistry.UnregisterUpdater(pUpdaterId, rvDoc);     // Revit 문서(rvDoc)에 지정된 pUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
 
-                    UpdaterRegistry.RemoveAllTriggers(pUpdaterId);            // 지정된 pUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
-                    UpdaterRegistry.UnregisterUpdater(pUpdaterId, rvDoc);     // Revit 문서(rvDoc)에 지정된 pUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
-
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 해제 완료");
-                    TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 + Triggers 해제 완료");
-
-                    transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
-                }   // 여기서 Dispose (리소스 해제) 처리 
+                Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 해제 완료");
+                TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 + Triggers 해제 완료");
             }
             catch(Exception ex)
             {
@@ -233,49 +236,38 @@ namespace RevitUpdater.Common.RequestBase
         
             try
             {
-                // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
-                // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
-                // 해당 Transaction 기능은 부포 폼(Revit)의 쓰레드를 자식 폼(MEPUpdater)이 제어하는 과정이다.
-                using(Transaction transaction = new Transaction(rvDoc))
-                {
-                    // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
-                    transaction.Start(UpdaterHelper.Start);   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
-        
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 등록 셋팅 시작");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 등록 셋팅 시작");
 
-                    // 해당 메서드 "UpdaterRegistry.RegisterUpdater" 호출시 파라미터로 넘길 인자로 넘길 때, 
-                    // 인터페이스 IUpdater를 상속 받는 MEPUpdater 클래스 객체를 넘기도록 구현하기 
+                // 해당 메서드 "UpdaterRegistry.RegisterUpdater" 호출시 파라미터로 넘길 인자로 넘길 때, 
+                // 인터페이스 IUpdater를 상속 받는 MEPUpdater 클래스 객체를 넘기도록 구현하기 
 
-                    // 1. Revit MEP 업데이터 등록 
-                    // TODO : static 메서드 "UpdaterManager.RegisterUpdater" 필요시 추가 수정 및 사용 예정 (2024.03.22 jbh)
-                    // UpdaterManager.RegisterUpdater(pMEPUpdaterForm, rvDoc, pUpdaterId);
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 시작");
+                // 1. Revit MEP 업데이터 등록 
+                // TODO : static 메서드 "UpdaterManager.RegisterUpdater" 필요시 추가 수정 및 사용 예정 (2024.03.22 jbh)
+                // UpdaterManager.RegisterUpdater(pMEPUpdaterForm, rvDoc, pUpdaterId);
+                Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 시작");
 
-                    UpdaterRegistry.RegisterUpdater(pMEPUpdaterForm, rvDoc);   // 인터페이스 IUpdater를 상속받는 폼 객체에 업데이터 등록
+                UpdaterRegistry.RegisterUpdater(pMEPUpdaterForm, rvDoc);   // 인터페이스 IUpdater를 상속받는 폼 객체에 업데이터 등록
 
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 완료");
-                    TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 등록 완료");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 완료");
+                TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 등록 완료");
 
-                    BuiltInCategory updaterBuiltInCategory = pMEPUpdaterForm.CategoryInfo.Category;
+                BuiltInCategory updaterBuiltInCategory = pMEPUpdaterForm.CategoryInfo.Category;
 
-                    // 2. 카테고리 ComboBox 컨트롤(comboBoxCategory)에서 선택한
-                    // 카테고리 객체 (BupdaterBuiltInCategory)만 필터링 처리 및 MEP Triggers 등록 
-                    MEPCategoryFilter = new ElementCategoryFilter(updaterBuiltInCategory);
-                    UpdaterManager.RegisterTriggers(pUpdaterId, MEPCategoryFilter);
+                // 2. 카테고리 ComboBox 컨트롤(comboBoxCategory)에서 선택한
+                // 카테고리 객체 (BupdaterBuiltInCategory)만 필터링 처리 및 MEP Triggers 등록 
+                MEPCategoryFilter = new ElementCategoryFilter(updaterBuiltInCategory);
+                UpdaterManager.RegisterTriggers(pUpdaterId, MEPCategoryFilter);
 
-                    // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.03.27 jbh)
-                    // 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 및 MEP Triggers 등록 
-                    // PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
-                    // UpdaterManager.RegisterTriggers(pUpdaterId, PipeCurvesCategoryFilter);
+                // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.03.27 jbh)
+                // 객체 "배관"(BuiltInCategory.OST_PipeCurves)만 필터링 처리 및 MEP Triggers 등록 
+                // PipeCurvesCategoryFilter  = new ElementCategoryFilter(BuiltInCategory.OST_PipeCurves);
+                // UpdaterManager.RegisterTriggers(pUpdaterId, PipeCurvesCategoryFilter);
 
-                    // 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 및 MEP Triggers 등록 
-                    //PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
-                    //UpdaterManager.RegisterTriggers(pUpdaterId, PipeFittingCategoryFilter);   
+                // 객체 "배관 부속류"(BuiltInCategory.OST_PipeFitting)만 필터링 처리 및 MEP Triggers 등록 
+                //PipeFittingCategoryFilter = new ElementCategoryFilter(BuiltInCategory.OST_PipeFitting);
+                //UpdaterManager.RegisterTriggers(pUpdaterId, PipeFittingCategoryFilter);   
 
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 등록 셋팅 완료");
-        
-                    transaction.Commit();   // 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
-                }   // 여기서 Dispose (리소스 해제) 처리 
+                Log.Information(Logger.GetMethodPath(currentMethod) + "Revit MEP 업데이터 + Triggers 등록 셋팅 완료");
             }
             catch(Exception ex)
             {
