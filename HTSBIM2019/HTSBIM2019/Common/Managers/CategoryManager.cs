@@ -58,31 +58,55 @@ namespace HTSBIM2019.Common.Managers
         /// <summary>
         /// 카테고리 이름에 맞는 BuiltInCategory 가져오기 
         /// </summary>
-        public static BuiltInCategory GetCategory(Document rvDoc, string rvCategoryName)
+        public static BuiltInCategory GetCategory(List<Category> rvCategoryList, string rvCategoryName)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
-                // 1 단계 : Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
-                // 참고 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.linq.enumerable.oftype?view=net-8.0
-                // 참고 2 URL - https://chopstick-91.tistory.com/25
-                List<Category> categories = rvDoc.Settings.Categories.OfType<Category>().ToList();
-
-                // 2 단계 : BuiltInCategory 정보 리스트에서 카테고리 이름에 맞는 BuiltInCategory 데이터 중 시퀀스 첫번째 요소 추출하기 (2024.04.19 jbh)
+                // BuiltInCategory 정보 리스트에서 카테고리 이름에 맞는 BuiltInCategory 데이터 중 시퀀스 첫번째 요소 추출하기 (2024.04.19 jbh)
                 // 참고 URL - https://afsdzvcx123.tistory.com/entry/C-%EB%AC%B8%EB%B2%95-C-LINQ-First-FirstOrDefault-Single-SingleOrDefault-%EC%B0%A8%EC%9D%B4%EC%A0%90
-                BuiltInCategory builtInCategory = categories.Where(category => category.Name.Equals(rvCategoryName))
-                                                            .Select(category => (BuiltInCategory)category.Id.IntegerValue)
-                                                            .FirstOrDefault();   // 시퀀스 첫번째 요소 추출 
+                BuiltInCategory builtInCategory = rvCategoryList.Where(category => category.Name.Equals(rvCategoryName))
+                                                                .Select(category => (BuiltInCategory)category.Id.IntegerValue)
+                                                                .FirstOrDefault();   // 시퀀스 첫번째 요소 추출 
 
                 return builtInCategory;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
             }
         }
+
+        /// <summary>
+        /// 카테고리 이름에 맞는 BuiltInCategory 가져오기 
+        /// </summary>
+        // public static BuiltInCategory GetCategory(Document rvDoc, string rvCategoryName)
+        // {
+        //     var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+        // 
+        //     try
+        //     {
+        //         // 1 단계 : Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
+        //         // 참고 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.linq.enumerable.oftype?view=net-8.0
+        //         // 참고 2 URL - https://chopstick-91.tistory.com/25
+        //         List<Category> categories = rvDoc.Settings.Categories.OfType<Category>().ToList();
+        // 
+        //         // 2 단계 : BuiltInCategory 정보 리스트에서 카테고리 이름에 맞는 BuiltInCategory 데이터 중 시퀀스 첫번째 요소 추출하기 (2024.04.19 jbh)
+        //         // 참고 URL - https://afsdzvcx123.tistory.com/entry/C-%EB%AC%B8%EB%B2%95-C-LINQ-First-FirstOrDefault-Single-SingleOrDefault-%EC%B0%A8%EC%9D%B4%EC%A0%90
+        //         BuiltInCategory builtInCategory = categories.Where(category => category.Name.Equals(rvCategoryName))
+        //                                                     .Select(category => (BuiltInCategory)category.Id.IntegerValue)
+        //                                                     .FirstOrDefault();   // 시퀀스 첫번째 요소 추출 
+        // 
+        //         return builtInCategory;
+        //     }
+        //     catch(Exception ex)
+        //     {
+        //         Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+        //         throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
+        //     }
+        // }
 
 
         #endregion GetCategory
@@ -302,7 +326,11 @@ namespace HTSBIM2019.Common.Managers
 
 
                 // 1 단계 : 공유 매개변수 리스트 가져오기 
-                List<SharedParameterElement> sharedParameters = ParamsManager.GetSharedParameterList(rvDoc);
+                // List<SharedParameterElement> sharedParameters = ParamsManager.GetSharedParameterList(rvDoc);
+
+                // 1 단계 : 프로젝트 매개변수 이름 리스트 가져오기 (사용자가 삭제 처리한 프로젝트(공유) 매개변수 제외)
+                List<string> projectParamNameList = ParamsManager.GetProjectParameterNameList(rvDoc);
+
 
                 // Revit 응용 프로그램의 언어 타입(영문, 한글 등등...)에 따라 pUpdaterParamList 리스트에서 언어 타입에 매핑되는 카테고리셋 가져오기 
                 // if () mepCategorySet = 
@@ -324,6 +352,7 @@ namespace HTSBIM2019.Common.Managers
                     default:
                         throw new Exception("Revit 언어 타입(영문 또는 한글) 변경 후\r\n프로그램 재실행 해주시기 바랍니다.");
                 }
+
 
                 // 2 단계 : 반복문 사용해서 MEP Updater 매개변수 리스트에 존재하는 모든 매개변수 데이터 방문 
                 foreach (var updaterParam in pUpdaterParamList)
@@ -362,21 +391,35 @@ namespace HTSBIM2019.Common.Managers
                     // 참고 URL - https://blog.naver.com/lewis_han/222226274359
 
                     // 6 단계 : 기존 공유 매개변수 리스트에 매개변수("객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자") 추가 
-                    // TODO : using System.Linq; 추가 및 Linq 확장 메서드 "Where" 사용해서 기존 공유 매개변수 리스트에 새로이 추가 하고자 하는 매개변수 이름과 동일한 공유 매개변수 존재 여부 확인 (2024.02.13 jbh) 
+                    // TODO : using System.Linq; 추가 및 Linq 확장 메서드 "Where" 사용해서 기존 프로젝트 매개변수 이름 리스트(projectParamNameList)에 새로이 추가 하고자 하는 매개변수 이름과 동일한 프로젝트 매개변수 존재 여부 확인 (2024.04.24 jbh) 
                     // 참고 URL - https://yangbengdictionary.tistory.com/3
                     // 참고 2 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.collections.generic.list-1.exists?view=net-8.0
                     // bool isExist = sharedParameters.Exists(sharedParam => sharedParam.Name.Equals(paramName));
-                    bool isExist = sharedParameters.Exists(sharedParam => sharedParam.Name.Equals(paramName));
+                    // bool isExist = sharedParameters.Exists(sharedParam => sharedParam.Name.Equals(paramName));
+
+                    bool isExist = projectParamNameList.Exists(projectParamName => projectParamName.Equals(paramName));
 
                     // 6 - 1 : 기존 공유 매개변수 리스트에 새로이 추가 하고자 하는 MEPUpdater 매개변수가 존재하지 않는 경우 
-                    if (false == isExist)
+                    if(false == isExist)
                     {
-                        CreateParamView createParam = new CreateParamView(categorySet, paramName, paramType, false);
+                        CreateParamView createParam = new CreateParamView(categorySet, paramName, BuiltInParameterGroup.INVALID, paramType, false, true, true);
+
+                        ParamsManager.CreateProjectParameter(rvDoc, createParam);   // MEPUpdater 매개변수 생성 (pUserModifiable = false 설정. 왜냐하면 사용자가 화면 상에서 매개변수에 매핑된 값 수정 불가 설정)
+
+                        // var testCategories = Enum.GetValues(typeof(BuiltInCategory)).OfType<BuiltInCategory>()
+                        //                                                             .Where(category => category.Equals(BuiltInCategory.OST_PipeCurves)
+                        //                                                                             || category.Equals(BuiltInCategory.OST_PipeInsulations)
+                        //                                                                             || category.Equals(BuiltInCategory.OST_PipeFitting)
+                        //                                                                             || category.Equals(BuiltInCategory.OST_PipeAccessory))
+                        //                                                             .ToList();
+
+
+                        // ParamsManager.CreateProjectParameter(rvDoc, paramName, BuiltInParameterGroup.INVALID, paramType, testCategories, true, true);
 
                         // ParamsManager.CreateParameter(rvDoc, categorySet, paramName, paramType, false);  // MEPUpdater 매개변수 생성 (pUserModifiable = false 설정. 왜냐하면 사용자가 화면 상에서 매개변수에 매핑된 값 수정 불가 설정)
-                        ParamsManager.CreateParameter(rvDoc, createParam);  // MEPUpdater 매개변수 생성 (pUserModifiable = false 설정. 왜냐하면 사용자가 화면 상에서 매개변수에 매핑된 값 수정 불가 설정)
+                        // ParamsManager.CreateParameter(rvDoc, createParam);       // MEPUpdater 매개변수 생성 (pUserModifiable = false 설정. 왜냐하면 사용자가 화면 상에서 매개변수에 매핑된 값 수정 불가 설정)
                     }
-                        
+
 
                     // TODO : 아래 주석친 코드 필요시 참고 (2024.04.04 jbh)
                     // 6 - 2 : 기존 공유 매개변수 리스트에 새로이 추가 하고자 하는 MEPUpdater 매개변수가 존재하는 경우 

@@ -67,8 +67,9 @@ namespace HTSBIM2019
 
                 Ribbon.CreateRibbonControl(application);   // 리본 메뉴 등록
 
-                AddInId addInId = application.ActiveAddInId;
-                AppSetting.Default.UpdaterBase.MEPUpdater = new MEPUpdater(addInId);
+                // AddInId addInId = application.ActiveAddInId;
+                // AppSetting.Default.UpdaterBase.MEPUpdater = new MEPUpdater(addInId);
+                //AppSetting.Default.UpdaterBase.MEPUpdater = UpdaterSetting.GetUpdaterInstance(addInId);
 
                 // TODO : 필요시 아래 주석친 DocumentCreated, DocumentOpened 이벤트 메소드 가입 코드 사용 예정 (2024.04.17 jbh)
                 // TODO : DocumentCreated 이벤트 메소드 App_DocumentCreated 가입 구현 (2024.04.16 jbh)

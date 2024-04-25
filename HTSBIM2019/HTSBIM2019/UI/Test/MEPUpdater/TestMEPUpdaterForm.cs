@@ -387,14 +387,7 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
                 {
                     AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo = new CategoryInfoView(categoryInfo.CategoryName, categoryInfo.Category);
 
-                    List<Updater_Parameters> updaterParamList = AppSetting.Default.UpdaterBase.MEPUpdater.UpdaterParamList;
-
-                    // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
-                    // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
-                    // 프로퍼티 "UserModifiable" 설명
-                    // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
-                    // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
-                    CategoryManager.CreateCategorySet(RevitDoc, updaterParamList, RevitLanguageType);
+                    // List<Updater_Parameters> updaterParamList = AppSetting.Default.UpdaterBase.MEPUpdater.UpdaterParamList;
 
                     MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
                 }

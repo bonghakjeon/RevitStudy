@@ -6,6 +6,7 @@ using System.Reflection;
 using HTSBIM2019.Common.LogBase;
 using HTSBIM2019.Common.Managers;
 using HTSBIM2019.Common.HTSBase;
+using HTSBIM2019.Common.RequestBase;
 using HTSBIM2019.UI.MEPUpdater;
 using HTSBIM2019.Settings;
 using HTSBIM2019.Utils.CompanyHomePage;
@@ -122,7 +123,7 @@ namespace HTSBIM2019
         /// <summary>
         /// MEPUpdater 폼 객체 
         /// </summary>
-        private static MEPUpdaterForm MEPUpdaterForm { get; set; }
+        // private static MEPUpdaterForm FormMEPUpdater { get; set; }
 
         /// <summary>
         /// Revit UI 애플리케이션 객체
@@ -134,11 +135,6 @@ namespace HTSBIM2019
         /// </summary>
         public Document RevitDoc { get; set; }
 
-        /// <summary>
-        /// Revit 애플리케이션 언어 타입(영문, 한글 등등...)
-        /// </summary>
-        public LanguageType RevitLanguageType { get; set; }
-
         #endregion 프로퍼티
 
         #region 기본 메소드
@@ -149,6 +145,8 @@ namespace HTSBIM2019
         // 참고 2 URL - https://todaycode.tistory.com/24
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            bool isVisible = false;                               // Modaless 폼 객체(AppSetting.Default.UpdaterBase.MEPUpdaterForm) 화면 출력 여부(.Show())
+
             // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2024.01.22 jbh)
             // 참고 URL - https://slaner.tistory.com/73
             // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
@@ -164,7 +162,6 @@ namespace HTSBIM2019
                 // AddInId addInId = revitUIApp.ActiveAddInId;                    // HTS Revit 업데이터 Command 아이디
 
                 Application revitApp = RevitUIApp.Application;                    // Revit 애플리케이션 객체 
-                RevitLanguageType = RevitUIApp.Application.Language; // Revit 애플리케이션 언어 타입(영문, 한글 등등...)
 
                 // TODO : 로그인 아이디, 작업자(사용자) 이름 구하기 (2024.03.02 jbh)
                 // 참고 URL   - https://www.revitapidocs.com/2018/8d3b257a-7b99-a6ee-b146-f635c35f425c.htm
@@ -172,6 +169,19 @@ namespace HTSBIM2019
                 AppSetting.Default.Login.LoginUserId = revitApp.LoginUserId;      // 로그인 아이디
                 AppSetting.Default.Login.Username    = revitApp.Username;         // 작업자(사용자) 이름
 
+
+                AddInId addInId = RevitUIApp.ActiveAddInId;                       // 활성화된 애드인 애플리케이션(또는 Command) 아이디
+                MEPUpdaterRequestHandler mepHandler = new MEPUpdaterRequestHandler();    // MEP 업데이터 외부 요청 핸들러 객체 mepHandler 생성 
+                ExternalEvent exEvent = ExternalEvent.Create(mepHandler);                // MEP 업데이터 폼 객체가 사용할 외부 이벤트 생성 
+
+                AppSetting.Default.UpdaterBase = UpdaterSetting.GetUpdaterInstance(addInId, exEvent, mepHandler, RevitUIApp);  // MEP 업데이터 폼 객체 싱글톤 객체로 생성
+
+                // TODO : 프로퍼티 "Visible" 사용해서 Modaless 폼 객체(AppSetting.Default.UpdaterBase.MEPUpdaterForm) 화면 출력 여부 확인
+                // 참고 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.windows.forms.control.visible?view=windowsdesktop-8.0
+                isVisible = AppSetting.Default.UpdaterBase.MEPUpdaterForm.Visible;
+
+                // Modaless 폼 객체(AppSetting.Default.UpdaterBase.MEPUpdaterForm) 화면 출력 안 된 경우 
+                if(false == isVisible) AppSetting.Default.UpdaterBase.MEPUpdaterForm.Show();   // Show 메서드 호출해서 화면 출력하기  
 
                 // TaskDialog.Show("HTS Revit Update...", "테스트 진행 중...");
 
@@ -183,7 +193,9 @@ namespace HTSBIM2019
                 // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
                 // MEPUpdaterForm.ShowDialog();
                 // MEPUpdaterForm.Show();
-                FormManager.ShowModalessForm(MEPUpdaterForm, RevitUIApp, RevitLanguageType, typeof(MEPUpdaterForm));
+                // FormManager.ShowModalessForm(AppSetting.Default.UpdaterBase.MEPUpdaterForm, RevitUIApp, typeof(MEPUpdaterForm));
+                // FormManager.ShowModalessForm(RevitUIApp, typeof(MEPUpdaterForm));
+                // FormManager.ShowModalessForm(AppSetting.Default.UpdaterBase.MEPUpdaterForm, typeof(MEPUpdaterForm));
 
                 // TestMEPUpdater testMEPUpdater = new TestMEPUpdater();
                 // testMEPUpdater.Show();
@@ -209,7 +221,8 @@ namespace HTSBIM2019
         /// </summary>
         public static void WakeFormUp()
         {
-            if (MEPUpdaterForm is not null) MEPUpdaterForm.WakeUp();
+            //if (FormMEPUpdater is not null) FormMEPUpdater.WakeUp();
+            if (AppSetting.Default.UpdaterBase.MEPUpdaterForm is not null) AppSetting.Default.UpdaterBase.MEPUpdaterForm.WakeUp();
         }
 
         #endregion WakeFormUp

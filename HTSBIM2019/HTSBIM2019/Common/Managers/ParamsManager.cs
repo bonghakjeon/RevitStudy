@@ -200,6 +200,43 @@ namespace HTSBIM2019.Common.Managers
 
         #endregion GetMEPUpdaterParameterList
 
+        #region GetProjectParameterNameList
+
+        /// <summary>
+        /// 프로젝트 매개변수 이름 리스트 가져오기 
+        /// </summary>
+        public static List<string> GetProjectParameterNameList(Document rvDoc)
+        {
+            List<string> projectParameterList = new List<string>();   // 프로젝트 매개변수 이름 리스트
+
+            var currentMethod = MethodBase.GetCurrentMethod();        // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // 프로젝트 매개변수 이름 리스트 가져오기(사용자가 삭제 처리한 프로젝트(공유) 매개변수 제외)
+                // 참고 URL - https://forums.autodesk.com/t5/revit-api-forum/parameter-bindings/td-p/9235864
+                BindingMap bindingMap = rvDoc.ParameterBindings;
+                DefinitionBindingMapIterator it = bindingMap.ForwardIterator();
+                it.Reset();
+
+                while (it.MoveNext())
+                {
+                    string paramName = it.Key.Name;
+
+                    projectParameterList.Add(paramName);
+                }
+
+                return projectParameterList;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달
+            }
+        }
+
+        #endregion GetProjectParameterNameList
+
         #region GetSharedParameterList
 
         /// <summary>
@@ -316,15 +353,13 @@ namespace HTSBIM2019.Common.Managers
                 // 팝업화면 "매개변수 특성" 출력 -> 항목 "매개변수 데이터"에 속하는 매개변수 타입(AIS_Parameters.json - "paramType")은 "인스턴스"로 체크된다.
                 binding = rvDoc.Application.Create.NewInstanceBinding(pCreateParam.CategorySet);
 
-                // TODO : 점심 먹고나서 아래 부터 로직 분석 진행하기 (2024.01.24 jbh)
                 // 6 단계 : Document.ParameterBindings 개체를 사용 문서에 새로운 공유 매개변수 바인딩 및 정의 추가 (map.Insert(exDef, binding))
                 // 새로운 공유 매개변수 바인딩은 매개변수 정의가 하나 이상의 카테고리 내의 요소에 바인딩되는 방식 의미
                 // BindingMap map = (new UIApplication(rvApp)).ActiveUIDocument.Document.ParameterBindings;
                 // return map.Insert(exDef, binding);
                 BindingMap map = rvDoc.ParameterBindings;
 
-                // 7 단계 : 카테고리셋 하위의 카테고리에 세움터 파라미터 (속성명, 속성값) 추가
-                //          (예) 속성명 "AIS_분류코드", 속성값 "L지상"(타입 - 코드(== 텍스트))
+                // 7 단계 : 카테고리셋 하위의 카테고리에 매개변수 데이터(key, value) 새로 추가 
                 // return map.Insert(exDef, binding);
                 map.Insert(exDef, binding);
             }
@@ -336,6 +371,247 @@ namespace HTSBIM2019.Common.Managers
         }
 
         #endregion CreateParameter
+
+        #region CreateProjectParameter
+
+        // TODO : 프로젝트 매개변수 생성 static 메서드 "CreateProjectParameter" 구현 (2024.04.24 jbh)
+        // 참고 URL - https://forums.autodesk.com/t5/revit-api-forum/parameter-bindings/td-p/9235864
+        // 참고 2 URL - https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html
+        // 참고 3 URL - https://thebuildingcoder.typepad.com/blog/2009/09/adding-a-category-to-a-parameter-binding.html
+
+        /// <summary>
+        /// 활성화된 Revit 문서 카테고리 하위 MEPUpdater 전용 프로젝트 매개변수 생성(추가) 
+        /// 메서드 파라미터 "rvDataType" 넣어서 새로 구현하기 
+        /// </summary>
+        public static void CreateProjectParameter(Document rvDoc, CreateParamView pCreateParam)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   //로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // string tempFile = Path.GetTempFileName() + HTSHelper.TextFile;  // 임시 파일의 전체 파일 경로 반환 및 string 클래스 객체 "tempFile"에 할당 
+                string tempFile = Path.Combine(Path.GetTempPath(), "TempProjectParameters.txt");   // 임시 파일의 전체 파일 경로 반환 및 string 클래스 객체 "tempFile"에 할당 
+
+                // Autodesk Revit에는 공유 매개변수 파일이 없으므로 공유 매개변수 파일 객체에 액세스 하기 전에
+                // string 클래스 객체 "originFile"에 공유 매개변수 파일 전체 경로 프로퍼티 "SharedParametersFilename" 할당하기 
+                // 참고 URL - https://www.revitapidocs.com/2018/d6b43cc8-9521-9ab3-569e-5e0c7a0205a8.htm
+                string originFile = rvDoc.Application.SharedParametersFilename;   // 문서(rvDoc)가 실행되는 Revit 응용 프로그램(rvDoc.Application)의 공유 매개변수 파일 가져오기 
+
+                // TODO : using 구문 사용해서 임시 파일 생성(File.Create(tempFile))  (2024.01.24 jbh)
+                // 참고 URL - https://www.csharpstudy.com/latest/CS8-using.aspx
+                // 임시 파일(tempFile) 생성
+                using(File.Create(tempFile))
+                {
+
+                }   // 중괄호 { } 범위 벗어난 여기서 Dispose() 호출됨.                                      
+
+                // 새로운 공유 매개변수 정의를 생성 하기 위해 ExternalDefinitionCreationOptions 옵션 클래스 객체 opt 생성 
+                // ExternalDefinitionCreationOptions opt = new ExternalDefinitionCreationOptions(p_ParamName, SpecTypeId.String.Text);
+                // 임시 파일 경로 값(tempFile)을 공유 매개변수 파일 전체 경로 프로퍼티 "SharedParametersFilename" 에 할당하기 
+                rvDoc.Application.SharedParametersFilename = tempFile;
+
+                // 1 단계 : app.OpenSharedParameterFile() 메서드를 통해 공유 매개변수 파일 열기 
+                //          DefinitionFile 클래스 객체(defFile)는 디스크에 존재하는 공유 매개변수 파일 의미
+                // 참고 URL - https://www.revitapidocs.com/2019/3a345800-4ee3-04ef-5a67-94a1b9840c27.htm
+                // 메서드 "OpenSharedParameterFile" 사용해서 디스크에 존재하는 공유 매개변수 파일 열기 
+                // 참고 URL - https://www.revitapidocs.com/2016/e7698cec-f599-3078-f2e2-84e8d90f2b44.htm
+                DefinitionFile defFile = rvDoc.Application.OpenSharedParameterFile();  // 공유 매개변수 파일 오픈
+
+                // 2 단계 : DefinitionGroup 클래스 객체 "defGroup" 생성 및 새로운 공유 매개변수 그룹 "TempDefintionGroup" 할당
+                //          새로운 공유 매개변수 그룹이란? 디스크에 새로운 공유 매개변수 정의를 보관하는데 사용되는 컨테이너를 의미함.
+                DefinitionGroup defGroup = defFile.Groups.Create("TempDefintionGroup");
+
+
+                // 새로운 공유 매개변수 정의를 생성 하기 위해 ExternalDefinitionCreationOptions 옵션 클래스 객체 opt 생성 
+                //ExternalDefinitionCreationOptions opt = new ExternalDefinitionCreationOptions(rvParamName, SpecTypeId.String.Text);
+                ExternalDefinitionCreationOptions opt = new ExternalDefinitionCreationOptions(pCreateParam.ParamName, pCreateParam.ParameterType);
+                opt.Visible = pCreateParam.ParamVisible;   // 새로운 공유 매개변수가 사용자에게 표시 되도록 true 할당
+
+                // TODO : 프로퍼티 "UserModifiable" 사용해서 사용자가 새로 생성한 공유 매개변수에 매핑된 값을 화면상에서 수정 여부 설정 구현 (2024.04.04 jbh)
+                // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
+                // 참고 2 URL - https://www.revitapidocs.com/2018/99e14a83-f976-2465-6464-ed3f8a159000.htm
+                opt.UserModifiable = pCreateParam.UserModifiable;
+
+                // 3 단계 : 외부 정의 클래스 ExternalDefinition 객체 exDef에 defGroup.Definitions.Create(opt) as ExternalDefinition 할당 
+                //          위에서 생성한 공유 매개변수 정의 보관 객체 "defGroup"에 속하는 프로퍼티 "Definitions" 사용
+                //          -> 지정된 옵션(opt) 사용해서 새로운 외부 매개변수 정의 생성 (defGroup.Definitions.Create(opt))
+                ExternalDefinition exDef = defGroup.Definitions.Create(opt) as ExternalDefinition;
+
+                // app.SharedParametersFilename에 originFile 할당 후 새로 생성한 공유 매개변수 파일 전체 경로가 존재하는지 확인
+                rvDoc.Application.SharedParametersFilename = originFile;
+                File.Delete(tempFile);   // 임시 파일(tempFile) 삭제 
+
+                // 4 단계 : ElementBinding 클래스 객체 "binding" null 초기화 
+                ElementBinding binding = null;
+
+                // 5 단계 : 객체 "binding"에 메서드 "NewTypeBinding" 또는 "NewInstanceBinding" 사용해서 새로운 공유 매개변수가 바인딩 될 객체 생성 
+                // 메서드 "NewTypeBinding" 사용시 탭 "관리" -> 버튼 "프로젝트 매개변수" -> 매개변수 클릭 (예)AIS_걸레받이마감
+                // 팝업화면 "매개변수 특성" 출력 -> 항목 "매개변수 데이터"에 속하는  매개변수 타입(AIS_Parameters.json - "paramType")은 "유형"로 체크된다.
+                // 메서드 "NewInstanceBinding" 사용시 탭 "관리" -> 버튼 "프로젝트 매개변수" -> 매개변수 클릭 (예)AIS_걸레받이마감
+                // 팝업화면 "매개변수 특성" 출력 -> 항목 "매개변수 데이터"에 속하는 매개변수 타입(AIS_Parameters.json - "paramType")은 "인스턴스"로 체크된다.
+
+                // 매개변수 타입 "인스턴스"일 경우 
+                if (true == pCreateParam.InstanceBinding) binding = rvDoc.Application.Create.NewInstanceBinding(pCreateParam.CategorySet);
+
+                // 매개변수 타입 "유형"일 경우 
+                else binding = rvDoc.Application.Create.NewTypeBinding(pCreateParam.CategorySet);
+
+                // 6 단계 : Document.ParameterBindings 개체를 사용 문서에 새로운 공유 매개변수 바인딩 및 정의 추가 (map.Insert(exDef, binding))
+                // 새로운 공유 매개변수 바인딩은 매개변수 정의가 하나 이상의 카테고리 내의 요소에 바인딩되는 방식 의미
+                // BindingMap map = (new UIApplication(rvApp)).ActiveUIDocument.Document.ParameterBindings;
+                // return map.Insert(exDef, binding);
+                BindingMap map = rvDoc.ParameterBindings;
+
+                // 메서드 파라미터 "paramName"의 문자열과 동일한 매개변수 이름(curDef.Name)이 존재하지 않는 경우 
+                // 카테고리셋 하위의 카테고리에 매개변수 데이터(key, value) 새로 추가 
+                map.Insert(exDef, binding, pCreateParam.ParameterGroup);
+
+
+                // TODO : 아래 주석친 코드 필요시 참고 (2024.04.25 jbh)
+                // Document.ParameterBindings 개체를 사용 문서에 새로운 공유 매개변수 바인딩 및 정의 추가 (map.Insert(exDef, binding))
+                // 새로운 공유 매개변수 바인딩은 매개변수 정의가 하나 이상의 카테고리 내의 요소에 바인딩되는 방식 의미
+                // BindingMap map = (new UIApplication(rvApp)).ActiveUIDocument.Document.ParameterBindings;
+                // return map.Insert(exDef, binding);
+                // BindingMap map = rvDoc.ParameterBindings;
+
+                // 매개변수 추가하기 위한 반복자 객체 DefinitionBindingMapIterator 클래스 객체 iter에 값 할당 
+                // rvDoc.ParameterBindings
+                // - Revit상에 활성화 된 문서(rvDoc)에 존재하는 카테고리 안에 포함된 매개변수들의 키(Key), 값(value)을 가지고 있는 HashMap(Dictionary) 객체 
+                // - 해당 rvDoc.ParameterBindings에 메서드 "Insert" 호출시 Revit상에 활성화 된 문서(rvDoc)에 존재하는 카테고리 안에 매개변수 키(key), 값(value) 추가 가능 
+                // ForwardIterator
+                // - 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)를
+                // 맨 앞에서 부터 검색할 수 있도록 반복자(카테고리 안에 존재하는 매개변수 키(key), 값(value) 포함) 반환
+                // DefinitionBindingMapIterator iter = map.ForwardIterator();
+
+                // 반복문 while 사용해서 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)에
+                // 다음 반복자(카테고리 안에 존재하는 매개변수 키(key), 값(value) 포함)가 존재할 경우 
+                //while (iter.MoveNext())
+                //{
+                //    Definition curDef = iter.Key;                           // 해당 반복자안에 존재하는 매개변수(Key) 가져오기
+                //    ElementBinding curBind = (ElementBinding)iter.Current;  // 해당 반복자에 속한 바인딩된 객체 가져오기
+
+                //    string testName = curDef.Name;
+                //    var testList = curBind.Categories.OfType<Category>().ToList();
+
+                //    bool result = rvDoc.ParameterBindings.ReInsert(curDef, curBind, pCreateParam.ParameterGroup);
+
+                //    // 메서드 파라미터 "paramName"의 문자열과 동일한 매개변수 이름(curDef.Name)이 존재하는 경우 
+                //    if (pCreateParam.ParamName.Equals(curDef.Name, StringComparison.CurrentCultureIgnoreCase))
+                //    {
+                //        // 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)에 기존 매개변수 데이터(key, value) 삭제 및 
+                //        // 지정된 매개변수 데이터 (curDef, curBind) 추가 
+                //        bool result2 = rvDoc.ParameterBindings.ReInsert(curDef, curBind, pCreateParam.ParameterGroup);
+                //        return;   // 메서드 "CreateProjectParameter" 종료
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
+            }
+            return;      // 메서드 "CreateProjectParameter" 종료
+        }
+
+
+        public static bool CreateProjectParameter(Document rvDoc, string paramName, BuiltInParameterGroup paramGroup, ParameterType paramType, List<BuiltInCategory> bicBindings, bool instanceBinding, bool visible)
+        {
+            // TODO : 로그 기록시 현재 실행 중인 메서드 위치 기록하기 (2024.01.22 jbh)
+            // 참고 URL - https://slaner.tistory.com/73
+            // 참고 2 URL - https://stackoverflow.com/questions/4132810/how-can-i-get-a-method-name-with-the-namespace-class-name
+            // 참고 3 URL - https://stackoverflow.com/questions/44153/can-you-use-reflection-to-find-the-name-of-the-currently-executing-method
+            var currentMethod = MethodBase.GetCurrentMethod();
+
+            try
+            {
+                // TODO : 프로젝트 매개변수 생성 static 메서드 "CreateProjectParameter" 구현 (2024.04.24 jbh)
+                // 참고 URL - https://forums.autodesk.com/t5/revit-api-forum/parameter-bindings/td-p/9235864
+                // 참고 2 URL - https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html
+                // 참고 3 URL - https://thebuildingcoder.typepad.com/blog/2009/09/adding-a-category-to-a-parameter-binding.html
+
+                // 매개변수 추가하기 위한 반복자 객체 DefinitionBindingMapIterator 클래스 객체 iter에 값 할당 
+                // rvDoc.ParameterBindings
+                // - Revit상에 활성화 된 문서(rvDoc)에 존재하는 카테고리 안에 포함된 매개변수들의 키(Key), 값(value)을 가지고 있는 HashMap(Dictionary) 객체 
+                // - 해당 rvDoc.ParameterBindings에 메서드 "Insert" 호출시 Revit상에 활성화 된 문서(rvDoc)에 존재하는 카테고리 안에 매개변수 키(key), 값(value) 추가 가능 
+                // ForwardIterator
+                // - 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)를
+                // 맨 앞에서 부터 검색할 수 있도록 반복자(카테고리 안에 존재하는 매개변수 키(key), 값(value) 포함) 반환
+                DefinitionBindingMapIterator iter = rvDoc.ParameterBindings.ForwardIterator();
+
+                // 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)에
+                // 다음 반복자(카테고리 안에 존재하는 매개변수 키(key), 값(value) 포함)가 존재할 경우 
+                while (iter.MoveNext())
+                {
+                    Definition curDef = iter.Key;   // 해당 반복자안에 존재하는 매개변수(Key) 가져오기
+                    ElementBinding curBind = (ElementBinding)iter.Current;  // 해당 반복자에 속한 바인딩된 객체 가져오기
+
+                    if (paramName.Equals(curDef.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        foreach (BuiltInCategory bic in bicBindings)
+                        {
+                            Category c = rvDoc.Settings.Categories.get_Item(bic);
+                            if (!curBind.Categories.Contains(c))
+                            {
+                                curBind.Categories.Insert(c); // 카테고리 추가 
+                            }
+                        }
+                        // 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)에 기존 매개변수 데이터(key, value) 삭제 및 
+                        // 지정된 매개변수 데이터 (curDef, curBind) 추가 
+                        rvDoc.ParameterBindings.ReInsert(curDef, curBind);
+
+                        return true;
+                    }
+                }
+
+
+
+                string tempFile = Path.Combine(Path.GetTempPath(), "TempProjectParameters.txt"); // 임시 파일 경로 읽어오기
+                using (File.Create(tempFile)) { }                                                // 임시 파일 생성하기 
+
+                // 문서(rvDoc)가 실행되는 Revit 응용 프로그램(rvDoc.Application)의 공유 매개변수 파일 가져오기 
+                string originFile = rvDoc.Application.SharedParametersFilename;
+
+                // 임시 파일 경로 값(tempFile)을 공유 매개변수 파일 경로 프로퍼티 "SharedParametersFilename" 에 할당하기 
+                rvDoc.Application.SharedParametersFilename = tempFile;
+
+
+                DefinitionFile defFile = rvDoc.Application.OpenSharedParameterFile();
+                DefinitionGroup defGroup = defFile.Groups.Create("TempDefintionGroup");
+
+                ExternalDefinitionCreationOptions opt = new ExternalDefinitionCreationOptions(paramName, paramType);
+                opt.Visible = visible;
+
+                ExternalDefinition exDef = defGroup.Definitions.Create(opt) as ExternalDefinition;
+
+                rvDoc.Application.SharedParametersFilename = originFile;
+                File.Delete(tempFile);
+
+                CategorySet cats = rvDoc.Application.Create.NewCategorySet();
+                foreach (BuiltInCategory bic in bicBindings)
+                {
+                    Category cat = rvDoc.Settings.Categories.get_Item(bic);
+                    cats.Insert(cat);
+                }
+
+                Autodesk.Revit.DB.ElementBinding binding = null;
+
+                if (instanceBinding)
+                    binding = rvDoc.Application.Create.NewInstanceBinding(cats);
+                else
+                    binding = rvDoc.Application.Create.NewTypeBinding(cats);
+
+                return rvDoc.ParameterBindings.Insert(exDef, binding, paramGroup);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(Logger.errorMessage, ex.Message);
+                return false;
+            }
+        }
+
+
+        #endregion CreateProjectParameter
 
         #region SetParametersValue
 

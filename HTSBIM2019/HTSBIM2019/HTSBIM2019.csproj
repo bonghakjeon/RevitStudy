@@ -160,6 +160,12 @@
     <Compile Include="UI\Test\MEPUpdater\TestMEPUpdaterForm.Designer.cs">
       <DependentUpon>TestMEPUpdaterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\UpdaterLoading\UpdaterLoadingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UpdaterLoading\UpdaterLoadingForm.Designer.cs">
+      <DependentUpon>UpdaterLoadingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\CompanyHomePage\CompanyHomePage.cs" />
     <Compile Include="Utils\MEPUpdater\MEPUpdater.cs" />
     <Compile Include="Utils\TechnicalSupport\TechnicalSupport.cs" />
@@ -185,6 +191,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Test\MEPUpdater\TestMEPUpdaterForm.resx">
       <DependentUpon>TestMEPUpdaterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UpdaterLoading\UpdaterLoadingForm.resx">
+      <DependentUpon>UpdaterLoadingForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

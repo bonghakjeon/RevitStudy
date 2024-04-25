@@ -21,10 +21,11 @@ namespace HTSBIM2019.Common.Managers
     {
         #region ShowForm
 
+        // TODO : 필요시 메서드 "ShowModalessForm" 사용 예정 (2024.04.24 jbh)
         /// <summary>
         /// Modaless 폼(.Show()) 형식 화면 출력 
         /// </summary>
-        public static void ShowModalessForm(System.Windows.Forms.Form pModalessForm, UIApplication rvUIApp, LanguageType rvLanguageType, Type pModalessFormType)
+        public static void ShowModalessForm(System.Windows.Forms.Form pModalessForm, UIApplication rvUIApp, Type pModalessFormType)
         {
             string modalessFormName = string.Empty;               // Modaless 폼 객체 이름
 
@@ -46,7 +47,7 @@ namespace HTSBIM2019.Common.Managers
                             ExternalEvent exEvent = ExternalEvent.Create(mepHandler);                // MEP 업데이터 폼 객체가 사용할 외부 이벤트 생성 
 
                             // pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp, addInId); // MEP 업데이터 폼 객체 생성
-                            pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp, rvLanguageType); // MEP 업데이터 폼 객체 생성
+                            pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp); // MEP 업데이터 폼 객체 생성
 
                             break;
 

@@ -1,10 +1,12 @@
 ﻿using Serilog;
 using System;
+using System.Linq;   // TODO : 해당 using 문(using System.Linq;)을 사용해야 Linq 확장 메서드 (Where, Select, ToList, ForEach 등등...) 사용 가능 (2024.04.25 jbh)
 using System.Reflection;
 using System.Collections.Generic;
 
 using HTSBIM2019.Common.LogBase;
 using HTSBIM2019.Models.HTSBase.MEPUpdater;
+using HTSBIM2019.Settings;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -53,7 +55,8 @@ namespace HTSBIM2019.Common.Managers
         // public static void RegisterTriggers(UpdaterId rvUpdaterId, ElementCategoryFilter rvElementCategoryFilter, List<CategoryInfoView> rvCategoryInfoList)
         public static void RegisterTriggers(UpdaterId rvUpdaterId, List<CategoryInfoView> rvCategoryInfoList)
         {
-            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+            List<string> addTriggerNameList = new List<string>();    // Revit MEP Triggers 등록 완료된 카테고리 이름 리스트 
+            var currentMethod = MethodBase.GetCurrentMethod();       // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
@@ -75,19 +78,29 @@ namespace HTSBIM2019.Common.Managers
                 
                         // TODO : Revit API 메서드 "Element.GetChangeTypeGeometry()" 사용해서 객체 위치만 변경 되었을 때 실행되는 업데이터 트리거 추가 구현 (2024.03.27 jbh)
                         // 참고 URL - https://www.revitapidocs.com/2018/45751c5b-6d10-657a-a017-04219d1a5ac8.htm
-                        ChangeType changeTypeGeometry = Element.GetChangeTypeGeometry();                         // 객체가 수정 방식(객체 위치변경만 해당 / 객체 자체의 속성값 변경은 해당되지 않음.)으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
-                        UpdaterRegistry.AddTrigger(rvUpdaterId, categoryFilter, changeTypeGeometry);      // 지정된 rvUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(rvElementCategoryFilter) 및 changeTypeAny을 이용해서 수정 트리거 추가
+                        ChangeType changeTypeGeometry = Element.GetChangeTypeGeometry();                           // 객체가 수정 방식(객체 위치변경만 해당 / 객체 자체의 속성값 변경은 해당되지 않음.)으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
+                        UpdaterRegistry.AddTrigger(rvUpdaterId, categoryFilter, changeTypeGeometry);               // 지정된 rvUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(rvElementCategoryFilter) 및 changeTypeAny을 이용해서 수정 트리거 추가
                 
                         // TODO : Revit API 메서드 "Element.GetChangeTypeAny()" 사용해서 객체 위치 + 속성값 변경 되었을 때 실행되는 업데이터 트리거 추가 구현 (2024.03.27 jbh)
-                        // ChangeType changeTypeAny = Element.GetChangeTypeAny();                                // 객체가 수정 방식(객체 위치 변경 및 객체 자체의 속성값 변경 모두 포함)으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
+                        // ChangeType changeTypeAny = Element.GetChangeTypeAny();                                  // 객체가 수정 방식(객체 위치 변경 및 객체 자체의 속성값 변경 모두 포함)으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
                         // UpdaterRegistry.AddTrigger(rvUpdaterId, rvElementCategoryFilter, changeTypeAny);        // 지정된 rvUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(rvElementCategoryFilter) 및 changeTypeAny을 이용해서 수정 트리거 추가
                 
-                        ChangeType changeTypeAddition = Element.GetChangeTypeElementAddition();                  // 객체가 새로 추가된 방식으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
-                        UpdaterRegistry.AddTrigger(rvUpdaterId, categoryFilter, changeTypeAddition);      // 지정된 rvUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(rvElementCategoryFilter) 및 changeTypeAddition을 이용해서 새로 추가 트리거 추가
+                        ChangeType changeTypeAddition = Element.GetChangeTypeElementAddition();                    // 객체가 새로 추가된 방식으로 업데이터 트리거 추가 하려면 해당 변경 유형 사용
+                        UpdaterRegistry.AddTrigger(rvUpdaterId, categoryFilter, changeTypeAddition);               // 지정된 rvUpdaterId와 연결된 모든 문서에 대해 지정된 요소 필터(rvElementCategoryFilter) 및 changeTypeAddition을 이용해서 새로 추가 트리거 추가
                 
-                        Log.Information(Logger.GetMethodPath(currentMethod) + $"테스트 {categoryInfo.CategoryName} Triggers 등록 완료");
-                        TaskDialog.Show("테스트 MEP Updater", $"테스트 {categoryInfo.CategoryName} Triggers 등록 완료");
+                        // Log.Information(Logger.GetMethodPath(currentMethod) + $"테스트 {categoryInfo.CategoryName} Triggers 등록 완료");
+                        // TaskDialog.Show("테스트 MEP Updater", $"테스트 {categoryInfo.CategoryName} Triggers 등록 완료");
+
+                        addTriggerNameList.Add(categoryInfo.CategoryName);
                     }
+
+                    // TODO : 리스트 객체 "addTriggerNameList"에 속한 모든 요소를 메서드 "String.Join()" 사용해서 하나의 문자열로 변환 (2024.04.24 jbh)
+                    // 참고 URL - https://codechacha.com/ko/csharp-convert-list-to-string/
+                    string addTriggerNames = String.Join(", ", addTriggerNameList.ToArray());
+                    Log.Information(Logger.GetMethodPath(currentMethod) + $"MEP 업데이터 + Triggers 등록 완료! 카테고리 목록 - {addTriggerNames}");
+                    TaskDialog.Show("테스트 MEP Updater", $"MEP 업데이터 + Triggers 등록 완료!\r\n\r\n카테고리 목록\r\n- {addTriggerNames}");
+
+                    AppSetting.Default.UpdaterBase.UpdaterLoadingForm.CloseLoadingForm();   // 업데이터 + Triggers 등록 대기처리 화면 종료
                 }
                 
                 // 해당 업데이터 아이디가 존재하지 않거나 업데이터가 등록되어 있지 않은 경우 

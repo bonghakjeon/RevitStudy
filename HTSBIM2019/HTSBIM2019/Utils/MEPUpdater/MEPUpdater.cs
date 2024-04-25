@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-
 using HTSBIM2019.Common.LogBase;
 using HTSBIM2019.Common.HTSBase;
+using HTSBIM2019.Common.Managers;
 using HTSBIM2019.Settings;
 using HTSBIM2019.Models.HTSBase.MEPUpdater;
-using HTSBIM2019.Common.Managers;
+
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
 namespace HTSBIM2019.Utils.MEPUpdater
 {
@@ -54,7 +54,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
         /// <summary>
         /// 카테고리 정보 리스트
         /// </summary>
-        public List<CategoryInfoView> CategoryInfoList { get; set; } = new List<CategoryInfoView>();
+        // public List<CategoryInfoView> CategoryInfoList { get; set; } = new List<CategoryInfoView>();
 
         /// <summary>
         /// MEP Updater 매개변수 리스트

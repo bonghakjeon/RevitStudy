@@ -62,15 +62,17 @@ namespace HTSBIM2019.Settings
         /// <summary>
         /// 업데이터 설정
         /// </summary>
-        public UpdaterSetting UpdaterBase
-        {
-            get => _UpdaterBase ?? (_UpdaterBase = new UpdaterSetting());
-            set
-            {
-                _UpdaterBase = value;
-                this.Changed(nameof(UpdaterBase));
-            }
-        }
+        //public UpdaterSetting UpdaterBase
+        //{
+        //    get => _UpdaterBase ?? (_UpdaterBase = new UpdaterSetting());
+        //    set
+        //    {
+        //        _UpdaterBase = value;
+        //        this.Changed(nameof(UpdaterBase));
+        //    }
+        //}
+        //private UpdaterSetting _UpdaterBase;
+        public UpdaterSetting UpdaterBase { get => _UpdaterBase; set { _UpdaterBase = value; this.Changed(nameof(UpdaterBase)); } }
         private UpdaterSetting _UpdaterBase;
 
         /// <summary>

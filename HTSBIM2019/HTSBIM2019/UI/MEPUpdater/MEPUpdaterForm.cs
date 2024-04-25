@@ -60,9 +60,9 @@ namespace HTSBIM2019.UI.MEPUpdater
         private Options GeometryOpt { get; set; }
 
         /// <summary>
-        /// Revit 애플리케이션 언어 타입(영문, 한글 등등...)
+        /// Revit 문서 내에 내장된 BuiltInCategory 정보 리스트
         /// </summary>
-        private LanguageType RevitLanguageType { get; set; }
+        private List<Category> CategoryList { get; set; } = new List<Category>();
 
         /// <summary>
         /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 리스트
@@ -73,6 +73,11 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 객체
         /// </summary>
         public CategoryInfoView CategoryInfo { get; set; }
+
+        /// <summary>
+        /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 리스트
+        /// </summary>
+        public List<CategoryInfoView> CategoryInfoList { get; set; } = new List<CategoryInfoView>();
 
         /// <summary>
         /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러 프로퍼티 
@@ -89,12 +94,12 @@ namespace HTSBIM2019.UI.MEPUpdater
         #region 생성자
 
         //public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
-        public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, LanguageType rvLanguageType)
+        public MEPUpdaterForm(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
         {
             InitializeComponent();
 
             // InitSetting(rvExEvent, pHandler, rvUIApp, rvAddInId);   // 업데이터 초기 셋팅
-            InitSetting(rvExEvent, pHandler, rvUIApp, rvLanguageType);   // 업데이터 초기 셋팅
+            InitSetting(rvExEvent, pHandler, rvUIApp);   // 업데이터 초기 셋팅
         }
 
         #endregion 생성자
@@ -105,7 +110,7 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// 업데이터 초기 셋팅
         /// </summary>
         //private void InitSetting(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, AddInId rvAddInId)
-        private void InitSetting(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp, LanguageType rvLanguageType)
+        private void InitSetting(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -157,9 +162,9 @@ namespace HTSBIM2019.UI.MEPUpdater
                 GeometryOpt.DetailLevel = ViewDetailLevel.Fine;
                 GeometryOpt.ComputeReferences = true;              // 각 Geometry 객체에 대해 GeometryObject.Reference 속성을 활성화하도록 Revit을 설정
 
+                // 8. Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
+                CategoryList = RevitDoc.Settings.Categories.OfType<Category>().ToList();
 
-                // 8. Revit 애플리케이션 언어 타입(영문, 한글 등등...) 할당 
-                RevitLanguageType = rvLanguageType;
 
                 // CategoryDataCreate(Collector, GeometryOpt);     // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
                 CategoryDataCreate(RevitDoc);                      // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
@@ -391,28 +396,23 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // 카테고리 체크한 경우 
                 if(testCheckedList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
                 {
-                    AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
+                    //AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
+
+                    CategoryInfoList.Clear();
 
                     foreach(TreeNode checkedNode in testCheckedList)
                     {
                         string chkCategoryName = checkedNode.Text;   // TreeView 체크박스에서 체크한 카테고리 이름 
 
-                        BuiltInCategory chkBuiltInCategory = CategoryManager.GetCategory(RevitDoc, chkCategoryName);    // TreeView 체크박스에서 체크한 카테고리(BuiltInCategory)
+                        // BuiltInCategory chkBuiltInCategory = CategoryManager.GetCategory(RevitDoc, chkCategoryName);    // TreeView 체크박스에서 체크한 카테고리(BuiltInCategory)
+                        BuiltInCategory chkBuiltInCategory = CategoryManager.GetCategory(CategoryList, chkCategoryName);    // TreeView 체크박스에서 체크한 카테고리(BuiltInCategory)
 
                         CategoryInfoView categoryInfo = new CategoryInfoView(chkCategoryName, chkBuiltInCategory);   // CategoryInfoView 클래스 객체 categoryInfo 생성
 
-                        AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Add(categoryInfo);  // 소스파일 "MEPUpdater.cs"에 존재하는  -> CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가 
+                        //AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Add(categoryInfo);  // 소스파일 "MEPUpdater.cs"에 존재하는  -> CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가 
+                        CategoryInfoList.Add(categoryInfo);   // CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가
                     }
-
-                    List<Updater_Parameters> updaterParamList = AppSetting.Default.UpdaterBase.MEPUpdater.UpdaterParamList;
-
-                    // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
-                    // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
-                    // 프로퍼티 "UserModifiable" 설명
-                    // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
-                    // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
-                    CategoryManager.CreateCategorySet(RevitDoc, updaterParamList, RevitLanguageType);
 
                     MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
                 }
@@ -466,7 +466,10 @@ namespace HTSBIM2019.UI.MEPUpdater
 
             try
             {
-                TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 등록 테스트 진행 중...");
+                // TaskDialog.Show("Revit MEPUpdater", "업데이터 + Triggers 등록 테스트 진행 중...");
+
+                // 업데이터 + Triggers 등록 대기처리 화면 출력
+                AppSetting.Default.UpdaterBase.UpdaterLoadingForm.ShowLoadingForm();
 
                 // 체크한 카테고리 목록 리스트로 변환
                 var checkedCategoryList = this.treeViewCategory.Nodes.OfType<TreeNode>()
@@ -476,30 +479,26 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // 카테고리 체크한 경우 
                 if(checkedCategoryList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
                 {
-                    AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
+                    // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
+                    CategoryInfoList.Clear();
 
                     foreach(TreeNode checkedNode in checkedCategoryList)
                     {
                         string chkCategoryName = checkedNode.Text;   // TreeView 체크박스에서 체크한 카테고리 이름 
 
-                        BuiltInCategory chkBuiltInCategory = CategoryManager.GetCategory(RevitDoc, chkCategoryName);    // TreeView 체크박스에서 체크한 카테고리(BuiltInCategory)
+                        // BuiltInCategory chkBuiltInCategory = CategoryManager.GetCategory(RevitDoc, chkCategoryName);    // TreeView 체크박스에서 체크한 카테고리(BuiltInCategory)
+                        BuiltInCategory chkBuiltInCategory = CategoryManager.GetCategory(CategoryList, chkCategoryName);    // TreeView 체크박스에서 체크한 카테고리(BuiltInCategory)
 
                         CategoryInfoView categoryInfo = new CategoryInfoView(chkCategoryName, chkBuiltInCategory);   // CategoryInfoView 클래스 객체 categoryInfo 생성
 
-                        AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Add(categoryInfo);  // 소스파일 "MEPUpdater.cs"에 존재하는  -> CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가 
+                        // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Add(categoryInfo);  // 소스파일 "MEPUpdater.cs"에 존재하는  -> CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가 
+                        CategoryInfoList.Add(categoryInfo);   // CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가 
                     }
 
-                    List<Updater_Parameters> updaterParamList = AppSetting.Default.UpdaterBase.MEPUpdater.UpdaterParamList;
+                    // List<Updater_Parameters> updaterParamList = AppSetting.Default.UpdaterBase.MEPUpdater.UpdaterParamList;
 
                     //string language = RevitDoc.GetUnits().GetFormatOptions(UnitType.UT_Length).DisplayUnits.ToString();
-
-                    // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
-                    // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
-                    // 프로퍼티 "UserModifiable" 설명
-                    // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
-                    // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
-                    CategoryManager.CreateCategorySet(RevitDoc, updaterParamList, RevitLanguageType);
 
                     MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
                 }

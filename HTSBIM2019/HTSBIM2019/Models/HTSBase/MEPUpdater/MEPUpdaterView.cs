@@ -264,7 +264,14 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
         /// </summary>
         public string ParamName { get => _ParamName; set { _ParamName = value; NotifyOfPropertyChange(); } }
         private string _ParamName;
-    
+
+        /// <summary>
+        /// 매개변수 상위 그룹
+        /// </summary>
+
+        public BuiltInParameterGroup ParameterGroup { get => _ParameterGroup; set { _ParameterGroup = value; NotifyOfPropertyChange(); } }
+        private BuiltInParameterGroup _ParameterGroup;
+
         /// <summary>
         /// 매개변수 자료형(유형)
         /// </summary>
@@ -276,17 +283,32 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
         /// </summary>
         public bool UserModifiable { get => _UserModifiable; set { _UserModifiable = value; NotifyOfPropertyChange(); } }
         private bool _UserModifiable;
-    
+
+        /// <summary>
+        /// 매개변수가 화면상으로 사용자에게 표시 여부 
+        /// </summary>
+        public bool ParamVisible { get => _ParamVisible; set { _ParamVisible = value; NotifyOfPropertyChange(); } }
+        private bool _ParamVisible;
+            
+        /// <summary>
+        /// 매개변수 데이터에 속하는 매개변수 타입 (인스턴스 또는 유형)
+        /// </summary>
+        public bool InstanceBinding { get => _InstanceBinding; set { _InstanceBinding = value; NotifyOfPropertyChange(); } }
+        private bool _InstanceBinding;
+
         #endregion 프로퍼티
-    
+
         #region 생성자
-    
-        public CreateParamView(CategorySet rvCatSet, string rvParamName, ParameterType rvParamType, bool rvUserModifiable)
+
+        public CreateParamView(CategorySet rvCatSet, string rvParamName, BuiltInParameterGroup rvParameterGroup, ParameterType rvParamType, bool rvUserModifiable, bool rvParamVisible, bool rvInstanceBinding)
         {
             this._CategorySet = rvCatSet;
             this._ParamName = rvParamName;
+            this._ParameterGroup = rvParameterGroup;
             this._ParameterType = rvParamType;
             this._UserModifiable = rvUserModifiable;
+            this._ParamVisible = rvParamVisible;
+            this._InstanceBinding = rvInstanceBinding;
         }
     
         #endregion 생성자
