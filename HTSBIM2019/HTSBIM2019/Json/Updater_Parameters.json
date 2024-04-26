@@ -6,9 +6,9 @@
 			"Domain": "공통",
 			"DataType": "문자",
 			"DefinitionGroup": "기타",
-			"KOR_CategorySet": [ "배관", "배관 단열재", "배관 부속류", "배관 밸브류" ],
-			"ENU_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ],
-			"ENG_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ]
+			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델" ],
+			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ],
+			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ]
 		},
 		{
 			"ParamName": "객체 생성자",
@@ -16,9 +16,9 @@
 			"Domain": "공통",
 			"DataType": "문자",
 			"DefinitionGroup": "기타",
-			"KOR_CategorySet": [ "배관", "배관 단열재", "배관 부속류", "배관 밸브류" ],
-			"ENU_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ],
-			"ENG_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ]
+			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델" ],
+			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ],
+			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ]
 		},
 		{
 			"ParamName": "최종 수정 날짜",
@@ -26,9 +26,9 @@
 			"Domain": "공통",
 			"DataType": "문자",
 			"DefinitionGroup": "기타",
-			"KOR_CategorySet": [ "배관", "배관 단열재", "배관 부속류", "배관 밸브류" ],
-			"ENU_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ],
-			"ENG_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ]
+			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델" ],
+			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ],
+			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ]
 		},
 		{
 			"ParamName": "최종 수정자",
@@ -36,9 +36,9 @@
 			"Domain": "공통",
 			"DataType": "문자",
 			"DefinitionGroup": "기타",
-			"KOR_CategorySet": [ "배관", "배관 단열재", "배관 부속류", "배관 밸브류" ],
-			"ENU_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ],
-			"ENG_CategorySet": [ "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories" ]
+			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델" ],
+			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ],
+			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ]
 		}
 	]
 }

@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -124,6 +125,9 @@
     <Compile Include="Controls\Text\WaterMarkTextControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\Tree\NewTreeViewControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Interface\Request\IHTSRequest.cs" />
     <Compile Include="Interface\Command\IHTSCommand.cs" />
     <Compile Include="Models\HTSBase\MEPUpdater\MEPUpdaterView.cs" />
@@ -160,6 +164,12 @@
     <Compile Include="UI\Test\MEPUpdater\TestMEPUpdaterForm.Designer.cs">
       <DependentUpon>TestMEPUpdaterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Test\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Test\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\UpdaterLoading\UpdaterLoadingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -176,9 +186,7 @@
     <None Include="Json\Updater_Parameters.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\Tree\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -193,6 +201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Test\MEPUpdater\TestMEPUpdaterForm.resx">
       <DependentUpon>TestMEPUpdaterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Test\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\UpdaterLoading\UpdaterLoadingForm.resx">
       <DependentUpon>UpdaterLoadingForm.cs</DependentUpon>

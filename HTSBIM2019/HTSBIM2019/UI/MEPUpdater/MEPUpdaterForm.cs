@@ -197,6 +197,15 @@ namespace HTSBIM2019.UI.MEPUpdater
 
         #region CategoryDataCreate
 
+        // TODO : TreeView 컨트롤 (treeViewCategory) 체크박스 구현 및 체크박스 전체 선택 및 전체 해제 기능 구현 (2024.04.26 jbh)
+        // 참고 URL - https://afsdzvcx123.tistory.com/entry/C-%EC%9C%88%ED%8F%BC-TreeView-%EC%BB%A8%ED%8A%B8%EB%A1%A4-CheckBox-%EB%A1%9C-%EB%B3%80%EA%B2%BD-%EB%B0%8F-%EC%B2%B4%ED%81%AC-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%84%A0%EC%96%B8%ED%95%98%EA%B8%B0
+
+        // TODO : C# Winform(윈폼) 트리뷰 체크박스 더블클릭(체크 + 언체크) 체크 오류 버그 방지 해결책 구현 (2024.04.26 jbh)
+        // 참고 URL - https://mintaku.tistory.com/33
+
+        // TODO : TreeView 컨트롤 (treeViewCategory) 체크박스 구현 및 체크박스 전체 선택 및 전체 해제 기능 구현 (2024.04.26 jbh)
+        // 참고 URL - https://stackoverflow.com/questions/44927977/un-check-behavior-in-c-sharp-treeview
+
         // TODO : TreeView 컨트롤(treeViewCategory)에 카테고리 이름 데이터를 Node로 바인딩 할 수 있도록 구현 (2024.04.19 jbh)
         // 참고 URL - https://www.csharpstudy.com/WinForms/WinForms-treeview.aspx
         // 유튜브 참고 URL - https://youtu.be/PNIZDLFPmXE?si=TXd8f6fvEWwQV08k
@@ -257,7 +266,7 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 // 상위 카테고리("배관")에 속하는 하위 카테고리 추가 
                 PipeCategoryInfoList.ForEach(CategoryInfo => { 
-                                            this.treeViewCategory.Nodes[(int)EnumMainCategoryInfo.PIPE].Nodes.Add(CategoryInfo.CategoryName);
+                                                this.treeViewCategory.Nodes[(int)EnumMainCategoryInfo.PIPE].Nodes.Add(CategoryInfo.CategoryName);
                                         });
 
                 this.treeViewCategory.CheckBoxes = true;   // TreeView 컨트롤(treeViewCategory)에 속한 모든 노드들을 체크박스로 변경 
@@ -447,17 +456,17 @@ namespace HTSBIM2019.UI.MEPUpdater
                 TaskDialog.Show(HTSHelper.NoticeTitle, "테스트 진행 중...");
 
                 // var testCheckedList = testList.Where(treeNode => true == treeNode.Checked).ToList();
-                var testCheckedList = this.treeViewCategory.Nodes.OfType<TreeNode>()
-                                                                 .Where(treeNode => true == treeNode.Checked)
-                                                                 .ToList();
+                // var testCheckedList = this.treeViewCategory.Nodes.OfType<TreeNode>()
+                //                                                  .Where(treeNode => true == treeNode.Checked)
+                //                                                  .ToList();
 
                 // TODO : Linq 확장 메서드 "SelectMany" 사용해서 2차원 카테고리 리스트에서 실제로 체크(선택)한 카테고리만 모아서 1차원 리스트로 변환하기 (2024.04.25 jbh)
                 // 참고 URL - https://chat.openai.com/c/d68dec9b-494a-43cf-8925-081d23d11c93
-                var testList = this.treeViewCategory.Nodes.OfType<TreeNode>()
-                                                          .SelectMany(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
-                                                          // .Select(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
-                                                          .Where(subCategory => subCategory.Checked)
-                                                          .ToList();
+                var testCheckedList = this.treeViewCategory.Nodes.OfType<TreeNode>()
+                                                                 .SelectMany(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                                                                 // .Select(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                                                                 .Where(subCategory => subCategory.Checked)   // 상위 카테고리 하위의 자식 카테고리 중 체크한 카테고리만 추출
+                                                                 .ToList();
 
                 // 카테고리 체크한 경우 
                 if (testCheckedList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
@@ -467,7 +476,7 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                     CategoryInfoList.Clear();
 
-                    foreach(TreeNode checkedNode in testCheckedList)
+                    foreach (TreeNode checkedNode in testCheckedList)
                     {
                         string chkCategoryName = checkedNode.Text;   // TreeView 체크박스에서 체크한 카테고리 이름 
 
@@ -538,31 +547,25 @@ namespace HTSBIM2019.UI.MEPUpdater
                 AppSetting.Default.UpdaterBase.UpdaterLoadingForm.ShowLoadingForm();
 
                 // 체크한 카테고리 목록 리스트로 변환
-                var checkedCategoryList = this.treeViewCategory.Nodes.OfType<TreeNode>()
-                                                                     .Where(treeNode => true == treeNode.Checked)
-                                                                     .ToList();
+                // var checkedCategoryList = this.treeViewCategory.Nodes.OfType<TreeNode>()
+                //                                                      .Where(treeNode => true == treeNode.Checked)
+                //                                                      .ToList();
 
                 // TODO : Linq 확장 메서드 "SelectMany" 사용해서 2차원 카테고리 리스트에서 실제로 체크(선택)한 카테고리만 모아서 1차원 리스트로 변환하기 (2024.04.25 jbh)
                 // 참고 URL - https://chat.openai.com/c/d68dec9b-494a-43cf-8925-081d23d11c93
-                var testList = this.treeViewCategory.Nodes.OfType<TreeNode>()
-                                                          .SelectMany(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
-                                                          // .Select(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
-                                                          .Where(subCategory => subCategory.Checked)
-                                                          .ToList();
+                // var testList = this.treeViewCategory.Nodes.OfType<TreeNode>()
+                //                                           .SelectMany(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                //                                           // .Select(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                //                                           .Where(subCategory => subCategory.Checked)
+                //                                           .ToList();
 
-                // var testList2 = testList.Where(x => x.)
-
-                // testList.ForEach(mainCategory => { 
-                //             mainCategory
-                //         });
-
-                // foreach(TreeNode mainCategory in this.treeViewCategory.Nodes) 
-                // {
-                //     mainCategory.Nodes.OfType<TreeNode>()
-                //                       .Where(subCategory => subCategory.Checked)
-                //                       .ToList();
-                // }
-
+                // TODO : Linq 확장 메서드 "SelectMany" 사용해서 2차원 카테고리 리스트에서 실제로 체크(선택)한 카테고리만 모아서 1차원 리스트로 변환하기 (2024.04.25 jbh)
+                // 참고 URL - https://chat.openai.com/c/d68dec9b-494a-43cf-8925-081d23d11c93
+                var checkedCategoryList = this.treeViewCategory.Nodes.OfType<TreeNode>()
+                                                                     .SelectMany(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                                                                     // .Select(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                                                                     .Where(subCategory => subCategory.Checked)   // 상위 카테고리 하위의 자식 카테고리 중 체크한 카테고리만 추출
+                                                                     .ToList();
 
                 // 카테고리 체크한 경우 
                 if (checkedCategoryList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
@@ -571,7 +574,7 @@ namespace HTSBIM2019.UI.MEPUpdater
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
                     CategoryInfoList.Clear();
 
-                    foreach(TreeNode checkedNode in checkedCategoryList)
+                    foreach (TreeNode checkedNode in checkedCategoryList)
                     {
                         string chkCategoryName = checkedNode.Text;   // TreeView 체크박스에서 체크한 카테고리 이름 
 
@@ -648,8 +651,8 @@ namespace HTSBIM2019.UI.MEPUpdater
                 if(e.Action != TreeViewAction.Unknown)
                 {
                     // 체크박스를 체크(선택)한 카테고리가 존재하는 경우 (상위, 하위 카테고리 포함)
-                    if(e.Node.Nodes.Count > 0)
-                    // if (e.Node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
+                    // if(e.Node.Nodes.Count > 0)
+                    if (e.Node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
                     {
                         /* Calls the CheckAllChildNodes method, passing in the current 
                         Checked value of the TreeNode whose checked state changed. */
@@ -691,8 +694,8 @@ namespace HTSBIM2019.UI.MEPUpdater
                     node.Checked = pNodeChecked;
 
                     // 체크박스를 체크(선택)한 카테고리가 존재하는 경우 (상위, 하위 카테고리 포함)
-                    if (node.Nodes.Count > 0)
-                    // if (node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
+                    // if (node.Nodes.Count > 0)
+                    if (node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
                     {
                         // If the current node has child nodes, call the CheckAllChildsNodes method recursively.
                         // 현재 체크(선택)한 카테고리 안에 하위 카테고리가 존재하는 경우 메서드 "CheckAllChildNodes" 재귀 호출 

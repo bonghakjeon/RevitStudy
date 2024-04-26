@@ -167,138 +167,125 @@ namespace HTSBIM2019.Utils.MEPUpdater
 
             try
             {
+                Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 콜백 함수 Execute 시작");
+
+                // 매개변수 값 입력 완료 여부 확인 
+                // if (true == IsCompleted)
+                // {
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 콜백 함수 Execute 종료");
+                //     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
+                //     return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
+                // }
+
                 RevitDoc = pData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
 
-                // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
-                // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
-                using(Transaction transaction = new Transaction(RevitDoc))
+                var addElementIds            = pData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
+                List<Element> addElements    = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
+                List<string> addElementNames = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
+
+                // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(modElementIds)에 존재하는 요소들 중 타입이 "FamilySymbol"인 요소만 추출 
+                // List<FamilySymbol> addFamilySymbols = addElementIds.Where(addElementId => RevitDoc.GetElement(addElementId) as FamilySymbol is not null)
+                //                                                    .Select(addElementId => RevitDoc.GetElement(addElementId) as FamilySymbol)
+                //                                                    .ToList();
+
+                var modElementIds            = pData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
+                List<Element> modElements    = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
+                List<string> modElementNames = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
+
+                // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds)에 존재하는 요소들 중 타입이 "FamilySymbol"인 요소만 추출 
+                // List<FamilySymbol> modFamilySymbols = modElementIds.Where(modElementId => RevitDoc.GetElement(modElementId) as FamilySymbol is not null)
+                //                                                    .Select(modElementId => RevitDoc.GetElement(modElementId) as FamilySymbol)
+                //                                                    .ToList();
+
+                // elementId List -> FamiliySymbol 유형이 존재하면 -> 얘네들만 제외하고 다른 ElementId 요소값만 따로 추출해서 진행 
+
+                // TODO : 클래스 "ElementId" 타입 Collection 객체 "addElementIds", "modElementIds"에 존재하는 타입이 "FamilyInstance"가 아니고 "FamilySymbol"일 경우 
+                //        Revit 문서(RevitDoc)에 아직 실제로 생성된 객체는 아니기 때문에 매개변수 "객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자"가 존재하지 않음.
+                //        하여 이런 경우엔 메서드 Execute를 종료할 수 있도록 return 처리 진행 (2024.04.17 jbh)
+                // if(addFamilySymbols.Count >= (int)EnumExistFamilySymbols.EXIST || modFamilySymbols.Count >= (int)EnumExistFamilySymbols.EXIST) return;
+
+
+
+                // TODO : Revit API 사용해서 로그인 정보에 속한 작업자 이름(로그인 계정 - 영문 또는 한글) 가져오기 (2024.04.02 jbh)
+                // workerId   = AppSetting.Default.Login.LoginUserId;   // 작업자(사용자) 아이디
+                workerName = AppSetting.Default.Login.Username;      // 작업자(사용자) 이름
+
+                currentDateTime = DateTime.Now.ToString();   // 매개변수 "객체 생성 날짜" 또는 "최종 수정 날짜"에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
+
+
+
+                // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
+                if (addElementIds.Count >= (int)EnumExistElements.EXIST
+                    && addElementNames.Count >= (int)EnumExistElements.EXIST)
                 {
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 콜백 함수 Execute 시작");
+                    // TODO : 신규 Triggers 실행시 매개변수 2가지("객체 생성 날짜", "객체 생성자")에 입력할 값으로
+                    //        "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 (2024.04.02 jbh)
+                    // static 메서드 "SetParametersValue" 기능
+                    // 1. 매개변수 "객체 생성 날짜", "객체 생성자" 추출하기 
+                    // 2. 매개변수에 값 "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 
+                    // 3. 매개변수에 입력 완료된 값 "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 메시지 출력하기 
 
-                    // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
-                    transaction.Start(HTSHelper.Start);  // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
-
-                    // 매개변수 값 입력 완료 여부 확인 
-                    // if (true == IsCompleted)
-                    // {
-                    //     Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 콜백 함수 Execute 종료");
-                    //     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
-                    //     return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
-                    // }
-
-                    // RevitDoc = pData.GetDocument();   // UpdaterData 클래스 객체 pData와 연관된 Document 개체 반환
-
-                    var addElementIds            = pData.GetAddedElementIds();      // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(addElementIds) 구하기 
-                    List<Element> addElements    = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId)).ToList();        // 새로 추가된 객체 리스트 
-                    List<string> addElementNames = addElementIds.Select(addElementId => RevitDoc.GetElement(addElementId).Name).ToList();   // 새로 추가된 객체 집합에서 객체 이름만 추출 
-
-                    // 활성화된 Revit 문서에서 새로 추가된 객체 아이디 리스트(modElementIds)에 존재하는 요소들 중 타입이 "FamilySymbol"인 요소만 추출 
-                    // List<FamilySymbol> addFamilySymbols = addElementIds.Where(addElementId => RevitDoc.GetElement(addElementId) as FamilySymbol is not null)
-                    //                                                    .Select(addElementId => RevitDoc.GetElement(addElementId) as FamilySymbol)
-                    //                                                    .ToList();
-
-                    var modElementIds            = pData.GetModifiedElementIds();   // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds) 구하기 
-                    List<Element> modElements    = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId)).ToList();        // 수정된 객체 리스트 
-                    List<string> modElementNames = modElementIds.Select(modElementId => RevitDoc.GetElement(modElementId).Name).ToList();   // 수정된 객체 집합에서 객체 이름만 추출
-
-                    // 활성화된 Revit 문서에서 수정(편집)된 객체 아이디 리스트(modElementIds)에 존재하는 요소들 중 타입이 "FamilySymbol"인 요소만 추출 
-                    // List<FamilySymbol> modFamilySymbols = modElementIds.Where(modElementId => RevitDoc.GetElement(modElementId) as FamilySymbol is not null)
-                    //                                                    .Select(modElementId => RevitDoc.GetElement(modElementId) as FamilySymbol)
-                    //                                                    .ToList();
-
-                    // elementId List -> FamiliySymbol 유형이 존재하면 -> 얘네들만 제외하고 다른 ElementId 요소값만 따로 추출해서 진행 
-
-                    // TODO : 클래스 "ElementId" 타입 Collection 객체 "addElementIds", "modElementIds"에 존재하는 타입이 "FamilyInstance"가 아니고 "FamilySymbol"일 경우 
-                    //        Revit 문서(RevitDoc)에 아직 실제로 생성된 객체는 아니기 때문에 매개변수 "객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자"가 존재하지 않음.
-                    //        하여 이런 경우엔 메서드 Execute를 종료할 수 있도록 return 처리 진행 (2024.04.17 jbh)
-                    // if(addFamilySymbols.Count >= (int)EnumExistFamilySymbols.EXIST || modFamilySymbols.Count >= (int)EnumExistFamilySymbols.EXIST) return;
-
-
-
-                    // TODO : Revit API 사용해서 로그인 정보에 속한 작업자 이름(로그인 계정 - 영문 또는 한글) 가져오기 (2024.04.02 jbh)
-                    // workerId   = AppSetting.Default.Login.LoginUserId;   // 작업자(사용자) 아이디
-                    workerName = AppSetting.Default.Login.Username;      // 작업자(사용자) 이름
-
-                    currentDateTime = DateTime.Now.ToString();   // 매개변수 "객체 생성 날짜" 또는 "최종 수정 날짜"에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
-
-
-
-                    // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
-                    if (addElementIds.Count >= (int)EnumExistElements.EXIST
-                        && addElementNames.Count >= (int)EnumExistElements.EXIST)
+                   
+                    // 매개변수에 매핑된 값 입력하기  
+                    foreach(var addParam in AddParamList)
                     {
-                        // TODO : 신규 Triggers 실행시 매개변수 2가지("객체 생성 날짜", "객체 생성자")에 입력할 값으로
-                        //        "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 (2024.04.02 jbh)
-                        // static 메서드 "SetParametersValue" 기능
-                        // 1. 매개변수 "객체 생성 날짜", "객체 생성자" 추출하기 
-                        // 2. 매개변수에 값 "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 
-                        // 3. 매개변수에 입력 완료된 값 "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 메시지 출력하기 
+                        paramValue = string.Empty;
 
-                        
-
-                        // 매개변수에 매핑된 값 입력하기  
-                        foreach(var addParam in AddParamList)
+                        switch(addParam.ParamName)
                         {
-                            paramValue = string.Empty;
-
-                            switch(addParam.ParamName)
-                            {
-                                case HTSHelper.AddDate:
-                                    paramValue = currentDateTime;
-                                    break;
-                                case HTSHelper.AddWorker:
-                                    paramValue = workerName;                            
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            // bResult = ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
-                            ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
-
-                            // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
-                            // if (true == bResult) IsCompleted = true;
-                            // if (false == bResult) throw new Exception($"매개변수 {addParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");  
+                            case HTSHelper.AddDate:
+                                paramValue = currentDateTime;
+                                break;
+                            case HTSHelper.AddWorker:
+                                paramValue = workerName;                            
+                                break;
+                            default:
+                                break;
                         }
-                    }
 
-                    // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
-                    if (modElementIds.Count >= (int)EnumExistElements.EXIST
-                        && modElementNames.Count >= (int)EnumExistElements.EXIST)
+                        // bResult = ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
+                        ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
+
+                        // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
+                        // if (true == bResult) IsCompleted = true;
+                        // if (false == bResult) throw new Exception($"매개변수 {addParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");  
+                    }
+                }
+
+                // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
+                if (modElementIds.Count >= (int)EnumExistElements.EXIST
+                    && modElementNames.Count >= (int)EnumExistElements.EXIST)
+                {
+                    // TODO : 수정/편집 Triggers 실행시 매개변수 2가지("최종 수정 날짜", "최종 수정자")에 입력할 값으로
+                    //        "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 (2024.04.02 jbh)
+
+                    // 매개변수에 매핑된 값 입력하기  
+                    foreach(var modParam in ModParamList)
                     {
-                        // TODO : 수정/편집 Triggers 실행시 매개변수 2가지("최종 수정 날짜", "최종 수정자")에 입력할 값으로
-                        //        "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 (2024.04.02 jbh)
+                        paramValue = string.Empty;
 
-                        // 매개변수에 매핑된 값 입력하기  
-                        foreach(var modParam in ModParamList)
+                        switch (modParam.ParamName)
                         {
-                            paramValue = string.Empty;
-
-                            switch (modParam.ParamName)
-                            {
-                                case HTSHelper.LastModDate:
-                                    paramValue = currentDateTime;
-                                    break;
-                                case HTSHelper.LastModWorker:
-                                    paramValue = workerName;
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            // bResult = ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
-                            ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
-
-                            // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
-                            // if (true == bResult) IsCompleted = true;
-                            // if (false == bResult) throw new Exception($"매개변수 {modParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");
+                            case HTSHelper.LastModDate:
+                                paramValue = currentDateTime;
+                                break;
+                            case HTSHelper.LastModWorker:
+                                paramValue = workerName;
+                                break;
+                            default:
+                                break;
                         }
+
+                        // bResult = ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
+                        ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
+
+                        // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
+                        // if (true == bResult) IsCompleted = true;
+                        // if (false == bResult) throw new Exception($"매개변수 {modParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");
                     }
+                }
 
-                    transaction.Commit();    // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
-
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 콜백 함수 Execute 완료");
-                }   // 여기서 Dispose (리소스 해제) 처리 
+                Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 콜백 함수 Execute 완료");
             }
             catch(Exception ex)
             {
