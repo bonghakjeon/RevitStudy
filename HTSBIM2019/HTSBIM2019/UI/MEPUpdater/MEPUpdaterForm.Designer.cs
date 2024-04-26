@@ -1,4 +1,5 @@
 ﻿
+
 namespace HTSBIM2019.UI.MEPUpdater
 {
     partial class MEPUpdaterForm
@@ -35,8 +36,8 @@ namespace HTSBIM2019.UI.MEPUpdater
             this.btnON = new DevExpress.XtraEditors.SimpleButton();
             this.btnTest = new DevExpress.XtraEditors.SimpleButton();
             this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
-            this.treeViewCategory = new System.Windows.Forms.TreeView();
             this.labelCategory = new DevExpress.XtraEditors.LabelControl();
+            this.treeViewCategory = new System.Windows.Forms.TreeView();
             ((System.ComponentModel.ISupportInitialize)(this.panelTitle)).BeginInit();
             this.panelTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl2)).BeginInit();
@@ -107,13 +108,6 @@ namespace HTSBIM2019.UI.MEPUpdater
             this.panelControl3.Size = new System.Drawing.Size(398, 188);
             this.panelControl3.TabIndex = 2;
             // 
-            // treeViewCategory
-            // 
-            this.treeViewCategory.Location = new System.Drawing.Point(89, 36);
-            this.treeViewCategory.Name = "treeViewCategory";
-            this.treeViewCategory.Size = new System.Drawing.Size(220, 134);
-            this.treeViewCategory.TabIndex = 2;
-            // 
             // labelCategory
             // 
             this.labelCategory.Appearance.Font = new System.Drawing.Font("Tahoma", 15F);
@@ -123,6 +117,14 @@ namespace HTSBIM2019.UI.MEPUpdater
             this.labelCategory.Size = new System.Drawing.Size(64, 24);
             this.labelCategory.TabIndex = 0;
             this.labelCategory.Text = "카테고리";
+            // 
+            // treeViewCategory
+            // 
+            this.treeViewCategory.Location = new System.Drawing.Point(89, 36);
+            this.treeViewCategory.Name = "treeViewCategory";
+            this.treeViewCategory.Size = new System.Drawing.Size(220, 134);
+            this.treeViewCategory.TabIndex = 2;
+            this.treeViewCategory.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewCategory_AfterCheck);
             // 
             // MEPUpdaterForm
             // 
@@ -136,7 +138,7 @@ namespace HTSBIM2019.UI.MEPUpdater
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MEPUpdaterForm";
-            this.Text = "MEPUpdater";
+            this.Text = "MEPUpdaterForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MEPUpdater_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.panelTitle)).EndInit();
             this.panelTitle.ResumeLayout(false);
@@ -160,5 +162,6 @@ namespace HTSBIM2019.UI.MEPUpdater
         private DevExpress.XtraEditors.SimpleButton btnON;
         private DevExpress.XtraEditors.LabelControl labelCategory;
         private System.Windows.Forms.TreeView treeViewCategory;
+        // private NewTreeViewControl treeViewCategory;
     }
 }

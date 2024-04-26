@@ -67,7 +67,12 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// <summary>
         /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 리스트
         /// </summary>
-        private List<CategoryInfoView> GeometryCategoryInfoList { get; set; } = new List<CategoryInfoView>();
+        // private List<CategoryInfoView> GeometryCategoryInfoList { get; set; } = new List<CategoryInfoView>();
+
+        /// <summary>
+        /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 배관 카테고리 정보 리스트
+        /// </summary>
+        private List<CategoryInfoView> PipeCategoryInfoList { get; set; } = new List<CategoryInfoView>();
 
         /// <summary>
         /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 객체
@@ -209,8 +214,59 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(rvDoc);
 
+                // "일반 모델" - "OST_GenericModel", "기계 장비" - "OST_MechanicalEquipment"
+                //var testList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals("일반모델")
+                //                                                   || categoryInfo.CategoryName.Equals("기계장비"))
+                //                               .ToList();
+
+                var testList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals("케이블 트레이")
+                                                                   || categoryInfo.CategoryName.Equals("케이블 트레이 부속류")
+                                                                   || categoryInfo.CategoryName.Equals("덕트")
+                                                                   || categoryInfo.CategoryName.Equals("덕트 부속")
+                                                                   || categoryInfo.CategoryName.Equals("덕트 액세서리")
+                                                                   || categoryInfo.CategoryName.Equals("배관 밸브류")
+                                                                   || categoryInfo.CategoryName.Equals("일반 모델")
+                                                                   || categoryInfo.CategoryName.Equals("전기 설비")
+                                                                   || categoryInfo.CategoryName.Equals("전기 시설물")
+                                                                   || categoryInfo.CategoryName.Equals("전선관")
+                                                                   || categoryInfo.CategoryName.Equals("전선관 부속류")
+                                                                   || categoryInfo.CategoryName.Equals("전화 장치"))
+                                               .ToList();
+
+
+                PipeCategoryInfoList.Clear();   // 배관 카테고리 정보 리스트 초기화
+
+                // TODO : Revit 한글, 영문판 모두에서 카테고리 리스트를 가져올 수 있도록 필요한 카테고리 리스트를 Where 조건절로 추출할 때, 
+                //        categoryInfo.CategoryName이 아닌 categoryInfo.Category로
+                //        "배관 - OST_PipeCurves", "배관 단열재 - OST_PipeInsulations", "배관 부속류 - OST_PipeAccessory", "배관 밸브류 - OST_PipeFitting"
+                //        "기계 장비" - "OST_MechanicalEquipment", "일반 모델" - "OST_GenericModel" 추출하기 (2024.04.23 jbh)
+                PipeCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.Category.Equals(BuiltInCategory.OST_PipeCurves)
+                                                                           || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeInsulations)
+                                                                           || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeFitting)
+                                                                           || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeAccessory)
+                                                                           || categoryInfo.Category.Equals(BuiltInCategory.OST_MechanicalEquipment)
+                                                                           || categoryInfo.Category.Equals(BuiltInCategory.OST_GenericModel))
+                                                           // .OrderByDescending(categoryInfo => categoryInfo.CategoryName)
+                                                           // .OrderByDescending(categoryInfo => categoryInfo.Category)
+                                                       .OrderBy(categoryInfo => categoryInfo.CategoryName)
+                                                       .ToList();
+
+                // 상위 카테고리 ("배관", "전기/제어") 추가
+                this.treeViewCategory.Nodes.Add(HTSHelper.배관);
+                this.treeViewCategory.Nodes.Add(HTSHelper.전기제어);
+
+                // 상위 카테고리("배관")에 속하는 하위 카테고리 추가 
+                PipeCategoryInfoList.ForEach(CategoryInfo => { 
+                                            this.treeViewCategory.Nodes[(int)EnumMainCategoryInfo.PIPE].Nodes.Add(CategoryInfo.CategoryName);
+                                        });
+
+                this.treeViewCategory.CheckBoxes = true;   // TreeView 컨트롤(treeViewCategory)에 속한 모든 노드들을 체크박스로 변경 
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "카테고리 데이터 생성 완료");
+
+                // TODO : 아래 테스트 코드 필요시 참고 (2024.04.25 jbh)
                 // TODO : TreeView (treeViewCategory)에 바인딩할 리스트에 데이터 할당 구현 (2024.03.26 jbh)
-                GeometryCategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화
+                //GeometryCategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화
                 // CategoryInfoList = CategoryManager.GetCategoryInfoList(rvCollector, rvGeometryOpt);
                 //GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals(HTSHelper.배관)
                 //                                                               || categoryInfo.CategoryName.Equals(HTSHelper.배관단열재)
@@ -220,21 +276,23 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 // TODO : Revit 한글, 영문판 모두에서 카테고리 리스트를 가져올 수 있도록 필요한 카테고리 리스트를 Where 조건절로 추출할 때, 
                 //        categoryInfo.CategoryName이 아닌 categoryInfo.Category로
-                //        "배관 - OST_PipeCurves", "배관 단열재 - OST_PipeInsulations", "배관 부속류 - OST_PipeAccessory", "배관 밸브류 - OST_PipeFitting" 추출하기 (2024.04.23 jbh)
-                GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.Category.Equals(BuiltInCategory.OST_PipeCurves)
-                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeInsulations)
-                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeFitting)
-                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeAccessory))
-                                                           .OrderByDescending(categoryInfo => categoryInfo.CategoryName)
-                                                           .ToList();
+                //        "배관 - OST_PipeCurves", "배관 단열재 - OST_PipeInsulations", "배관 부속류 - OST_PipeAccessory", "배관 밸브류 - OST_PipeFitting"
+                //        "기계 장비" - "OST_MechanicalEquipment", "일반 모델" - "OST_GenericModel" 추출하기 (2024.04.23 jbh)
+                // GeometryCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.Category.Equals(BuiltInCategory.OST_PipeCurves)
+                //                                                                || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeInsulations)
+                //                                                                || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeFitting)
+                //                                                                || categoryInfo.Category.Equals(BuiltInCategory.OST_PipeAccessory)
+                //                                                                || categoryInfo.Category.Equals(BuiltInCategory.OST_MechanicalEquipment)
+                //                                                                || categoryInfo.Category.Equals(BuiltInCategory.OST_GenericModel))
+                //                                            // .OrderByDescending(categoryInfo => categoryInfo.CategoryName)
+                //                                            // .OrderByDescending(categoryInfo => categoryInfo.Category)
+                //                                            .OrderBy(categoryInfo => categoryInfo.CategoryName)
+                //                                            .ToList();
 
-                GeometryCategoryInfoList.ForEach(CategoryInfo => { 
-                                            this.treeViewCategory.Nodes.Add(CategoryInfo.CategoryName);
-                                        });
 
-                this.treeViewCategory.CheckBoxes = true;   // TreeView 컨트롤(treeViewCategory)에 속한 모든 노드들을 체크박스로 변경 
-
-                Log.Information(Logger.GetMethodPath(currentMethod) + "카테고리 데이터 생성 완료");
+                // GeometryCategoryInfoList.ForEach(CategoryInfo => { 
+                //                             this.treeViewCategory.Nodes.Add(CategoryInfo.CategoryName);
+                //                         });
             }
             catch (Exception ex)
             {
@@ -393,8 +451,16 @@ namespace HTSBIM2019.UI.MEPUpdater
                                                                  .Where(treeNode => true == treeNode.Checked)
                                                                  .ToList();
 
+                // TODO : Linq 확장 메서드 "SelectMany" 사용해서 2차원 카테고리 리스트에서 실제로 체크(선택)한 카테고리만 모아서 1차원 리스트로 변환하기 (2024.04.25 jbh)
+                // 참고 URL - https://chat.openai.com/c/d68dec9b-494a-43cf-8925-081d23d11c93
+                var testList = this.treeViewCategory.Nodes.OfType<TreeNode>()
+                                                          .SelectMany(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                                                          // .Select(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                                                          .Where(subCategory => subCategory.Checked)
+                                                          .ToList();
+
                 // 카테고리 체크한 경우 
-                if(testCheckedList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
+                if (testCheckedList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
                 {
                     //AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
@@ -476,8 +542,30 @@ namespace HTSBIM2019.UI.MEPUpdater
                                                                      .Where(treeNode => true == treeNode.Checked)
                                                                      .ToList();
 
+                // TODO : Linq 확장 메서드 "SelectMany" 사용해서 2차원 카테고리 리스트에서 실제로 체크(선택)한 카테고리만 모아서 1차원 리스트로 변환하기 (2024.04.25 jbh)
+                // 참고 URL - https://chat.openai.com/c/d68dec9b-494a-43cf-8925-081d23d11c93
+                var testList = this.treeViewCategory.Nodes.OfType<TreeNode>()
+                                                          .SelectMany(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                                                          // .Select(mainCategory => mainCategory.Nodes.OfType<TreeNode>())
+                                                          .Where(subCategory => subCategory.Checked)
+                                                          .ToList();
+
+                // var testList2 = testList.Where(x => x.)
+
+                // testList.ForEach(mainCategory => { 
+                //             mainCategory
+                //         });
+
+                // foreach(TreeNode mainCategory in this.treeViewCategory.Nodes) 
+                // {
+                //     mainCategory.Nodes.OfType<TreeNode>()
+                //                       .Where(subCategory => subCategory.Checked)
+                //                       .ToList();
+                // }
+
+
                 // 카테고리 체크한 경우 
-                if(checkedCategoryList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
+                if (checkedCategoryList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
                 {
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
@@ -537,6 +625,89 @@ namespace HTSBIM2019.UI.MEPUpdater
         }
 
         #endregion btnON_Click
+
+        #region treeViewCategory_AfterCheck
+
+        // TODO : TreeView 컨트롤("treeViewCategory")에 속하는 상위 카테고리 ("배관", "전기/제어") 클릭시
+        //        체크박스 전체 선택 또는 전체 해제 기능 메서드 "treeViewCategory_AfterCheck", "CheckAllChildNodes" 구현 (2024.04.25 jbh)
+        // 참고 URL - https://mintaku.tistory.com/34
+        // 참고 2 URL - https://hvyair.tistory.com/50
+        // 참고 3 URL - https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.treeview.aftercheck?redirectedfrom=MSDN&view=windowsdesktop-6.0
+
+        /// <summary>
+        /// 상위 카테고리("배관", "전기/제어") 클릭시 체크박스 전체 선택 또는 전체 해제 
+        /// </summary>
+        private void treeViewCategory_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // The code only executes if the user caused the checked state to change.
+                // 사용자가 카테고리 체크박스를 체크(선택)하여 상태가 변한 경우 
+                if(e.Action != TreeViewAction.Unknown)
+                {
+                    // 체크박스를 체크(선택)한 카테고리가 존재하는 경우 (상위, 하위 카테고리 포함)
+                    if(e.Node.Nodes.Count > 0)
+                    // if (e.Node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
+                    {
+                        /* Calls the CheckAllChildNodes method, passing in the current 
+                        Checked value of the TreeNode whose checked state changed. */
+                        this.CheckAllChildNodes(e.Node, e.Node.Checked);   // 메서드 "CheckAllChildNodes" 호출 
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+            }
+            finally
+            {
+                // TODO : finally문 안에 코드 필요시 구현 예정 (2024.03.14 jbh)
+            }
+        }
+
+        #endregion treeViewCategory_AfterCheck
+
+        #region CheckAllChildNodes
+
+        // TODO : TreeView 컨트롤("treeViewCategory")에 속하는 상위 카테고리 ("배관", "전기/제어") 클릭시 전체 선택 또는 전체 해제 기능 메서드 "treeViewCategory_AfterCheck", "CheckAllChildNodes" 구현 (2024.04.25 jbh)
+        // 참고 URL - https://mintaku.tistory.com/34
+        // 참고 2 URL - https://hvyair.tistory.com/50
+        // 참고 3 URL - https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.treeview.aftercheck?redirectedfrom=MSDN&view=windowsdesktop-6.0
+
+        /// <summary>
+        /// 상위 카테고리("배관", "전기/제어") 하위에 존재하는 모든 카테고리 재귀적으로 체크박스 선택 또는 해제 
+        /// </summary>
+        private void CheckAllChildNodes(TreeNode pTreeNode, bool pNodeChecked)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                foreach(TreeNode node in pTreeNode.Nodes)
+                {
+                    node.Checked = pNodeChecked;
+
+                    // 체크박스를 체크(선택)한 카테고리가 존재하는 경우 (상위, 하위 카테고리 포함)
+                    if (node.Nodes.Count > 0)
+                    // if (node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
+                    {
+                        // If the current node has child nodes, call the CheckAllChildsNodes method recursively.
+                        // 현재 체크(선택)한 카테고리 안에 하위 카테고리가 존재하는 경우 메서드 "CheckAllChildNodes" 재귀 호출 
+                        this.CheckAllChildNodes(node, pNodeChecked);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달
+            }
+        }
+
+        #endregion CheckAllChildNodes
 
         #region Sample
 

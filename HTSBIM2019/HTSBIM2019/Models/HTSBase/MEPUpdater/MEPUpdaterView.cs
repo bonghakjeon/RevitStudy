@@ -75,7 +75,7 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
 
     #endregion EnumExistKeyInputData
 
-    #region EnumCategoryInfo
+    #region EnumEqualCategoryInfo
 
     /// <summary>
     /// 동일 카테고리 존재여부 확인
@@ -88,7 +88,7 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
         EXIST = 1
     }
 
-    #endregion EnumCategoryInfo
+    #endregion EnumEqualCategoryInfo
 
     #region EnumCategoryInfo
 
@@ -110,6 +110,21 @@ namespace HTSBIM2019.Models.HTSBase.MEPUpdater
     }
 
     #endregion EnumCategoryInfo
+
+    #region EnumMainCategoryInfo
+
+    /// <summary>
+    /// 상위 카테고리 종류 
+    /// </summary>
+    public enum EnumMainCategoryInfo : int
+    {
+        [Description("배관")]
+        PIPE = 0,
+        [Description("전기/제어")]
+        ELECTRIC_CONTROL = 1
+    }
+
+    #endregion EnumMainCategoryInfo
 
     #region EnumCheckedCategoryInfo
 

@@ -185,38 +185,54 @@ namespace HTSBIM2019.Common.HTSBase
 
         #region 카테고리 종류 - 배관
 
+        #region 공통 (상위, 하위 카테고리)
+
         /// <summary>
         /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 배관
         /// </summary>
         public const string 배관 = "배관";
 
+        #endregion 공통 (상위, 하위 카테고리)
+
+        #region 하위 카테고리 
+
         /// <summary>
-        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 배관 부속류
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 하위 카테고리 - 배관 부속류
         /// </summary>
         public const string 배관부속류 = "배관 부속류";
 
         /// <summary>
-        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 배관 단열재
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 하위 카테고리 - 배관 단열재
         /// </summary>
         public const string 배관단열재 = "배관 단열재";
 
         /// <summary>
-        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 배관 밸브류
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 하위 카테고리 - 배관 밸브류
         /// </summary>
         public const string 배관밸브류 = "배관 밸브류";
 
         /// <summary>
-        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 일반 모델
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 하위 카테고리 - 일반 모델
         /// </summary>
-        
+
 
         /// <summary>
-        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 기계장비
+        /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 하위 카테고리 - 기계장비
         /// </summary>
+
+        #endregion 하위 카테고리 
 
         #endregion 카테고리 종류 - 배관
 
         #region 카테고리 종류 - 전기/제어
+
+        #region 상위 카테고리
+
+        public const string 전기제어 = "전기/제어";
+
+        #endregion 상위 카테고리
+
+        #region 하위 카테고리
 
         /// <summary>
         /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 케이블 트레이
@@ -277,6 +293,8 @@ namespace HTSBIM2019.Common.HTSBase
         /// TreeView 컨트롤(treeViewCategory)에 바인딩할 대상 카테고리 - 
         /// </summary>
         // public const string = "전화 장치";
+
+        #endregion 하위 카테고리
 
         #endregion 카테고리 종류 - 전기/제어
 

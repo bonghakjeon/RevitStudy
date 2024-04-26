@@ -284,8 +284,8 @@ namespace HTSBIM2019.Common.RequestBase
                 {
                     Log.Information(Logger.GetMethodPath(currentMethod) + "Request 작업 시작");
 
-                    // transaction.Start(AABIMHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
-                    transaction.Start(HTSHelper.Start);  // 해당 "AABIM2024" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
+                    // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                    transaction.Start(HTSHelper.Start);  // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
 
                     // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
                     // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
@@ -351,7 +351,7 @@ namespace HTSBIM2019.Common.RequestBase
                             break;
                     }
 
-                    transaction.Commit();    // 해당 "AABIM2024" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
+                    transaction.Commit();    // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + "Request 작업 완료");
                 }   // 여기서 Dispose (리소스 해제) 처리 
