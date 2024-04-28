@@ -136,6 +136,14 @@ namespace HTSBIM2019.Common.Managers
                 Array builtInCategories = Enum.GetValues(typeof(BuiltInCategory));
                 // Array builtInCategoryNames = Enum.GetNames(typeof(BuiltInCategory));
 
+                // TODO : 아래 주석친 테스트 카테고리 리스트 testCategories 필요시 참고 
+                // var testCategories = Enum.GetValues(typeof(BuiltInCategory)).OfType<BuiltInCategory>()
+                //                                                             .Where(category => category.Equals(BuiltInCategory.OST_PipeCurves)
+                //                                                                             || category.Equals(BuiltInCategory.OST_PipeInsulations)
+                //                                                                             || category.Equals(BuiltInCategory.OST_PipeFitting)
+                //                                                                             || category.Equals(BuiltInCategory.OST_PipeAccessory))
+                //                                                             .ToList();
+
                 List<CategoryInfoView> categoryInfoList = new List<CategoryInfoView>();
 
                 foreach(BuiltInCategory builtInCategory in builtInCategories) 
