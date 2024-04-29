@@ -6,9 +6,9 @@
 			"Domain": "공통",
 			"DataType": "문자",
 			"DefinitionGroup": "기타",
-			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델" ],
-			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ],
-			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ]
+			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델", "케이블 트레이", "케이블 트레이 부속류", "덕트", "덕트 부속", "덕트 액세서리", "전기 설비", "전기 시설물", "전선관", "전선관 부속류", "전화 장치" ],
+			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models", "Cable Trays", "Cable Tray Fittings", "Ducts", "Duct Fittings", "Duct Accessories", "Electrical Fixtures", "Electrical Equipment", "Conduits", "Conduit Fittings", "Telephone Devices" ],
+			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models", "Cable Trays", "Cable Tray Fittings", "Ducts", "Duct Fittings", "Duct Accessories", "Electrical Fixtures", "Electrical Equipment", "Conduits", "Conduit Fittings", "Telephone Devices" ]
 		},
 		{
 			"ParamName": "객체 생성자",
@@ -16,9 +16,9 @@
 			"Domain": "공통",
 			"DataType": "문자",
 			"DefinitionGroup": "기타",
-			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델" ],
-			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ],
-			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ]
+			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델", "케이블 트레이", "케이블 트레이 부속류", "덕트", "덕트 부속", "덕트 액세서리", "전기 설비", "전기 시설물", "전선관", "전선관 부속류", "전화 장치" ],
+			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models", "Cable Trays", "Cable Tray Fittings", "Ducts", "Duct Fittings", "Duct Accessories", "Electrical Fixtures", "Electrical Equipment", "Conduits", "Conduit Fittings", "Telephone Devices" ],
+			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models", "Cable Trays", "Cable Tray Fittings", "Ducts", "Duct Fittings", "Duct Accessories", "Electrical Fixtures", "Electrical Equipment", "Conduits", "Conduit Fittings", "Telephone Devices" ]
 		},
 		{
 			"ParamName": "최종 수정 날짜",
@@ -26,9 +26,9 @@
 			"Domain": "공통",
 			"DataType": "문자",
 			"DefinitionGroup": "기타",
-			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델" ],
-			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ],
-			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ]
+			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델", "케이블 트레이", "케이블 트레이 부속류", "덕트", "덕트 부속", "덕트 액세서리", "전기 설비", "전기 시설물", "전선관", "전선관 부속류", "전화 장치" ],
+			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models", "Cable Trays", "Cable Tray Fittings", "Ducts", "Duct Fittings", "Duct Accessories", "Electrical Fixtures", "Electrical Equipment", "Conduits", "Conduit Fittings", "Telephone Devices" ],
+			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models", "Cable Trays", "Cable Tray Fittings", "Ducts", "Duct Fittings", "Duct Accessories", "Electrical Fixtures", "Electrical Equipment", "Conduits", "Conduit Fittings", "Telephone Devices" ]
 		},
 		{
 			"ParamName": "최종 수정자",
@@ -36,9 +36,9 @@
 			"Domain": "공통",
 			"DataType": "문자",
 			"DefinitionGroup": "기타",
-			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델" ],
-			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ],
-			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models" ]
+			"KOR_CategorySet": [ "기계 장비", "배관", "배관 단열재", "배관 부속류", "배관 밸브류", "일반 모델", "케이블 트레이", "케이블 트레이 부속류", "덕트", "덕트 부속", "덕트 액세서리", "전기 설비", "전기 시설물", "전선관", "전선관 부속류", "전화 장치" ],
+			"ENU_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models", "Cable Trays", "Cable Tray Fittings", "Ducts", "Duct Fittings", "Duct Accessories", "Electrical Fixtures", "Electrical Equipment", "Conduits", "Conduit Fittings", "Telephone Devices" ],
+			"ENG_CategorySet": [ "Mechanical Equipment", "Pipes", "Pipe Insulations", "Pipe Fittings", "Pipe Accessories", "Generic Models", "Cable Trays", "Cable Tray Fittings", "Ducts", "Duct Fittings", "Duct Accessories", "Electrical Fixtures", "Electrical Equipment", "Conduits", "Conduit Fittings", "Telephone Devices" ]
 		}
 	]
 }
