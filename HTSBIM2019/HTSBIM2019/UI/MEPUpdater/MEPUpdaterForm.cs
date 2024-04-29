@@ -75,6 +75,11 @@ namespace HTSBIM2019.UI.MEPUpdater
         private List<CategoryInfoView> PipeCategoryInfoList { get; set; } = new List<CategoryInfoView>();
 
         /// <summary>
+        /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 전기/제어 카테고리 정보 리스트
+        /// </summary>
+        private List<CategoryInfoView> ElectricCategoryInfoList { get; set; } = new List<CategoryInfoView>();
+
+        /// <summary>
         /// 객체 타입이 Geometry 유형 객체(GeometryElement)에 속하는 카테고리 정보 객체
         /// </summary>
         public CategoryInfoView CategoryInfo { get; set; }
@@ -228,13 +233,16 @@ namespace HTSBIM2019.UI.MEPUpdater
                 //                                                   || categoryInfo.CategoryName.Equals("기계장비"))
                 //                               .ToList();
 
+                // "케이블 트레이" - OST_CableTray, "케이블 트레이 부속류" - OST_CableTrayFitting, "덕트" - OST_DuctCurves, "덕트 부속" - OST_DuctFitting,
+                // "덕트 액세서리" - OST_DuctAccessory, "배관 밸브류" - OST_PipeAccessory, "일반 모델" - OST_GenericModel, "전기 설비" - OST_ElectricalFixtures,
+                // "전기 시설물" - OST_ElectricalEquipment, "전선관" - OST_Conduit, "전선관 부속류" - OST_ConduitFitting, "전화 장치" - OST_TelephoneDevices
                 var testList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals("케이블 트레이")
                                                                    || categoryInfo.CategoryName.Equals("케이블 트레이 부속류")
                                                                    || categoryInfo.CategoryName.Equals("덕트")
                                                                    || categoryInfo.CategoryName.Equals("덕트 부속")
                                                                    || categoryInfo.CategoryName.Equals("덕트 액세서리")
-                                                                   || categoryInfo.CategoryName.Equals("배관 밸브류")
-                                                                   || categoryInfo.CategoryName.Equals("일반 모델")
+                                                                   // || categoryInfo.CategoryName.Equals("배관 밸브류")
+                                                                   // || categoryInfo.CategoryName.Equals("일반 모델")
                                                                    || categoryInfo.CategoryName.Equals("전기 설비")
                                                                    || categoryInfo.CategoryName.Equals("전기 시설물")
                                                                    || categoryInfo.CategoryName.Equals("전선관")
@@ -260,13 +268,34 @@ namespace HTSBIM2019.UI.MEPUpdater
                                                        .OrderBy(categoryInfo => categoryInfo.CategoryName)
                                                        .ToList();
 
+                ElectricCategoryInfoList.Clear();   // 전기/제어 카테고리 정보 리스트 초기화
+
+                ElectricCategoryInfoList = categoryInfoList.Where(categoryInfo => categoryInfo.Category.Equals(BuiltInCategory.OST_CableTray)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_CableTrayFitting)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_DuctCurves)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_DuctFitting)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_DuctAccessory)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_ElectricalFixtures)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_ElectricalEquipment)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_Conduit)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_ConduitFitting)
+                                                                               || categoryInfo.Category.Equals(BuiltInCategory.OST_TelephoneDevices))
+                                                            .OrderBy(categoryInfo => categoryInfo.CategoryName)
+                                                            .ToList();
+
+
                 // 상위 카테고리 ("배관", "전기/제어") 추가
                 this.treeViewCategory.Nodes.Add(HTSHelper.배관);
                 this.treeViewCategory.Nodes.Add(HTSHelper.전기제어);
 
                 // 상위 카테고리("배관")에 속하는 하위 카테고리 추가 
-                PipeCategoryInfoList.ForEach(CategoryInfo => { 
-                                                this.treeViewCategory.Nodes[(int)EnumMainCategoryInfo.PIPE].Nodes.Add(CategoryInfo.CategoryName);
+                PipeCategoryInfoList.ForEach(categoryInfo => { 
+                                                this.treeViewCategory.Nodes[(int)EnumMainCategoryInfo.PIPE].Nodes.Add(categoryInfo.CategoryName);
+                                    });
+
+                // 상위 카테고리("전기/제어")에 속하는 하위 카테고리 추가 
+                ElectricCategoryInfoList.ForEach(categoryInfo => {
+                                                    this.treeViewCategory.Nodes[(int)EnumMainCategoryInfo.ELECTRIC_CONTROL].Nodes.Add(categoryInfo.CategoryName);
                                         });
 
                 this.treeViewCategory.CheckBoxes = true;   // TreeView 컨트롤(treeViewCategory)에 속한 모든 노드들을 체크박스로 변경 
