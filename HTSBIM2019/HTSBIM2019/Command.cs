@@ -83,7 +83,7 @@ namespace HTSBIM2019
 
                 return Result.Succeeded;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -186,8 +186,8 @@ namespace HTSBIM2019
                 // TaskDialog.Show("HTS Revit Update...", "테스트 진행 중...");
 
                 // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.04.15 jbh)
-                // if (RevitUIApp.ActiveUIDocument is null)   // Revit 문서를 열지 않은 경우 
-                // if (RevitDoc is null)   // Revit 문서를 열지 않은 경우 
+                // if(RevitUIApp.ActiveUIDocument is null)   // Revit 문서를 열지 않은 경우 
+                // if(RevitDoc is null)   // Revit 문서를 열지 않은 경우 
                 //     throw new Exception("MEP Updater 기능 실행하기 전에\r\nRevit 문서를 열어 주시기 바랍니다.");
 
                 // MEPUpdaterForm = new MEPUpdater(uiapp, addInId);
@@ -204,7 +204,7 @@ namespace HTSBIM2019
 
                 return Result.Succeeded;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -221,8 +221,8 @@ namespace HTSBIM2019
         /// </summary>
         public static void WakeFormUp()
         {
-            //if (FormMEPUpdater is not null) FormMEPUpdater.WakeUp();
-            if (AppSetting.Default.UpdaterBase.MEPUpdaterForm is not null) AppSetting.Default.UpdaterBase.MEPUpdaterForm.WakeUp();
+            //if(FormMEPUpdater is not null) FormMEPUpdater.WakeUp();
+            if(AppSetting.Default.UpdaterBase.MEPUpdaterForm is not null) AppSetting.Default.UpdaterBase.MEPUpdaterForm.WakeUp();
         }
 
         #endregion WakeFormUp
@@ -279,7 +279,7 @@ namespace HTSBIM2019
 
                 return Result.Succeeded;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);

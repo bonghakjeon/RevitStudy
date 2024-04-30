@@ -45,7 +45,7 @@ namespace HTSBIM2019.Common.Managers
 
                 return builtInParamName;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 // TODO : 오류 발생시 상위 호출자 예외처리 전달 throw 구현 (2024.01.29 jbh)
@@ -107,7 +107,7 @@ namespace HTSBIM2019.Common.Managers
                 List<BuiltInParamView> paramDatas = new List<BuiltInParamView>();
 
                 // 3 단계 : foreach 반복문 사용해서 BuiltInParameter 매개변수들의 이름 및 값 구해서 리스트 객체 "paramDatas"에 데이터 추가 
-                foreach (BuiltInParameter builtInParam in builtInParamList)
+                foreach(BuiltInParameter builtInParam in builtInParamList)
                 {
                     // TODO : BuiltInParameter -> ForgeTypeId 구하기 (2024.02.07 jbh)
                     //        아래 URL 주소와 연동된 PDF 문서 5 Page -> "ParameterUtils.GetParameterTypeId(BuiltInParameter)" 참고
@@ -136,7 +136,7 @@ namespace HTSBIM2019.Common.Managers
 
                 return paramDatas;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -191,7 +191,7 @@ namespace HTSBIM2019.Common.Managers
 
                 return updaterParameters;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -219,7 +219,7 @@ namespace HTSBIM2019.Common.Managers
                 DefinitionBindingMapIterator it = bindingMap.ForwardIterator();
                 it.Reset();
 
-                while (it.MoveNext())
+                while(it.MoveNext())
                 {
                     string paramName = it.Key.Name;
 
@@ -296,7 +296,7 @@ namespace HTSBIM2019.Common.Managers
                 // TODO : using 구문 사용해서 임시 파일 생성(File.Create(tempFile))  (2024.01.24 jbh)
                 // 참고 URL - https://www.csharpstudy.com/latest/CS8-using.aspx
                 // 임시 파일(tempFile) 생성
-                using (File.Create(tempFile))
+                using(File.Create(tempFile))
                 {
 
                 }  // 중괄호 { } 범위 벗어난 여기서 Dispose() 호출됨.
@@ -451,7 +451,7 @@ namespace HTSBIM2019.Common.Managers
                 // 팝업화면 "매개변수 특성" 출력 -> 항목 "매개변수 데이터"에 속하는 매개변수 타입(AIS_Parameters.json - "paramType")은 "인스턴스"로 체크된다.
 
                 // 매개변수 타입 "인스턴스"일 경우 
-                if (true == pCreateParam.InstanceBinding) binding = rvDoc.Application.Create.NewInstanceBinding(pCreateParam.CategorySet);
+                if(true == pCreateParam.InstanceBinding) binding = rvDoc.Application.Create.NewInstanceBinding(pCreateParam.CategorySet);
 
                 // 매개변수 타입 "유형"일 경우 
                 else binding = rvDoc.Application.Create.NewTypeBinding(pCreateParam.CategorySet);
@@ -485,7 +485,7 @@ namespace HTSBIM2019.Common.Managers
 
                 // 반복문 while 사용해서 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)에
                 // 다음 반복자(카테고리 안에 존재하는 매개변수 키(key), 값(value) 포함)가 존재할 경우 
-                //while (iter.MoveNext())
+                //while(iter.MoveNext())
                 //{
                 //    Definition curDef = iter.Key;                           // 해당 반복자안에 존재하는 매개변수(Key) 가져오기
                 //    ElementBinding curBind = (ElementBinding)iter.Current;  // 해당 반복자에 속한 바인딩된 객체 가져오기
@@ -496,7 +496,7 @@ namespace HTSBIM2019.Common.Managers
                 //    bool result = rvDoc.ParameterBindings.ReInsert(curDef, curBind, pCreateParam.ParameterGroup);
 
                 //    // 메서드 파라미터 "paramName"의 문자열과 동일한 매개변수 이름(curDef.Name)이 존재하는 경우 
-                //    if (pCreateParam.ParamName.Equals(curDef.Name, StringComparison.CurrentCultureIgnoreCase))
+                //    if(pCreateParam.ParamName.Equals(curDef.Name, StringComparison.CurrentCultureIgnoreCase))
                 //    {
                 //        // 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)에 기존 매개변수 데이터(key, value) 삭제 및 
                 //        // 지정된 매개변수 데이터 (curDef, curBind) 추가 
@@ -505,7 +505,7 @@ namespace HTSBIM2019.Common.Managers
                 //    }
                 //}
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -540,17 +540,17 @@ namespace HTSBIM2019.Common.Managers
 
                 // 해당 HashMap(Dictionary) 객체(rvDoc.ParameterBindings)에
                 // 다음 반복자(카테고리 안에 존재하는 매개변수 키(key), 값(value) 포함)가 존재할 경우 
-                while (iter.MoveNext())
+                while(iter.MoveNext())
                 {
                     Definition curDef = iter.Key;   // 해당 반복자안에 존재하는 매개변수(Key) 가져오기
                     ElementBinding curBind = (ElementBinding)iter.Current;  // 해당 반복자에 속한 바인딩된 객체 가져오기
 
-                    if (paramName.Equals(curDef.Name, StringComparison.CurrentCultureIgnoreCase))
+                    if(paramName.Equals(curDef.Name, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        foreach (BuiltInCategory bic in bicBindings)
+                        foreach(BuiltInCategory bic in bicBindings)
                         {
                             Category c = rvDoc.Settings.Categories.get_Item(bic);
-                            if (!curBind.Categories.Contains(c))
+                            if(!curBind.Categories.Contains(c))
                             {
                                 curBind.Categories.Insert(c); // 카테고리 추가 
                             }
@@ -566,7 +566,7 @@ namespace HTSBIM2019.Common.Managers
 
 
                 string tempFile = Path.Combine(Path.GetTempPath(), "TempProjectParameters.txt"); // 임시 파일 경로 읽어오기
-                using (File.Create(tempFile)) { }                                                // 임시 파일 생성하기 
+                using(File.Create(tempFile)) { }                                                // 임시 파일 생성하기 
 
                 // 문서(rvDoc)가 실행되는 Revit 응용 프로그램(rvDoc.Application)의 공유 매개변수 파일 가져오기 
                 string originFile = rvDoc.Application.SharedParametersFilename;
@@ -587,7 +587,7 @@ namespace HTSBIM2019.Common.Managers
                 File.Delete(tempFile);
 
                 CategorySet cats = rvDoc.Application.Create.NewCategorySet();
-                foreach (BuiltInCategory bic in bicBindings)
+                foreach(BuiltInCategory bic in bicBindings)
                 {
                     Category cat = rvDoc.Settings.Categories.get_Item(bic);
                     cats.Insert(cat);
@@ -595,14 +595,14 @@ namespace HTSBIM2019.Common.Managers
 
                 Autodesk.Revit.DB.ElementBinding binding = null;
 
-                if (instanceBinding)
+                if(instanceBinding)
                     binding = rvDoc.Application.Create.NewInstanceBinding(cats);
                 else
                     binding = rvDoc.Application.Create.NewTypeBinding(cats);
 
                 return rvDoc.ParameterBindings.Insert(exDef, binding, paramGroup);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(Logger.errorMessage, ex.Message);
@@ -654,7 +654,7 @@ namespace HTSBIM2019.Common.Managers
                 // 3 단계 : foreach 문에서 리스트 "targetParameters"에 속한 요소(매개변수) 방문 
                 targetParameters.ForEach(param => {
                     // 4 단계 : 매개변수의 값 자료형 찾아서 메서드 파라미터 rvParamValue를 형변환(casting) 및 해당 매개변수(rvParamName와 동일한 이름)에 값 입력하기
-                    switch (param.StorageType)
+                    switch(param.StorageType)
                     {
                         case StorageType.Integer:   // "dataType": "예/아니요" 인 경우 
                             int intParamValue = Int32.Parse(rvParamValue);
@@ -689,7 +689,7 @@ namespace HTSBIM2019.Common.Managers
                     }
 
                     // 매개변수에 값 입력 완료한 경우 
-                    if (true == bResult)
+                    if(true == bResult)
                     {
                         SetParamView setCompletedParameter = new SetParamView(rvParamName, rvParamValue);
 
@@ -705,7 +705,7 @@ namespace HTSBIM2019.Common.Managers
                 });
 
                 // 매개변수에 값 입력이 모두 실패한 경우 (리스트 객체 "setCompletedParameters"에 데이터가 존재하지 않는 경우)
-                if (setCompletedParameters.Count.Equals((int)EnumExistParameters.NONE))
+                if(setCompletedParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
                     TaskDialog.Show(HTSHelper.ErrorTitle, $"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
                     throw new Exception($"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
@@ -716,7 +716,7 @@ namespace HTSBIM2019.Common.Managers
                 // TODO : 아래 테스트용 결과 메시지 필요시 사용 예정 (2024.02.21 jbh) 
                 // TaskDialog.Show(UpdaterHelper.CompletedTitle, $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -744,7 +744,7 @@ namespace HTSBIM2019.Common.Managers
 
                 return true;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 // throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 

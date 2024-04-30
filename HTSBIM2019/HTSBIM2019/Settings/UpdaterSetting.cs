@@ -80,16 +80,16 @@ namespace HTSBIM2019.Settings
         public static UpdaterSetting GetUpdaterInstance(AddInId rvAddInId, ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
         {
             // 업데이터 기본 설정 객체 자기 자신(Self)이 null일 경우
-            if (_Self is null) _Self = new UpdaterSetting();
+            if(_Self is null) _Self = new UpdaterSetting();
 
             // MEP 업데이터 객체가 null인 경우 
-            if (_Self._MEPUpdater is null) _Self._MEPUpdater = new MEPUpdater(rvAddInId);
+            if(_Self._MEPUpdater is null) _Self._MEPUpdater = new MEPUpdater(rvAddInId);
 
             // Modaless 폼 객체가 null이거나 삭제된 경우 
-            if (_Self._MEPUpdaterForm is null || _Self._MEPUpdaterForm.IsDisposed) _Self._MEPUpdaterForm = new MEPUpdaterForm(rvExEvent, pHandler, rvUIApp);
+            if(_Self._MEPUpdaterForm is null || _Self._MEPUpdaterForm.IsDisposed) _Self._MEPUpdaterForm = new MEPUpdaterForm(rvExEvent, pHandler, rvUIApp);
 
             // UpdaterLoading 폼 객체가 null인 경우 
-            if (_Self._UpdaterLoadingForm is null) _Self._UpdaterLoadingForm = new UpdaterLoadingForm();
+            if(_Self._UpdaterLoadingForm is null) _Self._UpdaterLoadingForm = new UpdaterLoadingForm();
 
             return _Self;
         }
@@ -124,10 +124,10 @@ namespace HTSBIM2019.Settings
         //public static MEPUpdaterForm GetUpdaterFormInstance(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
         //{
         //    // 업데이터 기본 설정 객체 자기 자신(Self)이 null일 경우
-        //    if (_Self is null) _Self = new UpdaterSetting();
+        //    if(_Self is null) _Self = new UpdaterSetting();
 
         //    // Modaless 폼 객체가 null이거나 삭제된 경우 
-        //    if (_Self._MEPUpdaterForm is null || _Self._MEPUpdaterForm.IsDisposed) _Self._MEPUpdaterForm = new MEPUpdaterForm(rvExEvent, pHandler, rvUIApp);
+        //    if(_Self._MEPUpdaterForm is null || _Self._MEPUpdaterForm.IsDisposed) _Self._MEPUpdaterForm = new MEPUpdaterForm(rvExEvent, pHandler, rvUIApp);
 
         //    return _Self._MEPUpdaterForm; 
         //}

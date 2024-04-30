@@ -67,7 +67,7 @@ namespace HTSBIM2019.Controls.Text
         /// </summary>
         private void InitSetting(bool pEventJoin)
         {
-            if (true == pEventJoin)
+            if(true == pEventJoin)
             {
                 this.TextChanged += new EventHandler(this.WaterMark_Toggel);
                 this.LostFocus += new EventHandler(this.WaterMark_Toggel);
@@ -122,7 +122,7 @@ namespace HTSBIM2019.Controls.Text
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "OnPaint 이벤트 종료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 MessageBox.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -136,7 +136,7 @@ namespace HTSBIM2019.Controls.Text
         private void WaterMark_Toggel(object sender, EventArgs e)
         {
             // 키보드로 부터 입력받은 텍스트(this.Text) 길이가 0보다 작거나 같으면 (텍스트가 존재하지 않으면)
-            if (this.Text.Length <= (int)EnumExistKeyInputData.NONE)
+            if(this.Text.Length <= (int)EnumExistKeyInputData.NONE)
                 EnableWaterMark();    // 워터마크 활성화
             // 키보드로 부터 입력받은 텍스트(this.Text)가 존재하면 
             else
@@ -170,7 +170,7 @@ namespace HTSBIM2019.Controls.Text
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "워터마크 텍스트(WaterMarkText) 활성화 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 MessageBox.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -198,12 +198,12 @@ namespace HTSBIM2019.Controls.Text
                 this.SetStyle(ControlStyles.UserPaint, false);   // UserPaint 스타일 false
 
                 // OldFont가 존재하는 경우 다시 반환
-                if (OldFont is not null)
-                    this.Font = new Font(OldFont.FontFamily, OldFont.Size, OldFont.Style, OldFont.Unit);
+                if(OldFont is not null)
+                   this.Font = new Font(OldFont.FontFamily, OldFont.Size, OldFont.Style, OldFont.Unit);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "워터마크 텍스트(WaterMarkText) 비활성화 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 MessageBox.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -223,7 +223,7 @@ namespace HTSBIM2019.Controls.Text
                 Log.Information(Logger.GetMethodPath(currentMethod) + "WaterMark_FontChanged 이벤트 시작");
 
                 // 워터마크 텍스트(WaterMarkText)가 활성화 된 경우 
-                if (true == WaterMarkTextEnabled)
+                if(true == WaterMarkTextEnabled)
                 {
                     OldFont = new Font(Font.FontFamily, Font.Size, Font.Style, Font.Unit);
                     Refresh();
@@ -231,7 +231,7 @@ namespace HTSBIM2019.Controls.Text
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "WaterMark_FontChanged 이벤트 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 MessageBox.Show(HTSHelper.ErrorTitle, ex.Message);

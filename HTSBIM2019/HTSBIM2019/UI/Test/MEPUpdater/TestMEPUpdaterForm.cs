@@ -171,7 +171,7 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -219,7 +219,7 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
 
                 this.comboBoxCategory.Refresh();   // 변경 사항 반영 하도록 comboBoxCategory 컨트롤 Refresh
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -250,7 +250,7 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 화면 종료 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
             }
@@ -354,7 +354,7 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
                 // BuiltInCategory test2Category = CategoryManager.GetBuiltInCategory("OST_PipeFitting");
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -393,7 +393,7 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
                 }
                 else throw new Exception("카테고리 정보 존재하지 않습니다.\r\n담당자에게 문의 하시기 바랍니다.");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);

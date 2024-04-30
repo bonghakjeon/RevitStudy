@@ -72,7 +72,7 @@ namespace HTSBIM2019.Common.Managers
 
                 return builtInCategory;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -170,7 +170,7 @@ namespace HTSBIM2019.Common.Managers
 
                     // 동일한 카테고리(BuiltInCategory Category)가 존재하지 않는 경우
                     // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
-                    // if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
+                    // if(existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
                 }
 
                 // 카테고리 정보 리스트 객체 "categoryInfoList" 카테고리 이름 순으로 정렬(OrderBy)
@@ -246,7 +246,7 @@ namespace HTSBIM2019.Common.Managers
 
                     // 동일한 카테고리(BuiltInCategory Category)가 존재하지 않는 경우
                     // - 카테고리 정보 리스트 객체 "categoryInfoList"에 데이터 추가
-                    // if (existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
+                    // if(existCount == (int)EnumCategoryInfo.NONE) categoryInfoList.Add(categoryInfo);
 
 
 
@@ -279,7 +279,7 @@ namespace HTSBIM2019.Common.Managers
                 //                                .OrderBy(categoryInfo => categoryInfo.CategoryName)
                 //                                .ToList();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -347,7 +347,7 @@ namespace HTSBIM2019.Common.Managers
 
                 // switch ~ case 사용하여 Revit 응용 프로그램의 언어 타입(미국 영문, 영국 영문, 한글 등등...)에 따라
                 // pUpdaterParamList 리스트에서 언어 타입에 매핑되는 카테고리셋 리스트 가져오기
-                switch (rvLanguageType)
+                switch(rvLanguageType)
                 {
                     case LanguageType.Korean:
                         updaterCategorySet = pUpdaterParamList.Select(updaterParam => updaterParam.KOR_CategorySet).FirstOrDefault();   // FirstOrDefault - 시퀀스 첫번째 요소 가져오기
@@ -364,25 +364,25 @@ namespace HTSBIM2019.Common.Managers
 
 
                 // 2 단계 : 반복문 사용해서 MEP Updater 매개변수 리스트에 존재하는 모든 매개변수 데이터 방문 
-                foreach (var updaterParam in pUpdaterParamList)
+                foreach(var updaterParam in pUpdaterParamList)
                 {
                     // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.04.04 jbh)
                     // MEP Updater 매개변수가 존재하는 경우 
                     // Parameter parameter = pAddElement.LookupParameter(updaterParam.paramName);
-                    // if (parameter is not null) continue;
+                    // if(parameter is not null) continue;
 
                     // 3 단계 : 새로운 카테고리 셋 객체 categorySet 생성 
                     CategorySet categorySet = rvDoc.Application.Create.NewCategorySet();
 
                     // 반복문 사용해서 카테고리 셋 하위에 존재하는 모든 카테고리 방문 
                     //foreach(var category in updaterParam.KOR_CategorySet)
-                    foreach (var category in updaterCategorySet)
+                    foreach(var category in updaterCategorySet)
                     {
                         Category cat = rvDoc.Settings.Categories.get_Item(category);   // string 클래스 객체 "category"와 동일한 카테고리 가져오기 
 
                         // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2024.01.29 jbh)
                         // 참고 URL - https://husk321.tistory.com/405
-                        if (cat is not null) categorySet.Insert(cat);  // 카테고리 셋에 카테고리 데이터 추가 
+                        if(cat is not null) categorySet.Insert(cat);  // 카테고리 셋에 카테고리 데이터 추가 
                     }
 
                     // 4 단계 : 카테고리 하위에 추가하려는 MEP Updater 매개변수 이름 가져오기  
@@ -392,7 +392,7 @@ namespace HTSBIM2019.Common.Managers
                     paramType = ParameterType.Invalid;   // MEP Updater 매개변수 자료형(유형) 초기화
 
                     // 5 단계 : MEP Updater 매개변수 자료형(문자) 가져오기
-                    if (updaterParam.DataType.Equals(HTSHelper.text)) paramType = ParameterType.Text;
+                    if(updaterParam.DataType.Equals(HTSHelper.text)) paramType = ParameterType.Text;
 
                     else throw new Exception($"생성할 공유 매개변수 유형(T): {HTSHelper.text}아닌\r\n다른 유형으로 오입력!\r\n담당자에게 문의하세요.");
 
@@ -437,7 +437,7 @@ namespace HTSBIM2019.Common.Managers
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + $"Revit 문서 - {rvDoc.PathName} / MEP Updater 매개변수 데이터 생성 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달

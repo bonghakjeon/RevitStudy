@@ -133,7 +133,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 초기 셋팅 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -170,7 +170,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
                 Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 콜백 함수 Execute 시작");
 
                 // 매개변수 값 입력 완료 여부 확인 
-                // if (true == IsCompleted)
+                // if(true == IsCompleted)
                 // {
                 //     Log.Information(Logger.GetMethodPath(currentMethod) + "MEPUpdater 콜백 함수 Execute 종료");
                 //     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
@@ -215,8 +215,8 @@ namespace HTSBIM2019.Utils.MEPUpdater
 
 
                 // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
-                if (addElementIds.Count >= (int)EnumExistElements.EXIST
-                    && addElementNames.Count >= (int)EnumExistElements.EXIST)
+                if(addElementIds.Count >= (int)EnumExistElements.EXIST
+                   && addElementNames.Count >= (int)EnumExistElements.EXIST)
                 {
                     // TODO : 신규 Triggers 실행시 매개변수 2가지("객체 생성 날짜", "객체 생성자")에 입력할 값으로
                     //        "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 (2024.04.02 jbh)
@@ -247,14 +247,14 @@ namespace HTSBIM2019.Utils.MEPUpdater
                         ParamsManager.SetParametersValue(addElements, addParam.ParamName, paramValue);
 
                         // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
-                        // if (true == bResult) IsCompleted = true;
-                        // if (false == bResult) throw new Exception($"매개변수 {addParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");  
+                        // if(true == bResult) IsCompleted = true;
+                        // if(false == bResult) throw new Exception($"매개변수 {addParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");  
                     }
                 }
 
                 // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
-                if (modElementIds.Count >= (int)EnumExistElements.EXIST
-                    && modElementNames.Count >= (int)EnumExistElements.EXIST)
+                if(modElementIds.Count >= (int)EnumExistElements.EXIST
+                   && modElementNames.Count >= (int)EnumExistElements.EXIST)
                 {
                     // TODO : 수정/편집 Triggers 실행시 매개변수 2가지("최종 수정 날짜", "최종 수정자")에 입력할 값으로
                     //        "현재 날짜 시간 조합 문자" "작업자 이름(영문 또는 한글)" 입력하기 (2024.04.02 jbh)
@@ -264,7 +264,7 @@ namespace HTSBIM2019.Utils.MEPUpdater
                     {
                         paramValue = string.Empty;
 
-                        switch (modParam.ParamName)
+                        switch(modParam.ParamName)
                         {
                             case HTSHelper.LastModDate:
                                 paramValue = currentDateTime;
@@ -280,8 +280,8 @@ namespace HTSBIM2019.Utils.MEPUpdater
                         ParamsManager.SetParametersValue(modElements, modParam.ParamName, paramValue);
 
                         // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
-                        // if (true == bResult) IsCompleted = true;
-                        // if (false == bResult) throw new Exception($"매개변수 {modParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");
+                        // if(true == bResult) IsCompleted = true;
+                        // if(false == bResult) throw new Exception($"매개변수 {modParam.ParamName} 값 입력 실패!!\r\n담당자에게 문의하세요.");
                     }
                 }
 

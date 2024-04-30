@@ -63,7 +63,7 @@ namespace HTSBIM2019.UI.UpdaterLoading
             // 참고 URL - https://chat.openai.com/c/710da82a-ca7f-4dba-9aba-2266bf1f9019
             // 대기 중인 동안에 실행될 작업을 시작합니다.
             // 사용 기록 관리 매개변수 생성 대기 처리 화면(WaitForm - CreateParams) "Revit 응용 프로그램"의 가운데로 출력
-            if (SplashScreenManager.Default is null) SplashScreenManager.ShowForm(this.ParentForm, typeof(UpdaterLoadingForm), true, true, false);
+            if(SplashScreenManager.Default is null) SplashScreenManager.ShowForm(this.ParentForm, typeof(UpdaterLoadingForm), true, true, false);
 
             // Thread.Sleep(10000);   // 테스트 코드 - 사용 기록 관리 Updater + Triggers 등록 대기 처리 화면 (WaitForm) 출력 후 10초간 대기 필요시 사용 (지정된 시간 동안 현재 동작하는 쓰레드만 일시 중단)
         }
@@ -79,7 +79,7 @@ namespace HTSBIM2019.UI.UpdaterLoading
         {
             // TODO : 사용 기록 관리 Updater + Triggers 등록 대기 처리 화면 (WaitForm) 종료 기능(SplashScreenManager.CloseForm) 구현 (2024.04.24 jbh)
             // 대기 중인 동안에 실행될 작업이 완료되면 대기 화면 닫기
-            if (SplashScreenManager.Default is not null) SplashScreenManager.CloseForm(false);
+            if(SplashScreenManager.Default is not null) SplashScreenManager.CloseForm(false);
         }
 
         #endregion CloseLoadingForm

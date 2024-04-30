@@ -114,7 +114,7 @@ namespace HTSBIM2019.Test
 
                 //var builtInCategoryList = ParamsManager.builtInCategoryNameList(builtInCategories);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -145,7 +145,7 @@ namespace HTSBIM2019.Test
                 Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater Execute 시작");
 
                 // 매개변수 값 입력 완료 여부 확인 
-                // if (true == IsCompleted)
+                // if(true == IsCompleted)
                 // {
                 //     IsCompleted = false;   // 매개변수 값 입력 완료 여부 false 다시 초기화
                 //     return;                // 콜백함수 Execute 종료 처리 (종료 처리 안 하면 콜백 함수 Execute가 무한으로 실행됨.)
@@ -167,8 +167,8 @@ namespace HTSBIM2019.Test
 
                 currentDateTime = DateTime.Now.ToString();   // "해설" 매개변수에 입력할 값 ("현재 날짜 시간 조합 문자") 문자열 변환 후 할당
 
-                if (addElementIds.Count >= (int)EnumExistElements.EXIST
-                    && addElementNames.Count >= (int)EnumExistElements.EXIST)   // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
+                if(addElementIds.Count >= (int)EnumExistElements.EXIST
+                   && addElementNames.Count >= (int)EnumExistElements.EXIST)   // 새로 추가된 객체 아이디 리스트(addElementIds)와 객체 이름 리스트(addElementNames)에 모두 값이 존재하는 경우 
                 {
                     // ParamsManager 클래스 static 메서드 "SetParametersValue" 호출
                     // 신규 추가 객체 리스트(addElements)에 속하는 BuiltInParameter“해설”매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
@@ -181,14 +181,14 @@ namespace HTSBIM2019.Test
 
                     // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                     // 신규 추가 완료된 객체 이름 리스트(addElementNames) 메세지 출력 
-                    // if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "신규 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", addElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
 
                     // 신규 업데이트 실패한 경우 
                     // else throw new Exception("신규 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
-                if (modElementIds.Count >= (int)EnumExistElements.EXIST
-                    && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
+                if(modElementIds.Count >= (int)EnumExistElements.EXIST
+                   && modElementNames.Count >= (int)EnumExistElements.EXIST)   // 수정된 객체 아이디 리스트(modElementIds)와 객체 이름 리스트(modElementNames)에 모두 값이 존재하는 경우 
                 {
                     // 수정된 객체 리스트(modElements)에 속하는 BuiltInParameter“해설”매개변수에 입력되는 값으로“현재 날짜 시간 조합 문자”입력
                     // IsCompleted = ParamsManager.SetParametersValue(modElements, builtInParamName, currentDateTime);
@@ -196,14 +196,14 @@ namespace HTSBIM2019.Test
 
                     // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.04.18 jbh)
                     // 수정 업데이트 완료된 객체 이름 리스트(modElementNames) 메세지 출력 
-                    // if (true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
+                    // if(true == IsCompleted) TaskDialog.Show("테스트 MEP Updater", "수정 업데이트 완료\r\n객체 명 - " + string.Join<string>(", ", modElementNames) + $"\r\n매개변수 이름 : {builtInParamName}\r\n매개변수 입력된 값 : {currentDateTime}");
                     // 수정 업데이트 실패한 경우 
                     // else throw new Exception("수정 업데이트 실패!!\r\n담당자에게 문의 하시기 바랍니다.");
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "TestMEPUpdater Execute 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -258,10 +258,10 @@ namespace HTSBIM2019.Test
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 시작");
 
-                if (UpdaterRegistry.IsUpdaterRegistered(rvUpdaterId, rvDoc))   // Revit 문서(rvDoc)에 해당 rvUpdaterId를 가진 업데이터가 등록된 경우 
+                if(UpdaterRegistry.IsUpdaterRegistered(rvUpdaterId, rvDoc))   // Revit 문서(rvDoc)에 해당 rvUpdaterId를 가진 업데이터가 등록된 경우 
                 {
-                    UpdaterRegistry.RemoveAllTriggers(rvUpdaterId);            // 지정된 rvUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
-                    UpdaterRegistry.UnregisterUpdater(rvUpdaterId, rvDoc);     // Revit 문서(rvDoc)에 지정된 rvUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
+                   UpdaterRegistry.RemoveAllTriggers(rvUpdaterId);            // 지정된 rvUpdaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
+                   UpdaterRegistry.UnregisterUpdater(rvUpdaterId, rvDoc);     // Revit 문서(rvDoc)에 지정된 rvUpdaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
                 }
 
                 UpdaterRegistry.RegisterUpdater(this, rvDoc);   // 업데이터 등록
@@ -270,7 +270,7 @@ namespace HTSBIM2019.Test
 
                 TaskDialog.Show("테스트 MEP Updater", "테스트 업데이터 등록 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -313,7 +313,7 @@ namespace HTSBIM2019.Test
         //        // 해당 업데이터 아이디가 존재하지 않거나 업데이터가 등록되어 있지 않은 경우 
         //        else throw new Exception($"테스트 {builtInCategoryName} Triggers 등록 실패!\r\n담당자에게 문의하세요.");
         //    }
-        //    catch (Exception ex)
+        //    catch(Exception ex)
         //    {
         //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
         //        throw;   // 오류 발생시 상위 호출자 예외처리 전달

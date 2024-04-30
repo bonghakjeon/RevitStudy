@@ -39,14 +39,14 @@ namespace HTSBIM2019.Common.Managers
                 // 2. DLL 파일의 상위 디렉토리(폴더 - HTSBIM2019) 가져오기 
                 // Path.GetDirectoryName 참고 URL - https://afsdzvcx123.tistory.com/entry/C-%EB%AC%B8%EB%B2%95-%ED%8C%8C%EC%9D%BC-%EA%B2%BD%EB%A1%9C%EC%97%90%EC%84%9C-%EB%94%94%EB%A0%89%ED%86%A0%EB%A6%AC-%EA%B2%BD%EB%A1%9C-%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0
                 // Directory.GetParent 참고 URL - https://chat.openai.com/c/0ed1e911-9425-4b35-9008-8e4a0a4493db
-                while (true)
+                while(true)
                 {
                     // parentDirName = Path.GetDirectoryName(dllPath);
                     // dllPath = parentDirName;
                     DirectoryInfo parentDirectory = Directory.GetParent(parentDirPath);
                     parentDirPath = parentDirectory.FullName;
 
-                    if (parentDirectory.Name.Equals(HTSHelper.AssemblyName)) break;
+                    if(parentDirectory.Name.Equals(HTSHelper.AssemblyName)) break;
                 }
 
                 return parentDirPath;

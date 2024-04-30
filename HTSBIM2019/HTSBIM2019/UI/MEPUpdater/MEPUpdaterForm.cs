@@ -187,7 +187,7 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -332,7 +332,7 @@ namespace HTSBIM2019.UI.MEPUpdater
                 //                             this.treeViewCategory.Nodes.Add(CategoryInfo.CategoryName);
                 //                         });
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -372,7 +372,7 @@ namespace HTSBIM2019.UI.MEPUpdater
 
         //        this.comboBoxCategory.Refresh();   // 변경 사항 반영 하도록 comboBoxCategory 컨트롤 Refresh
         //    }
-        //    catch (Exception ex)
+        //    catch(Exception ex)
         //    {
         //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
         //        throw;   // 오류 발생시 상위 호출자 예외처리 전달
@@ -403,7 +403,7 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 화면 종료 완료");
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
             }
@@ -498,14 +498,14 @@ namespace HTSBIM2019.UI.MEPUpdater
                                                                  .ToList();
 
                 // 카테고리 체크한 경우 
-                if (testCheckedList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
+                if(testCheckedList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
                 {
                     //AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
 
                     CategoryInfoList.Clear();
 
-                    foreach (TreeNode checkedNode in testCheckedList)
+                    foreach(TreeNode checkedNode in testCheckedList)
                     {
                         string chkCategoryName = checkedNode.Text;   // TreeView 체크박스에서 체크한 카테고리 이름 
 
@@ -547,7 +547,7 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // BuiltInCategory test2Category = CategoryManager.GetBuiltInCategory("OST_PipeFitting");
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -597,13 +597,13 @@ namespace HTSBIM2019.UI.MEPUpdater
                                                                      .ToList();
 
                 // 카테고리 체크한 경우 
-                if (checkedCategoryList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
+                if(checkedCategoryList.Count >= (int)EnumCheckedCategoryInfo.EXIST)
                 {
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList.Clear();
                     // AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfoList = new List<CategoryInfoView>();
                     CategoryInfoList.Clear();
 
-                    foreach (TreeNode checkedNode in checkedCategoryList)
+                    foreach(TreeNode checkedNode in checkedCategoryList)
                     {
                         string chkCategoryName = checkedNode.Text;   // TreeView 체크박스에서 체크한 카테고리 이름 
 
@@ -681,7 +681,7 @@ namespace HTSBIM2019.UI.MEPUpdater
                 {
                     // 체크박스를 체크(선택)한 카테고리가 존재하는 경우 (상위, 하위 카테고리 포함)
                     // if(e.Node.Nodes.Count > 0)
-                    if (e.Node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
+                    if(e.Node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
                     {
                         /* Calls the CheckAllChildNodes method, passing in the current 
                         Checked value of the TreeNode whose checked state changed. */
@@ -689,7 +689,7 @@ namespace HTSBIM2019.UI.MEPUpdater
                     }
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -723,8 +723,8 @@ namespace HTSBIM2019.UI.MEPUpdater
                     node.Checked = pNodeChecked;
 
                     // 체크박스를 체크(선택)한 카테고리가 존재하는 경우 (상위, 하위 카테고리 포함)
-                    // if (node.Nodes.Count > 0)
-                    if (node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
+                    // if(node.Nodes.Count > 0)
+                    if(node.Nodes.Count >= (int)EnumCheckedCategoryInfo.EXIST) 
                     {
                         // If the current node has child nodes, call the CheckAllChildsNodes method recursively.
                         // 현재 체크(선택)한 카테고리 안에 하위 카테고리가 존재하는 경우 메서드 "CheckAllChildNodes" 재귀 호출 
@@ -732,7 +732,7 @@ namespace HTSBIM2019.UI.MEPUpdater
                     }
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달

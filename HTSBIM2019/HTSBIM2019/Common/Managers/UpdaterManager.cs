@@ -65,8 +65,8 @@ namespace HTSBIM2019.Common.Managers
                 // BuiltInCategory builtInCategory = (BuiltInCategory)rvElementCategoryFilter.CategoryId.IntegerValue;
 
                 // 해당 업데이터 아이디가 존재하고, 업데이터가 등록되어 있는 경우 
-                // if (rvUpdaterId is not null
-                //     && UpdaterRegistry.IsUpdaterRegistered(rvUpdaterId))
+                // if(rvUpdaterId is not null
+                //    && UpdaterRegistry.IsUpdaterRegistered(rvUpdaterId))
                 // 해당 업데이터 아이디가 존재하는 경우 
                 if(rvUpdaterId is not null)
                 {

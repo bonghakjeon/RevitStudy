@@ -82,7 +82,7 @@ namespace HTSBIM2019
 
                 return Result.Succeeded;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -129,14 +129,14 @@ namespace HTSBIM2019
                 // TODO : Revit 전용문서(Document) 가져온 후 매개변수 생성되는 로직 아래에 구현하기 (2024.04.16 jbh)
                 TaskDialogResult dialogResult = TaskDialog.Show(HTSHelper.NoticeTitle, "MEP 사용 기록 관리\r\n매개변수 생성을 원하십니까?", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
 
-                if (TaskDialogResult.Yes == dialogResult)
+                if(TaskDialogResult.Yes == dialogResult)
                 {
                     // TODO : Revit Updater 매개변수 추가 및 대기 처리 화면(WaitForm) 구현 (2024.04.16 jbh)
                     CreateParams createParams = new CreateParams();
                     createParams.ToCreateUpdaterParameter(RevitDoc);
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -162,14 +162,14 @@ namespace HTSBIM2019
                 // TODO : Revit 전용문서(Document) 가져온 후 매개변수 생성되는 로직 아래에 구현하기 (2024.04.16 jbh)
                 TaskDialogResult dialogResult = TaskDialog.Show(HTSHelper.NoticeTitle, "MEP 사용 기록 관리\r\n매개변수 생성을 원하십니까?", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
 
-                if (TaskDialogResult.Yes == dialogResult)
+                if(TaskDialogResult.Yes == dialogResult)
                 {
                     // TODO : Revit Updater 매개변수 추가 및 대기 처리 화면(WaitForm) 구현 (2024.04.16 jbh)
                     CreateParams createParams = new CreateParams();
                     createParams.ToCreateUpdaterParameter(RevitDoc);
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);

@@ -20,9 +20,9 @@ namespace HTSBIMNet
         public void Dispose()
         {
             BindableBase target;
-            if (!this.Target.TryGetTarget(out target))
-                return;
-            switch (this.EndMode)
+            if(!this.Target.TryGetTarget(out target))
+               return;
+            switch(this.EndMode)
             {
                 case PropertyChangedSectionEndMode.AbsoluteEnable:
                     target.EnablePropertyChanged = true;

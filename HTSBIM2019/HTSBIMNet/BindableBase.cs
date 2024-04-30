@@ -20,8 +20,8 @@ namespace HTSBIMNet
             PropertyChangedEventHandler staticPropertyChanged = BindableBase.StaticPropertyChanged;
             // TODO : if 조건절에 == null 보다 빠른 is null 연산자 사용 (2023.11.24 jbh)
             // 참고 URL - https://husk321.tistory.com/405
-            if (staticPropertyChanged is null)
-                return;
+            if(staticPropertyChanged is null)
+               return;
             staticPropertyChanged((object)null, new PropertyChangedEventArgs(name));
         }
 
@@ -46,8 +46,8 @@ namespace HTSBIMNet
         {
             // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2023.11.24 jbh)
             // 참고 URL - https://husk321.tistory.com/405
-            if ((names is not null ? names.Length : 0) <= 0)
-                return;
+            if((names is not null ? names.Length : 0) <= 0)
+               return;
             foreach (string name in names)
                 this.OnPropertyChanged(name);
         }
@@ -60,16 +60,16 @@ namespace HTSBIMNet
         {
             // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2023.11.24 jbh)
             // 참고 URL - https://husk321.tistory.com/405
-            if ((names is not null ? names.Length : 0) <= 0)
-                return;
-            foreach (string name in names)
+            if((names is not null ? names.Length : 0) <= 0)
+               return;
+            foreach(string name in names)
                 this.OnPropertyChanged(name);
         }
 
         public bool SetAndNotify<T>(ref T field, T value, [CallerMemberName] string name = "")
         {
-            if (EqualityComparer<T>.Default.Equals(field, value))
-                return false;
+            if(EqualityComparer<T>.Default.Equals(field, value))
+               return false;
             field = value;
             this.OnPropertyChanged(name);
             return true;
@@ -77,14 +77,14 @@ namespace HTSBIMNet
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            // if (!this.EnablePropertyChanged)
-            if (false == this.EnablePropertyChanged)
-                return;
+            // if(!this.EnablePropertyChanged)
+            if(false == this.EnablePropertyChanged)
+               return;
             // PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
             // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2024.04.11 jbh)
             // 참고 URL - https://husk321.tistory.com/405
-            //if (propertyChanged is not null)
-            //    propertyChanged((object)this, new PropertyChangedEventArgs(name));
+            //if(propertyChanged is not null)
+            //   propertyChanged((object)this, new PropertyChangedEventArgs(name));
 
             // PropertyChanged 가 null이 아니면 Invoke를 호출한다
             // 참고 URL - https://m.cafe.daum.net/aspdotnet/6TQG/3149

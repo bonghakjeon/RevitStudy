@@ -36,9 +36,9 @@ namespace HTSBIM2019.Common.Managers
                 modalessFormName = pModalessFormType.Name;
 
                 // Modaless 폼 객체가 null이거나 삭제된 경우 
-                if (pModalessForm is null || pModalessForm.IsDisposed)
+                if(pModalessForm is null || pModalessForm.IsDisposed)
                 {
-                    switch (modalessFormName)
+                    switch(modalessFormName)
                     {
                         case HTSHelper.MEPUpdaterFormName:   // MEP 업데이터인 경우 
                             // AddInId addInId = rvUIApp.ActiveAddInId;                                 // HTS Revit 업데이터 Command 아이디
@@ -59,7 +59,7 @@ namespace HTSBIM2019.Common.Managers
                     pModalessForm.Show();   // Modaless 폼(.Show()) 형식 화면 출력 
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -89,13 +89,13 @@ namespace HTSBIM2019.Common.Managers
                 // Revit 응용 프로그램에서 현재 실행 중인 모든 폼 화면 목록 가져오도록 구현  
                 FormCollection openForms = System.Windows.Forms.Application.OpenForms;
 
-                foreach (System.Windows.Forms.Form openForm in openForms)
+                foreach(System.Windows.Forms.Form openForm in openForms)
                 {
                     string openFormName = openForm.Name;
                     Type openFormInterface = openForm.GetType().GetInterface(pInterfaceType.Name);
 
-                    if (openFormName.Equals(pModalessFormType.Name)
-                        && openFormInterface is not null)
+                    if(openFormName.Equals(pModalessFormType.Name)
+                       && openFormInterface is not null)
                     {
                         form = openForm;
                         break;
@@ -106,7 +106,7 @@ namespace HTSBIM2019.Common.Managers
 
                 return form;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
