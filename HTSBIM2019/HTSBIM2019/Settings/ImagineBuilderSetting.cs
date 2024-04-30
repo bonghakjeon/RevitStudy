@@ -10,15 +10,15 @@ namespace HTSBIM2019.Settings
     public class ImagineBuilderSetting : BindableBase
     {
         /// <summary>
-        /// (주)상상진화 기술지원 문의 - 상상플렉스 커뮤니티 웹사이트 연결 Utils 객체 
-        /// </summary>
-        public TechnicalSupport TechSupport { get => _TechSupport; set { _TechSupport = value; NotifyOfPropertyChange(nameof(TechSupport)); } }
-        private TechnicalSupport _TechSupport;
-
-        /// <summary>
         /// (주)상상진화 기업 홈페이지 - 상상진화 기업 홈페이지 연결 Utils 객체 
         /// </summary>
         public CompanyHomePage HomePage { get => _HomePage; set { _HomePage = value; NotifyOfPropertyChange(nameof(HomePage)); } }
         private CompanyHomePage _HomePage;
+
+        /// <summary>
+        /// (주)상상진화 기술지원 문의 - 상상플렉스 커뮤니티 웹사이트 연결 Utils 객체 
+        /// </summary>
+        public TechnicalSupport TechSupport { get => _TechSupport; set { _TechSupport = value; NotifyOfPropertyChange(nameof(TechSupport)); } }
+        private TechnicalSupport _TechSupport;
     }
 }

@@ -2,6 +2,12 @@
 
 namespace HTSBIM2019.Settings
 {
+    // TODO : 자바 디자인 패턴 "컴포짓 패턴(Composite Pattern)" 사용해서 클래스 "AppSetting"에 속하는
+    //        어댑터 클래스 "LoginSetting, UpdaterSetting, ImagineBuilderSetting" 구현 (2024.04.12 jbh)
+    // 유튜브 참고 URL - 
+    // https://youtu.be/78uNgDSHw-k?si=fqLynr8tvtn_LlaM
+    // 참고 URL - https://velog.io/@newtownboy/%EB%94%94%EC%9E%90%EC%9D%B8%ED%8C%A8%ED%84%B4-%EC%BB%B4%ED%8D%BC%EC%A7%80%ED%8A%B8%ED%8C%A8%ED%84%B4Composite-Pattern
+
     // TODO : 자바 디자인 패턴 "어댑터 패턴(Adapter Pattern)" 사용해서 클래스 "AppSetting"에 속하는
     //        어댑터 클래스 "LoginSetting, UpdaterSetting, ImagineBuilderSetting" 구현 (2024.04.12 jbh)
     // 유튜브 참고 URL - 
