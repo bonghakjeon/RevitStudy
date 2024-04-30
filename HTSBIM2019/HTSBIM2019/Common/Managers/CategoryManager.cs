@@ -131,6 +131,7 @@ namespace HTSBIM2019.Common.Managers
                 // 1 단계 : Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
                 // Categories categories = rvDoc.Settings.Categories;
                 List<Category> categories = rvDoc.Settings.Categories.OfType<Category>().ToList();
+                // List<BuiltInCategory> builtIns = rvDoc.Settings.Categories.OfType<BuiltInCategory>().ToList();
 
                 // 2 단계 : BuiltInCategory 매개변수 데이터 가져오기
                 Array builtInCategories = Enum.GetValues(typeof(BuiltInCategory));
