@@ -99,8 +99,6 @@ namespace HTSBIM2019.Common.Managers
                     string addTriggerNames = String.Join(", ", addTriggerNameList.ToArray());
                     Log.Information(Logger.GetMethodPath(currentMethod) + $"MEP 업데이터 + Triggers 등록 완료! 카테고리 목록 - {addTriggerNames}");
                     TaskDialog.Show("테스트 MEP Updater", $"MEP 업데이터 + Triggers 등록 완료!\r\n\r\n카테고리 목록\r\n- {addTriggerNames}");
-
-                    AppSetting.Default.UpdaterBase.UpdaterLoadingForm.CloseLoadingForm();   // 업데이터 + Triggers 등록 대기처리 화면 종료
                 }
                 
                 // 해당 업데이터 아이디가 존재하지 않거나 업데이터가 등록되어 있지 않은 경우 

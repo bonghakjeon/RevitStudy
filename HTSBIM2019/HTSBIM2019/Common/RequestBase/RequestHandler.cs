@@ -365,6 +365,7 @@ namespace HTSBIM2019.Common.RequestBase
             }
             finally
             {
+                AppSetting.Default.UpdaterBase.UpdaterLoadingForm.CloseLoadingForm();   // 업데이터 + Triggers 등록 대기처리 화면 종료
                 CmdMEPUpdater.WakeFormUp();
             }
         }
