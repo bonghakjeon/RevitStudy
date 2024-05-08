@@ -60,6 +60,11 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
         private Options GeometryOpt { get; set; }
 
         /// <summary>
+        /// Revit 문서 내에 내장된 BuiltInCategory 정보 리스트
+        /// </summary>
+        private List<Category> CategoryList { get; set; } = new List<Category>();
+
+        /// <summary>
         /// Revit 애플리케이션 언어 타입(영문, 한글 등등...)
         /// </summary>
         private LanguageType RevitLanguageType { get; set; }
@@ -160,13 +165,17 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
                 // 8. Revit 애플리케이션 언어 타입(영문, 한글 등등...) 할당 
                 RevitLanguageType = rvLanguageType;
 
-                // CategoryDataCreate(Collector, GeometryOpt);     // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
-                CategoryDataCreate(RevitDoc);                      // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                // 9. Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
+                CategoryList = RevitDoc.Settings.Categories.OfType<Category>().ToList();
 
-                // 9. GUID 생성 
+                // CategoryDataCreate(Collector, GeometryOpt);     // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                // CategoryDataCreate(RevitDoc);                      // ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                CategoryDataCreate(CategoryList);                      // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+
+                // GUID 생성 
                 // Guid guId = new Guid(HTSHelper.GId);
 
-                // 10. 업데이터 아이디(Updater_Id) 객체 생성 
+                // 업데이터 아이디(Updater_Id) 객체 생성 
                 // AppSetting.Default.UpdaterBase.MEPUpdater.Updater_Id = new UpdaterId(rvAddInId, guId);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 초기 셋팅 완료");
@@ -190,13 +199,15 @@ namespace HTSBIM2019.UI.Test.MEPUpdater
         /// ComboBox 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
         /// </summary>
         // private void CategoryDataCreate(FilteredElementCollector rvCollector, Options rvGeometryOpt)
-        private void CategoryDataCreate(Document rvDoc)
+        //private void CategoryDataCreate(Document rvDoc)
+        private void CategoryDataCreate(List<Category> pCategories)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
-                List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(rvDoc);
+                //List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(rvDoc);
+                List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(pCategories);
 
                 // TODO : ComboBox(comboBoxCategory)에 바인딩할 리스트에 데이터 할당 구현 (2024.03.26 jbh)
                 GeometryCategoryInfoList.Clear();   // 카테고리 정보 리스트 초기화

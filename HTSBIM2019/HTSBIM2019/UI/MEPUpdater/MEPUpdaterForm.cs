@@ -177,7 +177,8 @@ namespace HTSBIM2019.UI.MEPUpdater
 
 
                 // CategoryDataCreate(Collector, GeometryOpt);     // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
-                CategoryDataCreate(RevitDoc);                      // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                //CategoryDataCreate(RevitDoc);                      // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
+                CategoryDataCreate(CategoryList);                      // TreeView 컨트롤(comboBoxCategory)에 데이터 생성 및 출력 
 
                 // 9. GUID 생성 
                 // Guid guId = new Guid(HTSHelper.GId);
@@ -218,7 +219,8 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// <summary>
         /// TreeView 컨트롤(treeViewCategory)에 데이터 생성 및 출력
         /// </summary>
-        private void CategoryDataCreate(Document rvDoc)
+        //private void CategoryDataCreate(Document rvDoc)
+        private void CategoryDataCreate(List<Category> pCategories)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -226,7 +228,8 @@ namespace HTSBIM2019.UI.MEPUpdater
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "카테고리 데이터 생성 시작");
 
-                List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(rvDoc);
+                //List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(rvDoc);
+                List<CategoryInfoView> categoryInfoList = CategoryManager.GetCategoryInfoList(pCategories);
 
                 // "일반 모델" - "OST_GenericModel", "기계 장비" - "OST_MechanicalEquipment"
                 //var testList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals("일반모델")
@@ -236,19 +239,19 @@ namespace HTSBIM2019.UI.MEPUpdater
                 // "케이블 트레이" - OST_CableTray, "케이블 트레이 부속류" - OST_CableTrayFitting, "덕트" - OST_DuctCurves, "덕트 부속" - OST_DuctFitting,
                 // "덕트 액세서리" - OST_DuctAccessory, "배관 밸브류" - OST_PipeAccessory, "일반 모델" - OST_GenericModel, "전기 설비" - OST_ElectricalFixtures,
                 // "전기 시설물" - OST_ElectricalEquipment, "전선관" - OST_Conduit, "전선관 부속류" - OST_ConduitFitting, "전화 장치" - OST_TelephoneDevices
-                var testList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals("케이블 트레이")
-                                                                   || categoryInfo.CategoryName.Equals("케이블 트레이 부속류")
-                                                                   || categoryInfo.CategoryName.Equals("덕트")
-                                                                   || categoryInfo.CategoryName.Equals("덕트 부속")
-                                                                   || categoryInfo.CategoryName.Equals("덕트 액세서리")
-                                                                   // || categoryInfo.CategoryName.Equals("배관 밸브류")
-                                                                   // || categoryInfo.CategoryName.Equals("일반 모델")
-                                                                   || categoryInfo.CategoryName.Equals("전기 설비")
-                                                                   || categoryInfo.CategoryName.Equals("전기 시설물")
-                                                                   || categoryInfo.CategoryName.Equals("전선관")
-                                                                   || categoryInfo.CategoryName.Equals("전선관 부속류")
-                                                                   || categoryInfo.CategoryName.Equals("전화 장치"))
-                                               .ToList();
+                //var testList = categoryInfoList.Where(categoryInfo => categoryInfo.CategoryName.Equals("케이블 트레이")
+                //                                                   || categoryInfo.CategoryName.Equals("케이블 트레이 부속류")
+                //                                                   || categoryInfo.CategoryName.Equals("덕트")
+                //                                                   || categoryInfo.CategoryName.Equals("덕트 부속")
+                //                                                   || categoryInfo.CategoryName.Equals("덕트 액세서리")
+                //                                                   // || categoryInfo.CategoryName.Equals("배관 밸브류")
+                //                                                   // || categoryInfo.CategoryName.Equals("일반 모델")
+                //                                                   || categoryInfo.CategoryName.Equals("전기 설비")
+                //                                                   || categoryInfo.CategoryName.Equals("전기 시설물")
+                //                                                   || categoryInfo.CategoryName.Equals("전선관")
+                //                                                   || categoryInfo.CategoryName.Equals("전선관 부속류")
+                //                                                   || categoryInfo.CategoryName.Equals("전화 장치"))
+                //                               .ToList();
 
 
                 PipeCategoryInfoList.Clear();   // 배관 카테고리 정보 리스트 초기화

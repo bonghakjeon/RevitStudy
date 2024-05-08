@@ -117,7 +117,8 @@ namespace HTSBIM2019.Common.Managers
         /// BuiltInCategory 정보 리스트 가져오기 
         /// </summary>
         // public static List<CategoryInfoView> GetCategoryInfoList(FilteredElementCollector rvCollector, Document rvDoc)
-        public static List<CategoryInfoView> GetCategoryInfoList(Document rvDoc)
+        //public static List<CategoryInfoView> GetCategoryInfoList(Document rvDoc)
+        public static List<CategoryInfoView> GetCategoryInfoList(List<Category> pCategories)
         {
             string categoryName = string.Empty;                  // BuiltInCategory 이름
             int existCount = 0;                                  // 동일 카테고리(BuiltInCategory Category) 갯수(Count) 존재 여부 
@@ -130,7 +131,7 @@ namespace HTSBIM2019.Common.Managers
 
                 // 1 단계 : Revit 문서 내에 내장된 BuiltInCategory 정보 리스트로 가져오기 
                 // Categories categories = rvDoc.Settings.Categories;
-                List<Category> categories = rvDoc.Settings.Categories.OfType<Category>().ToList();
+                // List<Category> categories = rvDoc.Settings.Categories.OfType<Category>().ToList();
                 // List<BuiltInCategory> builtIns = rvDoc.Settings.Categories.OfType<BuiltInCategory>().ToList();
 
                 // 2 단계 : BuiltInCategory 매개변수 데이터 가져오기
@@ -149,10 +150,13 @@ namespace HTSBIM2019.Common.Managers
 
                 foreach(BuiltInCategory builtInCategory in builtInCategories) 
                 {
-                    Category category = categories.Where(category => category.Id.IntegerValue == (int)builtInCategory)
-                                                  .FirstOrDefault();
+                    //Category category = categories.Where(category => category.Id.IntegerValue == (int)builtInCategory)
+                    //                              .FirstOrDefault();
 
-                    if(category is null) continue;   // 카테고리가 존재하지 않는 경우 continue
+                    Category category = pCategories.Where(category => category.Id.IntegerValue == (int)builtInCategory)
+                                                   .FirstOrDefault();
+
+                    if (category is null) continue;   // 카테고리가 존재하지 않는 경우 continue
 
                     categoryName = string.Empty;
                     categoryName = category.Name;
