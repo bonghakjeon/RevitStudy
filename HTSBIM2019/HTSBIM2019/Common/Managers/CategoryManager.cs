@@ -382,11 +382,15 @@ namespace HTSBIM2019.Common.Managers
                     //foreach(var category in updaterParam.KOR_CategorySet)
                     foreach(var category in updaterCategorySet)
                     {
+                        // category와 동일한 카테고리가 존재하는지 확인 
                         Category cat = rvDoc.Settings.Categories.get_Item(category);   // string 클래스 객체 "category"와 동일한 카테고리 가져오기 
 
                         // TODO : if 조건절에 != null 보다 빠른 is not null 연산자 사용 (2024.01.29 jbh)
+                        // TODO : CategoryType.Model인 카테고리만 하위에 매개변수가 추가 가능 
+                        // TODO : cat.CanAddSubcategory 값이 true면 카테고리 하위에 서브 카테고리 추가 가능 
                         // 참고 URL - https://husk321.tistory.com/405
-                        if(cat is not null) categorySet.Insert(cat);  // 카테고리 셋에 카테고리 데이터 추가 
+                        if(cat is not null && cat.CategoryType == CategoryType.Model && cat.CanAddSubcategory) 
+                            categorySet.Insert(cat);  // 카테고리 셋에 카테고리 데이터 추가 
                     }
 
                     // 4 단계 : 카테고리 하위에 추가하려는 MEP Updater 매개변수 이름 가져오기  

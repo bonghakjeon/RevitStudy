@@ -92,12 +92,14 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// <summary>
         /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러 프로퍼티 
         /// </summary>
-        private MEPUpdaterRequestHandler RequestHandler { get; set; }
+        //private MEPUpdaterRequestHandler RequestHandler { get; set; }
+        public MEPUpdaterRequestHandler RequestHandler { get; set; }
 
         /// <summary>
         /// 외부 이벤트 프로퍼티
         /// </summary>
-        private ExternalEvent ExEvent { get; set; }
+        //private ExternalEvent ExEvent { get; set; }
+        public ExternalEvent ExEvent { get; set; }
 
         #endregion 프로퍼티
 
@@ -521,7 +523,7 @@ namespace HTSBIM2019.UI.MEPUpdater
                         CategoryInfoList.Add(categoryInfo);   // CategoryInfoView 클래스 리스트 객체 CategoryInfoList 데이터 추가
                     }
 
-                    MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
+                    MakeRequest(EnumMEPUpdaterRequestId.REGISTER);   // 업데이터 + Triggers 등록 요청
                 }
                 else TaskDialog.Show(HTSHelper.NoticeTitle, "카테고리 체크 하시기 바랍니다.");
 
@@ -623,7 +625,7 @@ namespace HTSBIM2019.UI.MEPUpdater
 
                     //string language = RevitDoc.GetUnits().GetFormatOptions(UnitType.UT_Length).DisplayUnits.ToString();
 
-                    MakeRequest(EnumMEPUpdaterRequestId.REGISTER);
+                    MakeRequest(EnumMEPUpdaterRequestId.REGISTER);   // 업데이터 + Triggers 등록 요청
                 }
                 else TaskDialog.Show(HTSHelper.NoticeTitle, "카테고리 체크 하시기 바랍니다.");
 

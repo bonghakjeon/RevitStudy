@@ -177,6 +177,7 @@
       <DependentUpon>UpdaterLoadingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\CompanyHomePage\CompanyHomePage.cs" />
+    <Compile Include="Utils\Failure\FailurePreprocessor.cs" />
     <Compile Include="Utils\MEPUpdater\MEPUpdater.cs" />
     <Compile Include="Utils\TechnicalSupport\TechnicalSupport.cs" />
   </ItemGroup>

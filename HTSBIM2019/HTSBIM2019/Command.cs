@@ -170,11 +170,12 @@ namespace HTSBIM2019
                 AppSetting.Default.Login.Username    = revitApp.Username;         // 작업자(사용자) 이름
 
 
-                AddInId addInId = RevitUIApp.ActiveAddInId;                       // 활성화된 애드인 애플리케이션(또는 Command) 아이디
+                // AddInId addInId = RevitUIApp.ActiveAddInId;                       // 활성화된 애드인 애플리케이션(또는 Command) 아이디
                 MEPUpdaterRequestHandler mepHandler = new MEPUpdaterRequestHandler();    // MEP 업데이터 외부 요청 핸들러 객체 mepHandler 생성 
                 ExternalEvent exEvent = ExternalEvent.Create(mepHandler);                // MEP 업데이터 폼 객체가 사용할 외부 이벤트 생성 
 
-                AppSetting.Default.UpdaterBase = UpdaterSetting.GetUpdaterInstance(addInId, exEvent, mepHandler, RevitUIApp);  // MEP 업데이터 폼 객체 싱글톤 객체로 생성
+                // AppSetting.Default.UpdaterBase = UpdaterSetting.GetUpdaterInstance(addInId, exEvent, mepHandler, RevitUIApp);  // MEP 업데이터 폼 객체 싱글톤 객체로 생성
+                AppSetting.Default.UpdaterBase.MEPUpdaterForm = UpdaterSetting.GetUpdaterFormInstance(exEvent, mepHandler, RevitUIApp);  // MEP 업데이터 폼 객체 싱글톤 객체로 생성
 
                 // TODO : 프로퍼티 "Visible" 사용해서 Modaless 폼 객체(AppSetting.Default.UpdaterBase.MEPUpdaterForm) 화면 출력 여부 확인
                 // 참고 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.windows.forms.control.visible?view=windowsdesktop-8.0

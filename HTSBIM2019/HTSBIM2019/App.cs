@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 
 using HTSBIM2019.Common.HTSBase;
 using HTSBIM2019.Common.LogBase;
@@ -9,12 +10,14 @@ using HTSBIM2019.Common.RibbonBase;
 using HTSBIM2019.Common.Managers;
 using HTSBIM2019.Settings;
 using HTSBIM2019.Utils.MEPUpdater;
+using HTSBIM2019.Utils.Failure;
 using HTSBIM2019.UI.CreateParams;
 
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Events;
+using Autodesk.Revit.UI.Events;
 
 namespace HTSBIM2019
 {
@@ -56,6 +59,10 @@ namespace HTSBIM2019
                 AppSetting.Default.DirectoryBase.ParentDirPath = DirectoryManager.GetDllParentDirectoryPath(HTSHelper.AssemblyFilePath);  // dll 파일(HTSBIM2019.dll)이 속한 부모 폴더 경로 가져오기 
                 AppSetting.Default.DirectoryBase.LogDirPath = HTSHelper.LogDirPath;
 
+                AddInId addInId = application.ActiveAddInId;                       // 활성화된 애드인 애플리케이션(또는 Command) 아이디
+
+                AppSetting.Default.UpdaterBase = UpdaterSetting.GetUpdaterInstance(addInId);
+
                 // TODO : 로그 폴더 디렉토리 경로 변경 (2024.04.23 jbh)
                 //        경로 변경 사유 - 폴더 경로 "C:\Program Files\ImagineBuilder\HTSBIM2019"에 접근불가 
                 // 참고 URL - https://www.c-sharpcorner.com/blogs/access-to-path-is-denied-permissions-error
@@ -80,6 +87,13 @@ namespace HTSBIM2019
                 // 참고 URL - https://www.revitapidocs.com/2015/7e5bc7a1-0475-b2ec-0aec-c410015737fe.htm
                 // application.ControlledApplication.DocumentOpened += new EventHandler<DocumentOpenedEventArgs>(App_DocumentOpened);
 
+                // TODO : DocumentClosing 이벤트 메소드 App_DocumentClosing 가입 구현 (2024.05.09 jbh)
+                // 참고 URL - https://www.revitapidocs.com/2015/2f0a7a6f-ed8b-0518-c5f8-edb14b321296.htm
+                // application.ControlledApplication.DocumentClosing += new EventHandler<DocumentClosingEventArgs>(App_DocumentClosing);
+
+                // TODO : DialogBoxShowing 이벤트 메소드 App_DialogBoxShowing 가입 구현 (2024.05.09 jbh)
+                // application.DialogBoxShowing += new EventHandler<DialogBoxShowingEventArgs>(App_DialogBoxShowing);
+
                 return Result.Succeeded;
             }
             catch(Exception ex)
@@ -89,7 +103,6 @@ namespace HTSBIM2019
                 return Result.Failed;
             }
         }
-
 
         /// <summary>
         /// Revit 종료 (OnShutdown)
@@ -159,15 +172,42 @@ namespace HTSBIM2019
             {
                 RevitDoc = args.Document;   // 이벤트 인수 args에서 Revit 전용문서(Document) 가져오기
 
-                // TODO : Revit 전용문서(Document) 가져온 후 매개변수 생성되는 로직 아래에 구현하기 (2024.04.16 jbh)
-                TaskDialogResult dialogResult = TaskDialog.Show(HTSHelper.NoticeTitle, "MEP 사용 기록 관리\r\n매개변수 생성을 원하십니까?", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
-
-                if(TaskDialogResult.Yes == dialogResult)
+                // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
+                // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
+                using(Transaction transaction = new Transaction(RevitDoc))
                 {
-                    // TODO : Revit Updater 매개변수 추가 및 대기 처리 화면(WaitForm) 구현 (2024.04.16 jbh)
-                    CreateParams createParams = new CreateParams();
-                    createParams.ToCreateUpdaterParameter(RevitDoc);
-                }
+                    // TODO : 필요시 아래 주석친 코드 사용 예정 (2024.05.09 jbh)
+                    //FailureHandlingOptions failureOptions = transaction.GetFailureHandlingOptions();
+                    //FailurePreprocessor preproccessor = new FailurePreprocessor();
+
+                    //failureOptions.SetFailuresPreprocessor(preproccessor);
+                    //transaction.SetFailureHandlingOptions(failureOptions);
+
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "App_DocumentOpened 작업 시작");
+
+                    // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                    transaction.Start(HTSHelper.Start);  // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
+
+                    // TODO : C# Revit API를 사용하여 타사 업데이터 누락 화면이 출력되지 않도록 구현 (2024.05.09 jbh)
+                    // 참고 URL - https://chatgpt.com/c/cebf6de7-2586-4e6c-9cc5-378fe8dcf787
+                    // 참고 2 URL - https://www.revitapidocs.com/2018/4774613d-600a-e1b5-b5aa-f1ee3b14394c.htm
+                    // var test = RevitDoc.GetWarnings();
+
+                    transaction.Commit();    // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
+
+                    Log.Information(Logger.GetMethodPath(currentMethod) + "App_DocumentOpened 작업 완료");
+                }   // 여기서 Dispose (리소스 해제) 처리 
+
+
+                // TODO : Revit 전용문서(Document) 가져온 후 매개변수 생성되는 로직 아래에 구현하기 (2024.04.16 jbh)
+                // TaskDialogResult dialogResult = TaskDialog.Show(HTSHelper.NoticeTitle, "MEP 사용 기록 관리\r\n매개변수 생성을 원하십니까?", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
+
+                // if(TaskDialogResult.Yes == dialogResult)
+                // {
+                //     // TODO : Revit Updater 매개변수 추가 및 대기 처리 화면(WaitForm) 구현 (2024.04.16 jbh)
+                //     CreateParams createParams = new CreateParams();
+                //     createParams.ToCreateUpdaterParameter(RevitDoc);
+                // }
             }
             catch(Exception ex)
             {
@@ -177,6 +217,66 @@ namespace HTSBIM2019
         }
 
         #endregion App_DocumentOpened
+
+        #region App_DocumentClosing
+
+        /// <summary>
+        /// Revit이 기존에 생성한 문서(Document)를 막 닫으려고 할 때 실행되는 이벤트 메소드 
+        /// </summary>
+        private void App_DocumentClosing(object sender, DocumentClosingEventArgs args)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                RevitDoc = args.Document;   // 이벤트 인수 args에서 Revit 전용문서(Document) 가져오기
+
+                MEPUpdater updater = AppSetting.Default.UpdaterBase.MEPUpdater;
+                UpdaterId updaterId = updater.GetUpdaterId();
+
+                // 업데이터가 기존에 이미 등록된 경우만 실행 
+                if (true == UpdaterRegistry.IsUpdaterRegistered(updaterId, RevitDoc))
+                {
+                    // UpdaterRegistry.RemoveAllTriggers(updaterId);                  // 지정된 updaterId를 가진 업데이터와 연결된 모든 트리거 제거. 업데이터 등록을 취소하지 않음.
+
+                    UpdaterRegistry.UnregisterUpdater(updaterId, RevitDoc);     // Revit 문서(RevitDoc)에 지정된 updaterId를 가진 업데이터와 연결된 업데이터 프로그램 등록 취소 (해당 트리거 포함 레지스트리에서 완전 제거 처리)
+                }
+
+                // TODO : MEP 업데이터 싱글톤 객체 프로퍼티 MEPUpdater null 초기화 소스코드 필요 없을시 주석 처리 예정 (2024.05.09 jbh)
+                // AppSetting.Default.UpdaterBase.MEPUpdater = null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+            }
+        }
+
+        #endregion App_DocumentClosing
+
+        #region App_DialogBoxShowing
+
+        /// <summary>
+        /// Modal 형식 경고 메시지 Dialog 팝업 화면 출력시 실행되는 이벤트 메서드
+        /// </summary>
+        private void App_DialogBoxShowing(object sender, DialogBoxShowingEventArgs args)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                TaskDialogShowingEventArgs tdArgs = args as TaskDialogShowingEventArgs;
+
+                string test = tdArgs.Message;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+            }
+        }
+
+        #endregion App_DialogBoxShowing
 
         #region Sample
 

@@ -287,13 +287,6 @@ namespace HTSBIM2019.Common.RequestBase
                     // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                     transaction.Start(HTSHelper.Start);  // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
 
-                    // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
-                    // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
-                    // 프로퍼티 "UserModifiable" 설명
-                    // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
-                    // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
-                    CategoryManager.CreateCategorySet(RevitDoc, UpdaterParamList, RevitLanguageType);
-
 
                     // 카테고리 ComboBox 컨트롤(comboBoxCategory)에서 선택한 카테고리 정보 가져오기 
                     // UpdaterCategory = AppSetting.Default.UpdaterBase.MEPUpdater.CategoryInfo.Category; // rvMEPUpdater.CategoryInfo.Category;
@@ -332,8 +325,15 @@ namespace HTSBIM2019.Common.RequestBase
                             return;
 
                         case EnumMEPUpdaterRequestId.REGISTER:   // 등록 요청 
+                            // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
+                            // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
+                            // 프로퍼티 "UserModifiable" 설명
+                            // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.
+                            // 참고 URL - https://www.revitapidocs.com/2018/c0343d88-ea6f-f718-2828-7970c15e4a9e.htm
+                            CategoryManager.CreateCategorySet(RevitDoc, UpdaterParamList, RevitLanguageType);
+
                             // TODO : 업데이터가 기존에 이미 등록된 경우 업데이터는 유지하고 Triggers만 추가 
-                            if(true == IsUpdaterRegistered) UpdaterManager.RegisterTriggers(Updater_Id, UpdaterCategoryList); // UpdaterManager.RegisterTriggers(Updater_Id, CategoryFilter, UpdaterCategoryName);   // RemoveMEP(RevitDoc, updater_Id);
+                            if (true == IsUpdaterRegistered) UpdaterManager.RegisterTriggers(Updater_Id, UpdaterCategoryList); // UpdaterManager.RegisterTriggers(Updater_Id, CategoryFilter, UpdaterCategoryName);   // RemoveMEP(RevitDoc, updater_Id);
 
                             // 업데이터가 등록되지 않은 경우 업데이터 + Triggers 모두 등록할 수 있도록 메서드 "RegisterMEP" 호출
                             // RegisterMEP(mepUpdaterForm, RevitDoc, updater_Id);
@@ -397,6 +397,13 @@ namespace HTSBIM2019.Common.RequestBase
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 시작");
 
                 UpdaterRegistry.RegisterUpdater(rvMEPUpdater, rvDoc);   // 인터페이스 IUpdater를 상속받는 폼 객체에 업데이터 등록
+
+                // TODO : 경고 메시지 "SKID TEST 파일이 현재 설치되지 않은 타사 업데이터 HTSBIM2019 : MEPUpdater에서 수정되었습니다.
+                //        파일을 계속 편집할 경우 HTSBIM2019: MEPUpdater에서 유지 관리하는 데이터가 제대로 업데이트되지 않습니다.
+                //        따라서 나중에 HTSBIM2019: MEPUpdater이(가) 있을 때 SKID TEST을(를) 열면 문제가 발생할 수 있습니다." 출력되지 않도록
+                //        메서드 "UpdaterRegistry.SetIsUpdaterOptional" 호출 구현 (2024.05.09 jbh)
+                // 참고 URL - https://adndevblog.typepad.com/aec/2012/05/avoid-the-missing-third-party-updater-dialog.html
+                UpdaterRegistry.SetIsUpdaterOptional(rvUpdaterId, true);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 등록 완료");
                 // TaskDialog.Show("테스트 MEP Updater", "MEP 업데이터 등록 완료");

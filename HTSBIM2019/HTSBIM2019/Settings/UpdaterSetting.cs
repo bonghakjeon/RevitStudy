@@ -74,10 +74,15 @@ namespace HTSBIM2019.Settings
 
         #region GetInstance
 
+        #endregion GetInstance
+
+        #region GetUpdaterInstance
+
         /// <summary>
         /// 싱글톤 객체 - 업데이터 기본 설정 가져오기
         /// </summary>
-        public static UpdaterSetting GetUpdaterInstance(AddInId rvAddInId, ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
+        //public static UpdaterSetting GetUpdaterInstance(AddInId rvAddInId, ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
+        public static UpdaterSetting GetUpdaterInstance(AddInId rvAddInId)
         {
             // 업데이터 기본 설정 객체 자기 자신(Self)이 null일 경우
             if(_Self is null) _Self = new UpdaterSetting();
@@ -85,16 +90,32 @@ namespace HTSBIM2019.Settings
             // MEP 업데이터 객체가 null인 경우 
             if(_Self._MEPUpdater is null) _Self._MEPUpdater = new MEPUpdater(rvAddInId);
 
-            // Modaless 폼 객체가 null이거나 삭제된 경우 
-            if(_Self._MEPUpdaterForm is null || _Self._MEPUpdaterForm.IsDisposed) _Self._MEPUpdaterForm = new MEPUpdaterForm(rvExEvent, pHandler, rvUIApp);
-
-            // UpdaterLoading 폼 객체가 null인 경우 
-            if(_Self._UpdaterLoadingForm is null) _Self._UpdaterLoadingForm = new UpdaterLoadingForm();
-
             return _Self;
         }
 
-        #endregion GetInstance
+        #endregion GetUpdaterInstance
+
+        #region GetUpdaterFormInstance
+
+        /// <summary>
+        /// 싱글톤 객체 - MEPUpdater 폼 객체  가져오기
+        /// </summary>
+        public static MEPUpdaterForm GetUpdaterFormInstance(ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
+        {
+            // TODO : 필요시 아래 주석친 코드 사용 예정 (2024.05.09 jbh)
+            // 업데이터 기본 설정 객체 자기 자신(Self)이 null일 경우
+            // if (_Self is null) _Self = new UpdaterSetting();
+
+            // Modaless 폼 객체가 null이거나 삭제된 경우 
+            if (_Self._MEPUpdaterForm is null || _Self._MEPUpdaterForm.IsDisposed) _Self._MEPUpdaterForm = new MEPUpdaterForm(rvExEvent, pHandler, rvUIApp);
+
+            // UpdaterLoading 폼 객체가 null인 경우 
+            if (_Self._UpdaterLoadingForm is null) _Self._UpdaterLoadingForm = new UpdaterLoadingForm();
+
+            return _Self._MEPUpdaterForm;
+        }
+
+        #endregion GetUpdaterFormInstance
 
         #region GetUpdaterInstance
 
