@@ -298,9 +298,6 @@ namespace HTSBIM2019.Common.RequestBase
                     // CategoryFilter = new ElementCategoryFilter(UpdaterCategory);
 
 
-                    // 7. 매개변수 4가지 ("객체 생성 날짜", "객체 생성자", "최종 수정 날짜", "최종 수정자") 생성 구현하기 (2024.04.16 jbh)
-                    // 버튼 "ON"을 중복 클릭시 매개변수가 존재할 경우에는 생성 안 함.
-
                     // TODO : 아래 주석친 테스트 코드 필요시 사용 예정 (2024.04.01 jbh)
                     // HTS Revit 업데이터 Command 아이디 값 프로퍼티 "Updater_Id" 할당 
                     // AddInId addInId = rvUIApp.ActiveAddInId;         // HTS Revit 업데이터 Command 아이디
@@ -326,6 +323,7 @@ namespace HTSBIM2019.Common.RequestBase
 
                         case EnumMEPUpdaterRequestId.REGISTER:   // 등록 요청 
                             // TODO : 매개변수 4가지("객체 생성 날짜", "최종 수정 날짜", "객체 생성자", "최종 수정자") 생성 로직 추가하기 (2024.04.02 jbh)
+                            //        버튼 "ON"을 중복 클릭시 매개변수가 존재할 경우에는 생성 안 함.
                             // 주의사항 - 생성한 매개변수에 매핑된 데이터 값을 사용자가 화면에서 수정하지 못하도록 설정 구현 
                             // 프로퍼티 "UserModifiable" 설명
                             // 사용자가 이 매개변수의 값을 수정할 수 있는지 여부를 나타냅니다.

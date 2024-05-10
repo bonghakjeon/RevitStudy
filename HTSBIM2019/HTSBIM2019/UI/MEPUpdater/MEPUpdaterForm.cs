@@ -92,14 +92,12 @@ namespace HTSBIM2019.UI.MEPUpdater
         /// <summary>
         /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러 프로퍼티 
         /// </summary>
-        //private MEPUpdaterRequestHandler RequestHandler { get; set; }
-        public MEPUpdaterRequestHandler RequestHandler { get; set; }
+        private MEPUpdaterRequestHandler RequestHandler { get; set; }
 
         /// <summary>
         /// 외부 이벤트 프로퍼티
         /// </summary>
-        //private ExternalEvent ExEvent { get; set; }
-        public ExternalEvent ExEvent { get; set; }
+        private ExternalEvent ExEvent { get; set; }
 
         #endregion 프로퍼티
 

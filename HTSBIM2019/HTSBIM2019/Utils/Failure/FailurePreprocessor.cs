@@ -15,6 +15,7 @@ namespace HTSBIM2019.Utils.Failure
     // TODO : 필요시 아래 주석친 코드 사용 예정 (2024.05.09 jbh)
     // TODO : 경고, 실패 팝업 화면 삭제 처리 기능 클래스 "FailurePreprocessor" 구현 (2024.05.09 jbh)
     // 참고 URL - https://www.revitapidocs.com/2023/053c6262-d958-b1b6-44b7-35d0d83b5a43.htm
+    // 참고 2 URL - https://www.revitapidocs.com/2018/4774613d-600a-e1b5-b5aa-f1ee3b14394c.htm
     // 유튜브 참고 URL - https://youtu.be/uqFH-7IJ6Hw?si=-De6nAigRasoVOA_
     //public class FailurePreprocessor : IFailuresPreprocessor
     //{

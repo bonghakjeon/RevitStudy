@@ -76,7 +76,7 @@ namespace HTSBIM2019
 
                 // AddInId addInId = application.ActiveAddInId;
                 // AppSetting.Default.UpdaterBase.MEPUpdater = new MEPUpdater(addInId);
-                //AppSetting.Default.UpdaterBase.MEPUpdater = UpdaterSetting.GetUpdaterInstance(addInId);
+                // AppSetting.Default.UpdaterBase.MEPUpdater = UpdaterSetting.GetUpdaterInstance(addInId);
 
                 // TODO : 필요시 아래 주석친 DocumentCreated, DocumentOpened 이벤트 메소드 가입 코드 사용 예정 (2024.04.17 jbh)
                 // TODO : DocumentCreated 이벤트 메소드 App_DocumentCreated 가입 구현 (2024.04.16 jbh)
@@ -114,10 +114,16 @@ namespace HTSBIM2019
             // 참고 URL - https://www.revitapidocs.com/2015/89f514bf-f067-308d-0518-f050450bde72.htm
             // application.ControlledApplication.DocumentCreated -= new EventHandler<DocumentCreatedEventArgs>(App_DocumentCreated);
 
-
             // TODO : DocumentOpened 이벤트 메소드 App_DocumentOpened 해제 구현 (2024.04.16 jbh)
             // 참고 URL - https://www.revitapidocs.com/2015/7e5bc7a1-0475-b2ec-0aec-c410015737fe.htm
             // application.ControlledApplication.DocumentOpened -= new EventHandler<DocumentOpenedEventArgs>(App_DocumentOpened);
+
+            // TODO : DocumentClosing 이벤트 메소드 App_DocumentClosing 해제 구현 (2024.05.10 jbh)
+            // 참고 URL - https://www.revitapidocs.com/2015/2f0a7a6f-ed8b-0518-c5f8-edb14b321296.htm
+            // application.ControlledApplication.DocumentClosing -= new EventHandler<DocumentClosingEventArgs>(App_DocumentClosing);
+
+            // TODO : DialogBoxShowing 이벤트 메소드 App_DialogBoxShowing 해제 구현 (2024.05.10 jbh)
+            // application.DialogBoxShowing -= new EventHandler<DialogBoxShowingEventArgs>(App_DialogBoxShowing);
 
             // TODO : 에러 처리 필요시 메서드 "OnShutdown" 몸체 안에 try - catch문으로 구현 예정 (2024.01.22 jbh)
             return Result.Succeeded;
@@ -188,17 +194,12 @@ namespace HTSBIM2019
                     // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
                     transaction.Start(HTSHelper.Start);  // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
 
-                    // TODO : C# Revit API를 사용하여 타사 업데이터 누락 화면이 출력되지 않도록 구현 (2024.05.09 jbh)
-                    // 참고 URL - https://chatgpt.com/c/cebf6de7-2586-4e6c-9cc5-378fe8dcf787
-                    // 참고 2 URL - https://www.revitapidocs.com/2018/4774613d-600a-e1b5-b5aa-f1ee3b14394c.htm
-                    // var test = RevitDoc.GetWarnings();
-
                     transaction.Commit();    // 해당 "HTSBIM2019" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + "App_DocumentOpened 작업 완료");
                 }   // 여기서 Dispose (리소스 해제) 처리 
 
-
+                // TODO : 필요시 아래 주석친 코드 사용 예정 (2024.05.09 jbh)
                 // TODO : Revit 전용문서(Document) 가져온 후 매개변수 생성되는 로직 아래에 구현하기 (2024.04.16 jbh)
                 // TaskDialogResult dialogResult = TaskDialog.Show(HTSHelper.NoticeTitle, "MEP 사용 기록 관리\r\n매개변수 생성을 원하십니까?", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
 
@@ -209,7 +210,7 @@ namespace HTSBIM2019
                 //     createParams.ToCreateUpdaterParameter(RevitDoc);
                 // }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
@@ -267,7 +268,7 @@ namespace HTSBIM2019
             {
                 TaskDialogShowingEventArgs tdArgs = args as TaskDialogShowingEventArgs;
 
-                string test = tdArgs.Message;
+                string testMsg = tdArgs.Message;
             }
             catch (Exception ex)
             {
