@@ -82,18 +82,34 @@ namespace HTSBIM2019.Settings
         /// 싱글톤 객체 - 업데이터 기본 설정 가져오기
         /// </summary>
         //public static UpdaterSetting GetUpdaterInstance(AddInId rvAddInId, ExternalEvent rvExEvent, MEPUpdaterRequestHandler pHandler, UIApplication rvUIApp)
-        public static UpdaterSetting GetUpdaterInstance(AddInId rvAddInId)
+        //public static UpdaterSetting GetUpdaterInstance(AddInId rvAddInId)
+        public static UpdaterSetting GetUpdaterInstance()
         {
             // 업데이터 기본 설정 객체 자기 자신(Self)이 null일 경우
             if(_Self is null) _Self = new UpdaterSetting();
 
             // MEP 업데이터 객체가 null인 경우 
-            if(_Self._MEPUpdater is null) _Self._MEPUpdater = new MEPUpdater(rvAddInId);
+            // if(_Self._MEPUpdater is null) _Self._MEPUpdater = new MEPUpdater(rvAddInId);
 
             return _Self;
         }
 
         #endregion GetUpdaterInstance
+
+        #region GetMEPUpdaterInstance   
+
+        /// <summary>
+        /// 싱글톤 객체 - MEP 업데이터 객체 가져오기
+        /// </summary>
+        public static MEPUpdater GetMEPUpdaterInstance(AddInId rvAddInId)
+        {
+            // MEP 업데이터 객체가 null인 경우 
+            if (_Self._MEPUpdater is null) _Self._MEPUpdater = new MEPUpdater(rvAddInId);
+
+            return _Self._MEPUpdater;
+        }
+
+        #endregion GetMEPUpdaterInstance
 
         #region GetUpdaterFormInstance
 
@@ -109,8 +125,8 @@ namespace HTSBIM2019.Settings
             // Modaless 폼 객체가 null이거나 삭제된 경우 
             if (_Self._MEPUpdaterForm is null || _Self._MEPUpdaterForm.IsDisposed) _Self._MEPUpdaterForm = new MEPUpdaterForm(rvExEvent, pHandler, rvUIApp);
 
-            // UpdaterLoading 폼 객체가 null인 경우 
-            if (_Self._UpdaterLoadingForm is null) _Self._UpdaterLoadingForm = new UpdaterLoadingForm();
+            // UpdaterLoading 폼 객체가 null이거나 삭제된 경우 
+            if (_Self._UpdaterLoadingForm is null || _Self._UpdaterLoadingForm.IsDisposed) _Self._UpdaterLoadingForm = new UpdaterLoadingForm();
 
             return _Self._MEPUpdaterForm;
         }

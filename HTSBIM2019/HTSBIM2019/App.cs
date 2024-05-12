@@ -61,7 +61,9 @@ namespace HTSBIM2019
 
                 AddInId addInId = application.ActiveAddInId;                       // 활성화된 애드인 애플리케이션(또는 Command) 아이디
 
-                AppSetting.Default.UpdaterBase = UpdaterSetting.GetUpdaterInstance(addInId);
+                //AppSetting.Default.UpdaterBase = UpdaterSetting.GetUpdaterInstance(addInId);
+                AppSetting.Default.UpdaterBase = UpdaterSetting.GetUpdaterInstance();
+                AppSetting.Default.UpdaterBase.MEPUpdater = UpdaterSetting.GetMEPUpdaterInstance(addInId);
 
                 // TODO : 로그 폴더 디렉토리 경로 변경 (2024.04.23 jbh)
                 //        경로 변경 사유 - 폴더 경로 "C:\Program Files\ImagineBuilder\HTSBIM2019"에 접근불가 
