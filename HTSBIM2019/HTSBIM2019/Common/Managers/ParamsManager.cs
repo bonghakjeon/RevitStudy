@@ -618,7 +618,6 @@ namespace HTSBIM2019.Common.Managers
         /// <summary>
         /// 매개변수에 값 입력하기
         /// </summary>
-        //public static bool SetParametersValue(List<Element> rvElementList, string rvParamName, string rvParamValue)
         public static void SetParametersValue(List<Element> rvElementList, string rvParamName, string rvParamValue)
         {
             bool bResult = false;                                // 매개변수에 입력할 값 할당 완료 여부 false로 초기화
@@ -635,7 +634,7 @@ namespace HTSBIM2019.Common.Managers
                                                                 .ToList();
 
                 // 2 단계 : 매개변수가 존재하지 않는 경우 
-                if(targetParameters.Count.Equals((int)EnumExistParameters.NONE))
+                if (targetParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
                     // TODO : 테스트 하면서 추후 값을 입력하려는 매개변수가 존재하지 않는 경우 메시지 박스 (TaskDialog.Show) 출력 필요 없으면 주석처리 진행하기 (2024.04.18 jbh)
                     Log.Information(Logger.GetMethodPath(currentMethod) + $"매개변수 - {rvParamName}\r\n 존재 안 함. 매개변수 값 입력 실패!");
@@ -652,9 +651,13 @@ namespace HTSBIM2019.Common.Managers
                 // 참고 2 URL - https://youtu.be/_TG0hVYJ6D8?si=FSuaEYrW7t-Bou3d
 
                 // 3 단계 : foreach 문에서 리스트 "targetParameters"에 속한 요소(매개변수) 방문 
-                targetParameters.ForEach(param => {
+                foreach(Parameter param in targetParameters)
+                {
+                    // 매개변수가 읽기 전용(값 수정 불가)인 경우 continue 처리
+                    if (true == param.IsReadOnly) continue;
+
                     // 4 단계 : 매개변수의 값 자료형 찾아서 메서드 파라미터 rvParamValue를 형변환(casting) 및 해당 매개변수(rvParamName와 동일한 이름)에 값 입력하기
-                    switch(param.StorageType)
+                    switch (param.StorageType)
                     {
                         case StorageType.Integer:   // "dataType": "예/아니요" 인 경우 
                             int intParamValue = Int32.Parse(rvParamValue);
@@ -689,7 +692,7 @@ namespace HTSBIM2019.Common.Managers
                     }
 
                     // 매개변수에 값 입력 완료한 경우 
-                    if(true == bResult)
+                    if (true == bResult)
                     {
                         SetParamView setCompletedParameter = new SetParamView(rvParamName, rvParamValue);
 
@@ -702,10 +705,10 @@ namespace HTSBIM2019.Common.Managers
                         Log.Error(Logger.GetMethodPath(currentMethod) + $"매개변수 값 입력 실패\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
                         TaskDialog.Show(HTSHelper.ErrorTitle, $"매개변수 값 입력 실패\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
                     }
-                });
-
+                }
+                
                 // 매개변수에 값 입력이 모두 실패한 경우 (리스트 객체 "setCompletedParameters"에 데이터가 존재하지 않는 경우)
-                if(setCompletedParameters.Count.Equals((int)EnumExistParameters.NONE))
+                if (setCompletedParameters.Count.Equals((int)EnumExistParameters.NONE))
                 {
                     TaskDialog.Show(HTSHelper.ErrorTitle, $"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
                     throw new Exception($"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
@@ -716,7 +719,7 @@ namespace HTSBIM2019.Common.Managers
                 // TODO : 아래 테스트용 결과 메시지 필요시 사용 예정 (2024.02.21 jbh) 
                 // TaskDialog.Show(UpdaterHelper.CompletedTitle, $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
@@ -725,6 +728,127 @@ namespace HTSBIM2019.Common.Managers
         }
 
         #endregion SetParametersValue
+
+        #region TestSetParametersValue
+
+        /// <summary>
+        /// 매개변수에 값 입력하기
+        /// </summary>
+        //public static bool TestSetParametersValue(List<Element> rvElementList, string rvParamName, string rvParamValue)
+        //public static void TestSetParametersValue(List<Element> rvElementList, string rvParamName, string rvParamValue)
+        //{
+        //    bool bResult = false;                                // 매개변수에 입력할 값 할당 완료 여부 false로 초기화
+
+        //    List<SetParamView> setCompletedParameters = new List<SetParamView>();     // 매개변수 값 할당 완료된 객체(이름, 값) 리스트 객체 생성 
+
+        //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록 
+
+        //    try
+        //    {
+        //        // 1 단계 : 매개변수 리스트 구하기 
+        //        List<Parameter> targetParameters = rvElementList.FindAll(element => element.LookupParameter(rvParamName) is not null)
+        //                                                        .Select(element => element.LookupParameter(rvParamName))
+        //                                                        .ToList();
+
+        //        // 2 단계 : 매개변수가 존재하지 않는 경우 
+        //        if(targetParameters.Count.Equals((int)EnumExistParameters.NONE))
+        //        {
+        //            // TODO : 테스트 하면서 추후 값을 입력하려는 매개변수가 존재하지 않는 경우 메시지 박스 (TaskDialog.Show) 출력 필요 없으면 주석처리 진행하기 (2024.04.18 jbh)
+        //            Log.Information(Logger.GetMethodPath(currentMethod) + $"매개변수 - {rvParamName}\r\n 존재 안 함. 매개변수 값 입력 실패!");
+        //            // TaskDialog.Show(HTSHelper.NoticeTitle, $"매개변수 - {rvParamName}이/가 존재하지 않습니다.\r\n담당자에게 문의 하시기 바랍니다.");
+        //            return;
+        //            // throw new Exception($"Revit 문서의 모든 객체(Element)에\r\n매개변수 - {rvParamName}\r\n이/가 존재하지 않습니다.\r\n다시 확인 바랍니다.");
+        //        }
+
+        //        // TODO : 그리디 알고리즘(욕심쟁이 탐욕법) 참고해서 foreach 문에서 리스트 "targetParameters"에 속한 요소(매개변수)를 방문하여
+        //        //        해당 매개변수(rvParamName)에 값(rvParamValue) 입력하기 
+        //        // 그리디 알고리즘
+        //        // 유튜브
+        //        // 참고 URL   - https://youtu.be/5OYlS2QQMPA?si=2Q5uu_kxwEnXp-gm
+        //        // 참고 2 URL - https://youtu.be/_TG0hVYJ6D8?si=FSuaEYrW7t-Bou3d
+
+        //        // 3 단계 : foreach 문에서 리스트 "targetParameters"에 속한 요소(매개변수) 방문 
+        //        targetParameters.ForEach(param => {
+
+        //            // TODO : 매개변수가 읽기 전용(값 수정 불가)인 경우 List<T> 클래스에 속한 메서드 ForEach에서
+        //            //        continue 처리 불가해서 continue 대신 return; 문 추가 (2024.05.17 jbh)
+        //            // 참고 URL - https://kjun.kr/1165
+        //            // 참고 2 URL - https://stackoverflow.com/questions/8333403/how-can-i-use-continue-statement-in-foreach-method
+        //            // 매개변수가 읽기 전용(값 수정 불가)인 경우 
+        //            if (true == param.IsReadOnly) return;
+
+        //            // 4 단계 : 매개변수의 값 자료형 찾아서 메서드 파라미터 rvParamValue를 형변환(casting) 및 해당 매개변수(rvParamName와 동일한 이름)에 값 입력하기
+        //            switch(param.StorageType)
+        //            {
+        //                case StorageType.Integer:   // "dataType": "예/아니요" 인 경우 
+        //                    int intParamValue = Int32.Parse(rvParamValue);
+        //                    bResult = param.Set(intParamValue);   // 매개변수에 값 입력
+
+        //                    break;
+
+        //                case StorageType.Double:    // "dataType": "번호" 인 경우
+        //                    double doubleParamValue = Double.Parse(rvParamValue);
+
+        //                    // ForgeTypeId unitTypeId = param.GetUnitTypeId();   // 메서드 "GetUnitTypeId" 사용해서 Revit API 내부에서 사용하는 단위 타입 아이디 (ForgeTypeId) 구하기 
+        //                    // var convertParamValue = UnitUtils.ConvertFromInternalUnits(doubleParamValue, unitTypeId);   // Revit API 내부에서 사용하는 단위 Feet -> Millimeters 단위 변환
+
+        //                    var convertParamValue = UnitUtils.ConvertFromInternalUnits(doubleParamValue, DisplayUnitType.DUT_MILLIMETERS);   // Revit API 내부에서 사용하는 단위 Feet -> Millimeters 단위 변환
+        //                    bResult = param.Set(convertParamValue);   // 매개변수에 값 입력
+
+        //                    break;
+
+        //                case StorageType.String:    // "dataType": "문자" 인 경우 
+        //                    bResult = param.Set(rvParamValue);   // 매개변수에 값 입력
+
+        //                    break;
+
+        //                    // TODO : 매개변수의 값 자료형에 "StorageType.ElementId", "StorageType.None" 추가될 경우 아래 case : 레이블 구현 예정 (2024.03.12 jbh)
+        //                    // case StorageType.ElementId:   // ElementId인 경우 
+        //                    //     ElementId elementId = testParam.AsElementId();
+        //                    //     bResult = param.Set(elementId);
+        //                    //     break;
+        //                    // case StorageType.None:   // invalid인 경우 
+        //                    //     // throw new Exception("invalid 값 복사 오류");
+        //                    //     break;
+        //            }
+
+        //            // 매개변수에 값 입력 완료한 경우 
+        //            if(true == bResult)
+        //            {
+        //                SetParamView setCompletedParameter = new SetParamView(rvParamName, rvParamValue);
+
+        //                setCompletedParameters.Add(setCompletedParameter);
+        //            }
+        //            // TODO : 추후 필요시 매개변수에 값 입력 실패한 경우 로그 및 메시지에 매개변수 값 입력 실패한 객체 이름 추가 여부 확인 후 추가 예정 (2024.03.14 jbh)
+        //            // 매개변수에 값 입력 실패한 경우 
+        //            else
+        //            {
+        //                Log.Error(Logger.GetMethodPath(currentMethod) + $"매개변수 값 입력 실패\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
+        //                TaskDialog.Show(HTSHelper.ErrorTitle, $"매개변수 값 입력 실패\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
+        //            }
+        //        });
+
+        //        // 매개변수에 값 입력이 모두 실패한 경우 (리스트 객체 "setCompletedParameters"에 데이터가 존재하지 않는 경우)
+        //        if(setCompletedParameters.Count.Equals((int)EnumExistParameters.NONE))
+        //        {
+        //            TaskDialog.Show(HTSHelper.ErrorTitle, $"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
+        //            throw new Exception($"확인 요망!\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 입력 실패!\r\n담당자에게 문의하세요.");
+        //        }
+
+        //        Log.Information(Logger.GetMethodPath(currentMethod) + $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
+
+        //        // TODO : 아래 테스트용 결과 메시지 필요시 사용 예정 (2024.02.21 jbh) 
+        //        // TaskDialog.Show(UpdaterHelper.CompletedTitle, $"매개변수 값 입력 완료\r\n\r\n매개변수\r\n이름 - {rvParamName}\r\n값 - {rvParamValue}");
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+        //        throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw 
+        //    }
+        //    return;   // 메서드 SetParametersValue 종료
+        //}
+
+        #endregion TestSetParametersValue
 
         #region ClashCheck_InRealTime
 
