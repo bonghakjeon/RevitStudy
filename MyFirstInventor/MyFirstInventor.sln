@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33529.622
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFirstInventor", "MyFirstInventor\MyFirstInventor.csproj", "{83E4623F-B201-494D-9AD1-A15F0BBFF103}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lesson1", "Lesson1\Lesson1.csproj", "{CFD1C27B-281D-4E4D-A406-9E2358CF589B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83E4623F-B201-494D-9AD1-A15F0BBFF103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83E4623F-B201-494D-9AD1-A15F0BBFF103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83E4623F-B201-494D-9AD1-A15F0BBFF103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83E4623F-B201-494D-9AD1-A15F0BBFF103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFD1C27B-281D-4E4D-A406-9E2358CF589B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFD1C27B-281D-4E4D-A406-9E2358CF589B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFD1C27B-281D-4E4D-A406-9E2358CF589B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFD1C27B-281D-4E4D-A406-9E2358CF589B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F15F3EBE-F2B4-4CBA-A566-E82486666C09}
+	EndGlobalSection
+EndGlobal
