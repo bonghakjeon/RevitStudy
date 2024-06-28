@@ -5,7 +5,7 @@ namespace HTSBIM2019.Common.RequestBase
     #region EnumMEPRequestId
 
     /// <summary>
-    /// MEPUpdater Request 유형 열거형 구조체
+    /// MEPUpdater Request 유형 enum 열거형 구조체
     /// </summary>
     public enum EnumMEPUpdaterRequestId : int
     {
@@ -72,7 +72,7 @@ namespace HTSBIM2019.Common.RequestBase
         #region Make
 
         /// <summary>
-        /// 사용자가 명령 버튼을 누를 때 대화 상자가 해당 메서드(Make) 호출
+        /// 사용자가 명령 버튼을 누를 때 대화 상자(1. MEP 사용 기록 관리 화면 폼 객체)가 해당 메서드(Make) 호출
         /// </summary>
         public void Make(EnumMEPUpdaterRequestId pRequest)
         {

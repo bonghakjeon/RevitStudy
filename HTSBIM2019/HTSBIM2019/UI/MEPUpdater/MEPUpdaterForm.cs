@@ -387,7 +387,7 @@ namespace HTSBIM2019.UI.MEPUpdater
         #region MEPUpdater_FormClosed
 
         /// <summary>
-        /// Revit 업데이터 종료 이벤트 
+        /// Revit 업데이터 폼 종료 이벤트 
         /// </summary>
         private void MEPUpdater_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -397,7 +397,7 @@ namespace HTSBIM2019.UI.MEPUpdater
             {
                 Log.Information(Logger.GetMethodPath(currentMethod) + "업데이터 화면 종료 시작");
 
-                // Revit Updater Modaless 폼(MEPUpdater) 화면 닫기 전에 외부 이벤트 프로퍼티 "ExEvent" 리소스 해제 
+                // Revit Updater Modaless 폼(MEPUpdaterForm) 화면 닫기 전에 외부 이벤트 프로퍼티 "ExEvent" 리소스 해제 
                 ExEvent.Dispose();
                 ExEvent = null;             // 외부 이벤트 null로 초기화
                 RequestHandler = null;      // 외부 요청 핸들러 null로 초기화
