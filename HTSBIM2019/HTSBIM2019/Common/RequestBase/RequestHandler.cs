@@ -1,5 +1,6 @@
 ﻿using Serilog;
 using System;
+using System.IO;
 using System.Linq;   // TODO : 해당 using 문(using System.Linq;)을 사용해야 Linq 확장 메서드 (Where, Select, ToList, ForEach 등등...) 사용 가능 (2024.04.25 jbh)
 using System.Reflection;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using HTSBIM2019.Models.HTSBase.MEPUpdater;
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.ApplicationServices;
 
 namespace HTSBIM2019.Common.RequestBase
@@ -137,6 +139,8 @@ namespace HTSBIM2019.Common.RequestBase
 
         #endregion Remove
     }
+
+    #region MEPUpdaterRequestHandler
 
     /// <summary>
     /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러
@@ -586,4 +590,285 @@ namespace HTSBIM2019.Common.RequestBase
 
         #endregion Remove
     }
+
+    #endregion MEPUpdaterRequestHandler
+
+    #region ImageEditorRequestHandler
+
+    /// <summary>
+    /// 이미지 편집(ImageEditorForm) Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러
+    /// </summary>
+    public class ImageEditorRequestHandler : IExternalEventHandler
+    {
+        #region 프로퍼티
+
+        /// <summary>
+        /// MEPUpdater Request 유형 열거형 구조체 프로퍼티
+        /// </summary>
+        private ImageEditorRequestId RequestIdValue { get; set; }
+
+        /// <summary>
+        /// Modaless 폼(.Show()) 최근 요청 값에 엑세스 하기위한 프로퍼티 (읽기 전용)
+        /// </summary>
+        public ImageEditorRequest Request { get { return _Request; } }
+        private ImageEditorRequest _Request = new ImageEditorRequest();
+
+        /// <summary>
+        /// 활성화된 Revit 문서 
+        /// </summary>
+        private UIDocument UIDoc { get; set; }
+
+        /// <summary>
+        /// Revit 문서 
+        /// </summary>
+        private Document RevitDoc { get; set; }
+
+        // TODO : 필요시 프로퍼티 "TaskErrorDialog" 사용 예정 (2024.07.03 jbh)
+        /// <summary>
+        /// 오류 메시지(이미지 파일 경로) 출력 
+        /// </summary>
+        // private TaskDialog TaskErrorDialog { get; set; }
+
+        #endregion 프로퍼티
+
+        #region 생성자
+
+        public ImageEditorRequestHandler()
+        {
+
+        }
+
+        #endregion 생성자
+
+        #region GetName
+
+        /// <summary>
+        /// 해당 외부 이벤트 핸들러(ImageEditorRequestHandler)(이벤트 메서드) 이름으로 식별 
+        /// </summary>
+        public string GetName()
+        {
+            return HTSHelper.ImageEditorFormName;
+        }
+
+        #endregion GetName
+
+        #region Execute
+
+        /// <summary>
+        /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 이벤트 메서드(외부 이벤트 핸들러 - ImageRequestHandler) 
+        /// </summary>
+        public void Execute(UIApplication rvUIApp)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();        // 로그 기록시 현재 실행 중인 메서드 위치 기록 
+
+            try
+            {
+                Log.Information(Logger.GetMethodPath(currentMethod) +  "메서드 Execute 시작");
+
+                // Revit 문서 프로퍼티 "UIDoc" 할당
+                UIDoc = rvUIApp.ActiveUIDocument;    // 활성화된 Revit 문서 
+                RevitDoc = UIDoc.Document;           // Revit 문서 
+
+                // 해당 Transaction이 끝날 때까지는 화면 상에서는 다른 기능을 실행할 수 있고 다른 기능의 화면도 출력되지만
+                // 다른 기능을 실행해서 데이터를 변경할 수 없다.(다른 작업이나 Command 명령이 끼어들 수 없다.)
+                using (Transaction transaction = new Transaction(RevitDoc))
+                {
+                    Log.Information(Logger.GetMethodPath(currentMethod) +  "Request 작업 시작");
+
+                    // transaction.Start(HTSHelper.Start); 부터 transaction.Commit(); 까지가 연산처리를 하는 하나의 작업단위이다.
+                    transaction.Start(HTSHelper.Start);  // 해당 "RevitBox2025" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... ) 시작
+
+                    RequestIdValue = Request.Take();
+
+                    switch (RequestIdValue)
+                    {
+                        case ImageEditorRequestId.NONE:           // 요청이 없는 경우 -> 즉시 종료
+                            return;
+
+                        case ImageEditorRequestId.SelectElement:  // 객체 선택 요청 
+                            SelectElement(UIDoc, RevitDoc);
+                            break;
+
+                        case ImageEditorRequestId.InsertImage:    // 이미지 편집 요청 
+                            InsertImage(RevitDoc);
+                            break;
+
+                        default:
+                            TaskDialog.Show(HTSHelper.NoticeTitle, $"요청 아이디{RequestIdValue}이/가 존재하지 않습니다.\r\n담당자에게 문의하시기 바랍니다.");
+                            break;
+                    }
+
+                    transaction.Commit();    // 해당 "RevitBox2025" 프로젝트에서 연산처리(객체 생성, 정보 변경 및 삭제 등등... )된 결과 커밋
+
+                    Log.Information(Logger.GetMethodPath(currentMethod) +  "Request 작업 완료");
+                }   // 여기서 Dispose (리소스 해제) 처리 
+
+                Log.Information(Logger.GetMethodPath(currentMethod) +  "메서드 Execute 완료");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) +  Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+            }
+            finally
+            {
+                CmdImageEditor.WakeFormUp();
+            }
+        }
+
+        #endregion Execute
+
+        #region SelectElement
+
+        /// <summary>
+        /// 객체 선택 
+        /// </summary>
+        private void SelectElement(UIDocument rvUIDoc, Document rvDoc)
+        {
+            bool result = false;                                      // 객체 선택 작업 완료 여부 초기화
+            string selectedImageFilePath = string.Empty;              // 열려있는 Revit 문서에서 선택된 이미지 객체(이미지 파일)의 실제 경로 초기화
+            string selectedImageFileName = string.Empty;              // 열려있는 Revit 문서에서 선택된 이미지 객체(이미지 파일) 이름 초기화
+
+            var currentMethod = MethodBase.GetCurrentMethod();        // 로그 기록시 현재 실행 중인 메서드 위치 기록 
+
+            try
+            {
+                Log.Information(Logger.GetMethodPath(currentMethod) +  "객체 선택 작업 시작");
+
+                TaskDialog.Show(HTSHelper.NoticeTitle, "열려있는 Revit 도면에서\r\n이미지 객체를 선택하세요.");
+
+                Reference reference = rvUIDoc.Selection.PickObject(ObjectType.Element);
+
+                Element element = rvDoc.GetElement(reference);   // 열려있는 Revit 도면에서 선택한 객체 가져오기
+
+                ElementId categoryId = element.Category.Id;      // 열려있는 Revit 도면에서 선택한 객체의 카테고리 아이디 가져오기
+                ElementId elementId = element.GetTypeId();       // 열려있는 Revit 도면에서 선택한 객체 아이디 가져오기
+
+#if (R2024 || R2025)
+                // 열려있는 Revit 문서에서 선택한 객체(element)가 이미지 객체(이미지 파일 - BuiltInCategory.OST_RasterImages)인 경우
+                if(categoryId.Value.Equals((long)BuiltInCategory.OST_RasterImages))
+#else
+                // 열려있는 Revit 문서에서 선택한 객체(element)가 이미지 객체(이미지 파일 - BuiltInCategory.OST_RasterImages)인 경우
+                if (categoryId.IntegerValue.Equals((int)BuiltInCategory.OST_RasterImages))
+#endif
+                {
+                    // Element selectElement = rvDoc.GetElement(element.GetTypeId());
+                    Element selectElement = rvDoc.GetElement(elementId);   // 열려있는 Revit 도면에서 선택한 객체 가져오기 
+                    Parameter param = selectElement.get_Parameter(BuiltInParameter.RASTER_SYMBOL_FILENAME);
+                    selectedImageFilePath = param.AsString();
+
+                    // 열려있는 Revit 문서에서 선택한 이미지 객체(이미지 파일 - BuiltInCategory.OST_RasterImages)가 실제로 존재하는 경우 
+                    if (false == string.IsNullOrWhiteSpace(selectedImageFilePath)
+                       && true == File.Exists(selectedImageFilePath))
+                    {
+                        result = true;
+                        CmdImageEditor.SetSelectedImageFilePath(result, selectedImageFilePath);
+                        Log.Information(Logger.GetMethodPath(currentMethod) +  "객체 선택 작업 완료");
+                    }
+
+                    // 열려있는 Revit 문서에서 선택한 이미지 객체(이미지 파일)가 실제로 존재하지 않는 경우
+                    else
+                    {
+                        selectedImageFileName = Path.GetFileName(selectedImageFilePath);   // 이미지 파일 이름(확장자 포함) 가져오기
+                        //result = false;
+                        //ImageInsertCommand.SetSelectedImageFilePath(result, string.Empty);
+                        // throw new Exception($"{selectedImageFileName} 파일 존재 안 함!\r\n다시 확인 바랍니다.\r\n* 파일 경로 *\r\n{selectedImageFilePath}");
+                        throw new Exception($"{selectedImageFileName} 파일 존재 안 함!\r\n다시 확인 바랍니다.");
+                    }
+                }
+
+                // 열려있는 Revit 문서에서 선택한 객체가 이미지 객체(이미지 파일)가 아닌 경우
+                else
+                {
+                    //TaskDialog.Show(HTSHelper.ErrorTitle, "잘못된 객체 입니다.\r\n이미지 객체를 선택하세요.");
+                    throw new Exception("잘못된 객체 입니다.\r\n이미지 객체를 선택하세요.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) +  Logger.errorMessage + ex.Message);
+                result = false;
+                CmdImageEditor.SetSelectedImageFilePath(result, string.Empty);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw
+            }
+        }
+
+        #endregion SelectElement
+
+        #region InsertImage
+
+        /// <summary>
+        /// 이미지 편집 
+        /// </summary>
+        private void InsertImage(Document rvDoc)
+        {
+            bool result = false;                                      // 이미지 편집 작업 완료 여부 초기화 
+            string insertedImageFilePath = string.Empty;              // 열려있는 Revit 문서에 편집하고자 하는 이미지 파일의 실제 경로
+            string insertedImageFileName = string.Empty;              // 열려있는 Revit 문서에 편집하고자 하는 이미지 파일 이름
+
+            var currentMethod = MethodBase.GetCurrentMethod();        // 로그 기록시 현재 실행 중인 메서드 위치 기록 
+
+            try
+            {
+                insertedImageFilePath = CmdImageEditor.GetInsertedImageFilePath();
+
+                // 열려있는 Revit 문서에 편집하고자 하는 이미지 파일이 사용자 PC 로컬에 저장된 경우 
+                if (false == string.IsNullOrWhiteSpace(insertedImageFilePath)
+                   && true == File.Exists(insertedImageFilePath))
+                {
+                    Log.Information(Logger.GetMethodPath(currentMethod) +  "이미지 편집 작업 시작");
+
+#if (R2016 || R2017 || R2018 || R2019 || R2020)
+                    ImageImportOptions importOptions = new ImageImportOptions();
+                    Element element;
+                    
+                    rvDoc.Import(insertedImageFilePath, importOptions, rvDoc.ActiveView, out element);
+
+#else               // Revit 2021 버전 이후 
+                    //ImageTypeOptions typeOptions = new ImageTypeOptions(insertedImageFilePath, false, ImageTypeSource.Import);
+
+                    //ImageType imageType = ImageType.Create(rvDoc, typeOptions);
+
+                    //ImagePlacementOptions placementOptions = new ImagePlacementOptions();
+
+                    //placementOptions.PlacementPoint = BoxPlacement.Center;
+                    //placementOptions.Location = new XYZ(0, 0, 0);
+
+                    //ImageInstance imageInstance = ImageInstance.Create(rvDoc, rvDoc.ActiveView, imageType.Id, placementOptions);
+#endif
+                    result = true;
+                    CmdImageEditor.SetInsertedImageFile(result);
+
+                    Log.Information(Logger.GetMethodPath(currentMethod) +  "이미지 편집 작업 완료");
+                }
+                // Revit 문서에 편집하고자 하는 이미지 파일이 PC에 저장되어 있지 않은 경우 
+                else
+                {
+                    insertedImageFileName = Path.GetFileName(insertedImageFilePath);   // 이미지 파일 이름(확장자 포함) 가져오기
+                    //throw new Exception($"{insertedImageFileName} 파일 존재 안 함!\r\n다시 확인 바랍니다.\r\n* 파일 경로 *\r\n{insertedImageFilePath}");
+                    throw new Exception($"{insertedImageFileName} 파일 존재 안 함!\r\n다시 확인 바랍니다.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) +  Logger.errorMessage + ex.Message);
+                result = false;
+                CmdImageEditor.SetInsertedImageFile(result);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw
+            }
+        }
+
+        #endregion InsertImage
+
+        #region Sample
+
+        #endregion Sample
+    }
+
+
+    #endregion ImageRequestHandler
+
+    #region Sample
+
+    #endregion Sample
 }

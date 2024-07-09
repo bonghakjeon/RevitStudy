@@ -7,11 +7,13 @@ using HTSBIM2019.Common.LogBase;
 using HTSBIM2019.Common.Managers;
 using HTSBIM2019.Common.HTSBase;
 using HTSBIM2019.Common.RequestBase;
-using HTSBIM2019.UI.MEPUpdater;
 using HTSBIM2019.Settings;
+
+using HTSBIM2019.UI.ImageEditor;
 using HTSBIM2019.Utils.CompanyHomePage;
 using HTSBIM2019.Utils.TechnicalSupport;
 using HTSBIM2019.Interface.Command;
+
 
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -292,6 +294,157 @@ namespace HTSBIM2019
     }
 
     #endregion CmdTechnicalSupport
+
+    #region CmdImageEditor
+
+    /// <summary>
+    /// 이미지 편집
+    /// </summary>
+    [Transaction(TransactionMode.Manual)]
+    class CmdImageEditor : IExternalCommand
+    {
+        #region 프로퍼티
+
+        // TODO : 아래 주석친 코드 필요시 참고 (2024.06.28 jbh)
+        // public static Autodesk.Revit.Creation.Application app = null;
+        // public static Document doc;
+        // public static UIApplication uiapp;
+        // public static UIDocument uidoc;
+
+        /// <summary>
+        /// 이미지 편집 폼 객체 
+        /// </summary>
+        private static ImageEditorForm ImageEditorForm { get; set; }
+
+        /// <summary>
+        /// Revit UI 애플리케이션 객체
+        /// </summary>
+        private UIApplication RevitUIApp { get; set; }
+
+        // TODO : 프로퍼티 "UIDoc" 필요시 사용 예정 (2024.06.24 jbh)
+        /// <summary>
+        /// 활성화된 Revit 문서 
+        /// </summary>
+        // private UIDocument UIDoc { get; set; }
+
+        // TODO : 프로퍼티 "RevitDoc" 필요시 사용 예정 (2024.06.24 jbh)
+        /// <summary>
+        /// Revit 문서 
+        /// </summary>
+        // private Document RevitDoc { get; set; }
+
+        #endregion 프로퍼티
+
+        #region ShowForm
+
+        // TODO : 추후 필요시 아래 메서드 "ShowForm" 참고 (2024.07.10 jbh) 
+        /// <summary>
+        /// 이미지 편집 폼 화면(ImageForm) Modaless(.show()) 형식 출력 
+        /// </summary>
+        //private void ShowForm(UIApplication rvUIApp)
+        //{
+        //    // Modaless 폼 객체가 null이거나 삭제된 경우 
+        //    if (ImageEditorForm is null || ImageEditorForm.IsDisposed)
+        //    {
+        //        ImageEditorRequestHandler imageEditorHandler = new ImageEditorRequestHandler();    // 이미지 편집 외부 요청 핸들러 객체 imageHandler 생성 
+        //        ExternalEvent exEvent = ExternalEvent.Create(imageEditorHandler);      // 이미지 편집 폼 객체(ImageForm)가 사용할 외부 이벤트 생성 
+
+        //        ImageEditorForm = new ImageEditorForm(imageEditorHandler, exEvent, rvUIApp);
+
+        //        ImageEditorForm.Show();   // Show 메서드 호출해서 화면 출력하기  
+        //                            // ImageForm.Show(System.Windows.Forms.Control.FromHandle(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle));
+        //    }
+        //}
+
+        #endregion ShowForm
+
+        #region SetSelectedImageFilePath
+
+        /// <summary>
+        /// 객체 선택한 이미지 파일 경로 셋팅 
+        /// </summary>
+        ----- public static void SetSelectedImageFilePath(bool pIsSelectedElement, string pSelectedImageFilePath)
+        ----- {
+        -----     ImageEditorForm.IsSelectedElement = pIsSelectedElement;
+        -----     ImageEditorForm.SelectedImageFilePath = string.Empty;
+        -----     ImageEditorForm.SelectedImageFilePath = pSelectedImageFilePath;
+        ----- }
+
+        #endregion SetSelectedImageFilePath
+
+        #region GetInsertedImageFilePath
+
+        /// <summary>
+        /// 이미지 편집 하고자 하는 이미지 파일 경로 가져오기 
+        /// </summary>
+        ----- public static string GetInsertedImageFilePath()
+        ----- {
+        -----     return ImageEditorForm.InsertedImageFilePath;
+        ----- }
+
+        #endregion GetInsertedImageFilePath
+
+        #region SetInsertedImageFile
+
+        /// <summary>
+        /// 이미지 편집 처리 여부 셋팅 
+        /// </summary>
+        ----- public static void SetInsertedImageFile(bool pIsInsertedImageFile)
+        ----- {
+        -----     ImageEditorForm.IsInsertedImageFile = pIsInsertedImageFile;
+        ----- }
+
+        #endregion SetInsertedImageFile
+
+        #region WakeFormUp
+
+        /// <summary>
+        /// 대기 상태에서 이미지 편집 폼 화면(ImageEditorForm) 깨우기
+        /// </summary>
+        public static void WakeFormUp()
+        {
+            if (ImageEditorForm is not null) ImageEditorForm.WakeUp();
+        }
+
+        #endregion WakeFormUp
+
+        #region 기본 메소드 
+
+        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 편집 Command - Execute 시작");
+
+                RevitUIApp = commandData.Application;
+                // UIDoc = RevitUIApp.ActiveUIDocument;
+                // RevitDoc = UIDoc.Document;
+
+                //ShowForm(RevitUIApp);
+                FormManager.ShowModalessForm(AppSetting.Default.ImageEditorBase.ImageEditorForm, RevitUIApp, typeof(ImageEditorForm));
+                // FormManager.ShowModalessForm(AppSetting.Default.UpdaterBase.MEPUpdaterForm, RevitUIApp, typeof(ImageEditorForm));
+
+                Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 편집 Command - Execute 종료");
+
+                return Result.Succeeded;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+                return Result.Failed;
+            }
+
+            #region Sample
+
+            #endregion Sample
+        }
+
+        #endregion 기본 메소드
+    }
+    #endregion CmdImageEditor
 
     #region Sample
 

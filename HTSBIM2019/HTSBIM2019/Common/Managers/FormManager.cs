@@ -10,6 +10,7 @@ using HTSBIM2019.Common.HTSBase;
 using HTSBIM2019.Common.RequestBase;
 
 using HTSBIM2019.UI.MEPUpdater;
+using HTSBIM2019.UI.ImageEditor;
 
 //using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -28,6 +29,7 @@ namespace HTSBIM2019.Common.Managers
         public static void ShowModalessForm(System.Windows.Forms.Form pModalessForm, UIApplication rvUIApp, Type pModalessFormType)
         {
             string modalessFormName = string.Empty;               // Modaless 폼 객체 이름
+            ExternalEvent exEvent = null;                         // 폼 객체가 사용할 외부 이벤트 초기화
 
             var currentMethod = MethodBase.GetCurrentMethod();    // 로그 기록시 현재 실행 중인 메서드 위치 
 
@@ -44,10 +46,18 @@ namespace HTSBIM2019.Common.Managers
                             // AddInId addInId = rvUIApp.ActiveAddInId;                                 // HTS Revit 업데이터 Command 아이디
 
                             MEPUpdaterRequestHandler mepHandler = new MEPUpdaterRequestHandler();    // MEP 업데이터 외부 요청 핸들러 객체 mepHandler 생성 
-                            ExternalEvent exEvent = ExternalEvent.Create(mepHandler);                // MEP 업데이터 폼 객체가 사용할 외부 이벤트 생성 
+                            exEvent = ExternalEvent.Create(mepHandler);                // MEP 업데이터 폼 객체가 사용할 외부 이벤트 생성 
 
                             // pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp, addInId); // MEP 업데이터 폼 객체 생성
                             pModalessForm = new MEPUpdaterForm(exEvent, mepHandler, rvUIApp); // MEP 업데이터 폼 객체 생성
+
+                            break;
+
+                        case HTSHelper.ImageEditorFormName:   // 이미지 편집인 경우 
+                            ImageEditorRequestHandler imageEditorHandler = new ImageEditorRequestHandler();    // 이미지 편집 외부 요청 핸들러 객체 imageHandler 생성 
+                            exEvent = ExternalEvent.Create(imageEditorHandler);      // 이미지 편집 폼 객체(ImageForm)가 사용할 외부 이벤트 생성 
+
+                            pModalessForm = new ImageEditorForm(exEvent, imageEditorHandler, rvUIApp);
 
                             break;
 

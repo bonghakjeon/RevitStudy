@@ -328,6 +328,75 @@ namespace HTSBIM2019.Common.HTSBase
 
         #endregion TechnicalSupport
 
+        #region ImageEditorForm
+
+        /// <summary>
+        /// 이미지 삽입 Modaless 폼 객체 이름 
+        /// </summary>
+        public const string ImageEditorFormName = "ImageForm";
+
+        // TODO : Click, Mouse, Paint 이벤트 타입 const string 객체 필요시 사용 예정 (2024.07.05 jbh)
+        /// <summary>
+        /// Click 이벤트 타입 
+        /// </summary>
+        // public const string MethodTypeOfClick = "Click";
+
+        /// <summary>
+        /// Mouse 이벤트 타입 
+        /// </summary>
+        // public const string MethodTypeOfMouse = "Mouse";
+
+        /// <summary>
+        /// Paint 이벤트 타입 
+        /// </summary>
+        // public const string MethodTypeOfPaint = "Paint";
+
+        /// <summary>
+        /// 기능 - 파일 선택
+        /// </summary>
+        public const string TypeOfSelectFile = "파일 선택";
+
+        /// <summary>
+        /// 기능 - 객체 선택
+        /// </summary>
+        public const string TypeOfSelectElement = "객체 선택";
+
+        /// <summary>
+        /// 기능 - 흑백 전환
+        /// </summary>
+        public const string TypeOfBlackConvert = "흑백 전환";
+
+        /// <summary>
+        /// 기능 - 원본 보기
+        /// </summary>
+        public const string TypeOfOrgImage = "원본 보기";
+
+        /// <summary>
+        /// 기능 - 이미지 자르기
+        /// </summary>
+        public const string TypeOfCropImage = "이미지 자르기";
+
+        /// <summary>
+        /// 기능 - 이미지 삽입
+        /// </summary>
+        public const string TypeOfInsertImage = "이미지 삽입";
+
+        #endregion ImageEditorForm
+
+        #region ImageEditorExtension - (ImageEditor.cs)
+
+        /// <summary>
+        /// 흑백 전환 후 이진화 처리 한계값(임계값)
+        /// </summary>
+        //public const int ThresholdValue = 128;
+        public const int ThresholdValue = 120;
+
+        #endregion ImageEditorExtension - (ImageEditor.cs)
+
+        #region Sample
+
+        #endregion Sample
+
         #region Sample
 
         #endregion Sample

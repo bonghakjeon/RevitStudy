@@ -94,6 +94,9 @@ namespace HTSBIM2019.Settings
             }
         }
         private ImagineBuilderSetting _ImagineBuilderBase;
+
+        public ImageEditorSetting ImageEditorBase { get => _ImageEditorBase; set { _ImageEditorBase = value; this.Changed(nameof(ImageEditorBase)); } }
+        private ImageEditorSetting _ImageEditorBase;
     }
 
     #region Sample
