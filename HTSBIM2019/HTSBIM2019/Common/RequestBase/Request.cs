@@ -89,9 +89,9 @@ namespace HTSBIM2019.Common.RequestBase
 
     #region ImageEditorRequest
 
-    // TODO : 이미지 편집 Request enum 열거형 구조체 "ImageRequestId" 구현 (2024.06.24 jbh)
+    // TODO : 이미지 삽입 Request enum 열거형 구조체 "ImageEditorRequestId" 구현 (2024.06.24 jbh)
     /// <summary>
-    /// 이미지 편집(ImageEditor) Request 유형 enum 열거형 구조체
+    /// 이미지 삽입(Image) Request 유형 enum 열거형 구조체
     /// </summary>
     public enum ImageEditorRequestId : int
     {
@@ -111,7 +111,7 @@ namespace HTSBIM2019.Common.RequestBase
         InsertImage = 2,
     }
 
-    // TODO : 이미지 삽입 Request 클래스 "ImageRequest" 구현 (2024.06.24 jbh)
+    // TODO : 이미지 삽입 Request 클래스 "ImageEditorRequest" 구현 (2024.06.24 jbh)
     /// <summary>
     /// 이미지 삽입 요청(Request) 클래스 
     /// 부모 폼(Revit 응용프로그램) 쓰레드 접근 가능 
@@ -121,7 +121,7 @@ namespace HTSBIM2019.Common.RequestBase
         #region 프로퍼티
 
         /// <summary>
-        /// 열거형 구조체 ImageRequestId를 정수로 변환한 값 할당 프로퍼티 
+        /// 열거형 구조체 ImageEditorRequestId를 정수로 변환한 값 할당 프로퍼티 
         /// 값을 일반 int로 저장하면 더 간단하게 연동할 수 있다.
         /// </summary>
         private int RequestIdValue = (int)ImageEditorRequestId.NONE;
@@ -131,7 +131,7 @@ namespace HTSBIM2019.Common.RequestBase
         #region Take
 
         /// <summary>
-        /// 최신 요청(Request)한 열거형 구조체 ImageRequestId 얻기
+        /// 최신 요청(Request)한 열거형 구조체 ImageEditorRequestId 얻기
         /// </summary>
         public ImageEditorRequestId Take()
         {
@@ -146,7 +146,7 @@ namespace HTSBIM2019.Common.RequestBase
         #region Make
 
         /// <summary>
-        /// 사용자가 명령 버튼을 누를 때 대화 상자(이미지 편집 화면 폼 객체)가 해당 메서드(Make) 호출
+        /// 사용자가 명령 버튼을 누를 때 대화 상자(이미지 삽입 화면 폼 객체)가 해당 메서드(Make) 호출
         /// </summary>
         public void Make(ImageEditorRequestId pRequest)
         {

@@ -16,6 +16,40 @@ using System.Drawing.Drawing2D;
 
 namespace HTSBIM2019.Common.Managers
 {
+    #region ImageRatio
+
+    public class ImageRatio
+    {
+        #region 프로퍼티
+
+        /// <summary>
+        /// 이미지 Width 비율
+        /// </summary>
+        public int WidthRatio { get; set; }
+
+        /// <summary>
+        /// 이미지 Height 비율
+        /// </summary>
+        public int HeightRatio { get; set; }
+
+        #endregion 프로퍼티 
+
+        #region 생성자 
+
+        public ImageRatio(int pWidthRatio, int pHeightRatio)
+        {
+            this.WidthRatio = pWidthRatio;
+            this.HeightRatio = pHeightRatio;
+        }
+
+        #endregion 생성자 
+    }
+
+    #endregion ImageRatio
+
+    /// <summary>
+    /// Extension methods for Image
+    /// </summary>
     public static class ImageManager
     {
         #region 프로퍼티
@@ -39,10 +73,87 @@ namespace HTSBIM2019.Common.Managers
 
         #endregion 프로퍼티
 
+        #region GetImageRatio
+
+        /// <summary>
+        /// 이미지 파일 - Width, Height 비율 구하기
+        /// </summary>
+        public static ImageRatio GetImageRatio(Image pImage)
+        {
+            int gcdValue = 0;                  // 이미지 파일 Width, Height 최대 공약수 
+            int resizedWidth = 0;              // 백의 자릿수(또는 십의 자릿수) 미만 제거한 Width
+            int resizedHeight = 0;             // 백의 자릿수(또는 십의 자릿수) 미만 제거한 Height
+            int widthRatio = 0;                // 이미지 파일 Width 비율
+            int heightRatio = 0;               // 이미지 파일 Height 비율
+            ImageRatio imageRatioObj = null;   // 이미지 파일 Width, Height 비율 담을 객체 초기화
+
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // 백의 자릿수 미만 내림 처리
+                // 참고 URL - https://chatgpt.com/c/14c89676-468c-4f06-b76a-52ab95b20803
+                //resizedWidth = (pImage.Width / 100) * 100;
+                //resizedHeight = (pImage.Height / 100) * 100;
+                resizedWidth = (pImage.Width >= HTSHelper.MinWidth) ? (pImage.Width / HTSHelper.Hundreds) * HTSHelper.Hundreds : (pImage.Width / HTSHelper.Tens) * HTSHelper.Tens;
+                resizedHeight = (pImage.Height >= HTSHelper.MinHeight) ? (pImage.Height / HTSHelper.Hundreds) * HTSHelper.Hundreds : (pImage.Height / HTSHelper.Tens) * HTSHelper.Tens;
+
+                gcdValue = GetGCD(resizedWidth, resizedHeight);   // 백의 자릿수 제거한 이미지 파일 removeTensWidth, removeTensHeight 최대 공약수 구하기 
+
+                //widthRatio = pImage.Width / gcdValue;
+                //heightRatio = pImage.Height / gcdValue;
+                widthRatio = resizedWidth / gcdValue;
+                heightRatio = resizedHeight / gcdValue;
+
+
+                imageRatioObj = new ImageRatio(widthRatio, heightRatio);
+
+                return imageRatioObj;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw
+            }
+        }
+
+        #endregion GetImageRatio
+
+        #region GetGCD
+
+        // TODO : 이미지 Width, Height 비율 계산할 수 있도록 유클리드 호제법(최대 공약수) 알고리즘 메서드 "GetGCD" 구현하기 (2024.07.12 jbh) 
+        // 유튜브 참고 URL - https://youtu.be/Whl9317jAOA?si=wyvTsAuWigL-lqUG
+        // 유튜브 참고 2 URL - https://youtu.be/wcdvQs8lZjQ?si=3n-wy-LOogArXYvS
+        // 블로그 참고 URL - https://circle-developer.tistory.com/27#codeview
+        // 블로그 참고 2 URL - https://jinwooking.tistory.com/191
+
+        /// <summary>
+        /// 이미지 파일 - Width, Height의 최대 공약수 구하기 
+        /// </summary>
+        public static int GetGCD(int pImageWidth, int pImageHeight)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // 두 수 pImageWidth, pImageHeight 이 있을 때 어느 한 수가 0이 될 때 까지
+                // GetGCD(pImageHeight, pImageWidth % pImageHeight) 의 재귀함수 반복
+                if (0 == pImageHeight) return pImageWidth;
+                else return GetGCD(pImageHeight, pImageWidth % pImageHeight);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw
+            }
+        }
+
+        #endregion GetGCD
+
         #region GetInsertImageFilePath
 
         /// <summary>
-        /// 삽입 처리할 이미지 저장할 파일 경로 가져오기
+        /// 삽입 처리할 이미지를 저장할 파일 경로 가져오기
         /// </summary>
         public static string GetInsertImageFilePath(string pOrgImageFilePath)
         {
@@ -133,53 +244,44 @@ namespace HTSBIM2019.Common.Managers
         // 참고 URL - https://chatgpt.com/c/772919c6-4936-4b8d-b796-0a4b4d02e6ef
 
         /// <summary>
-        /// 이미지 흑백 전환 + 이진화 처리
+        /// 이미지 흑백 전환 처리
         /// </summary>
-        /// <param name="parameter">pConvertBmp - 흑백 전환 + 이진화 처리할 비트맵 객체</param>
-        public static void BlackConvert(ref Bitmap pConvertBmp)
+        /// <param name="parameter">pBlackConvertBmp - 흑백 전환 처리할 비트맵 객체</param>
+        public static void BlackConvert(ref Bitmap pBlackConvertBmp)
         {
-            int average = 0;                       // RGB 색상값 평균
-            Color orgColor = Color.Transparent;    // 특정 픽셀의 기존 RGB 색상 (투명 초기화)
-                                                   // Color blackColor = Color.Transparent;     // 특정 픽셀의 흑백 전환 RGB 색상 (투명색 초기화 - Color.Transparent)
-            Color binaryColor = Color.Transparent;    // 특정 픽셀의 이진화 처리 RGB 색상 (투명색 초기화 - Color.Transparent)
+            int average = 0;                          // RGB 색상값 평균
+            Color orgColor = Color.Transparent;       // 특정 픽셀의 기존 RGB 색상 (투명 초기화)
+            Color blackColor = Color.Transparent;     // 특정 픽셀의 흑백 전환 RGB 색상 (투명색 초기화 - Color.Transparent)
 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
-                Log.Information(Logger.GetMethodPath(currentMethod) + "흑백 전환 + 이진화 처리 작업 시작");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "흑백 전환 작업 시작");
 
                 // 1. for문 돌면서 이미지 흑백 전환 처리 
-                // x - 흑백 전환할 비트맵 객체 pConvertBmp의 너비(Width)
-                // y - 흑백 전환할 비트맵 객체 pConvertBmp의 높이(Height)
-                // for(int x = 0; x < pConvertBmp.Width; x++)
-                for (int x = 0; x < pConvertBmp.Size.Width; x++)
+                // x - 흑백 전환할 비트맵 객체 pBlackConvertBmp의 너비(Width)
+                // y - 흑백 전환할 비트맵 객체 pBlackConvertBmp의 높이(Height)
+                // for(int x = 0; x < pBlackConvertBmp.Width; x++)
+                for(int x = 0; x < pBlackConvertBmp.Size.Width; x++)
                 {
-                    // for(int y = 0; y < pConvertBmp.Height; y++)
-                    for (int y = 0; y < pConvertBmp.Size.Height; y++)
+                    // for(int y = 0; y < pBlackConvertBmp.Height; y++)
+                    for(int y = 0; y < pBlackConvertBmp.Size.Height; y++)
                     {
-                        // 2. 흑백 전환 + 이진화 처리할 비트맵 객체 pConvertBmp에 존재하는 특정 픽셀의 기존 RGB 색상을 가져오기
-                        orgColor = pConvertBmp.GetPixel(x, y);
+                        // 2. 흑백 전환할 비트맵 객체 pBlackConvertBmp에 존재하는 특정 픽셀의 기존 RGB 색상을 가져오기
+                        orgColor = pBlackConvertBmp.GetPixel(x, y);
                         average = (orgColor.R + orgColor.G + orgColor.B) / 3;   // orgColor의 RGB 색상값 평균 구하기 
 
-                        // 3. 흑백 전환 + 이진화 처리 RGB 색상 가져오기
-                        // binaryColor = (average <= RevitBoxHelper.ThresholdValue) ? Color.Black : Color.White;
-                        binaryColor = (average < HTSHelper.ThresholdValue) ? Color.Black : Color.White;   // 삼항 연산자 적용하여 특정 픽셀의 이진화 처리 RGB 색상 구하기
-
-                        // 4. 흑백 전환 + 이진화 처리할 비트맵 객체 pConvertBmp의 특정 픽셀의 RGB 색상을 이진화(binaryColor) 설정 
-                        pConvertBmp.SetPixel(x, y, binaryColor);
-
-                        // TODO : 아래 주석친 코드 필요시 참고 (2024.07.08 jbh)
-                        // 흑백 전환 RGB 색상 가져오기
+                        // 3. 흑백 전환 RGB 색상 가져오기
                         // 메서드 FromArgb 호출해서 RGB 색상을 흑백으로 바꾸는 수식 적용
-                        // blackColor = Color.FromArgb(average, average, average);
+                        blackColor = Color.FromArgb(average, average, average);
 
-                        // 흑백 전환할 비트맵 객체 pConvertBmp의 특정 픽셀의 RGB 색상을 흑백(blackColor)으로 설정 
-                        // pConvertBmp.SetPixel(x, y, blackColor);
+                        // 4. 흑백 전환할 비트맵 객체 pBlackConvertBmp의 특정 픽셀의 RGB 색상을 흑백(blackColor)으로 설정 
+                        pBlackConvertBmp.SetPixel(x, y, blackColor);
                     }
                 }
 
-                Log.Information(Logger.GetMethodPath(currentMethod) + "흑백 전환 + 이진화 처리 작업 종료");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "흑백 전환 작업 종료");
             }
             catch (Exception ex)
             {
@@ -216,6 +318,9 @@ namespace HTSBIM2019.Common.Managers
             {
                 //Prepare a new Bitmap on which the cropped image will be drawn
                 Bitmap sourceBmp = new Bitmap(pictureBox.Image, pictureBox.Width, pictureBox.Height);
+                sourceBmp.SetResolution(
+                          pictureBox.Image.HorizontalResolution,
+                          pictureBox.Image.VerticalResolution);
 
                 // Scale:
                 double scaleY = (double)sourceBmp.Width / pictureBox.Width;
@@ -266,13 +371,132 @@ namespace HTSBIM2019.Common.Managers
 
         #endregion CropImage
 
+        #region Crop
+
+        // TODO : 아래 메서드 "Crop"은 호출시 오류 메시지 "Out of memory."가 출력되어 이미지 자르기 기능이 실행이 안 되어서 주석 처리 진행 (2024.06.18 jbh)
+        /// <summary>
+        /// Crops an image according to a selection rectangle
+        /// </summary>
+        /// <param name="image">
+        /// the image to be cropped
+        /// </param>
+        /// <param name="selection">
+        /// the selection
+        /// </param>
+        /// <returns>
+        /// cropped image
+        /// </returns>
+        public static Image Crop(this Image image, Rectangle selection)
+        {
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                Bitmap bmp = image as Bitmap;
+
+                // Check if it is a bitmap:
+                if (bmp == null)
+                    throw new ArgumentException("Kein gültiges Bild (Bitmap)");
+
+                // Bitmap 클래스 메서드 "Clone" 호출시 오류 메시지 "Out of memory." 출력
+                // Crop the image:
+                Bitmap cropBmp = bmp.Clone(selection, bmp.PixelFormat);
+
+                // Release the resources:
+                image.Dispose();
+
+                return cropBmp;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+                return image as Bitmap;
+            }
+        }
+
+        #endregion Crop
+
+        #region Fit2PictureBox
+
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Fits an image to the size of a picturebox
+        /// </summary>
+        /// <param name="image">
+        /// image to be fit
+        /// </param>
+        /// <param name="picBox">
+        /// picturebox in that the image should fit
+        /// </param>
+        /// <returns>
+        /// fitted image
+        /// </returns>
+        /// <remarks>
+        /// Although the picturebox has the SizeMode-property that offers
+        /// the same functionality an OutOfMemory-Exception is thrown
+        /// when assigning images to a picturebox several times.
+        /// 
+        /// AFAIK the SizeMode is designed for assigning an image to
+        /// picturebox only once.
+        /// </remarks>
+        public static Image Fit2PictureBox(this Image image, PictureBox picBox)
+        {
+            Bitmap bmp = null;
+            Graphics g;
+
+            // Scale:
+            double scaleY = (double)image.Width / picBox.Width;
+            double scaleX = (double)image.Height / picBox.Height;
+            double scale = scaleY < scaleX ? scaleX : scaleY;
+
+            // Create new bitmap:
+            bmp = new Bitmap(
+                (int)((double)image.Width / scale),
+                (int)((double)image.Height / scale));
+
+            // Set resolution of the new image:
+            bmp.SetResolution(
+                image.HorizontalResolution,
+                image.VerticalResolution);
+
+            // Create graphics:
+            g = Graphics.FromImage(bmp);
+
+            // Set interpolation mode:
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            // Draw the new image:
+            g.DrawImage(
+                image,
+                new System.Drawing.Rectangle(          // Ziel
+                    0, 0,
+                    bmp.Width, bmp.Height),
+                new System.Drawing.Rectangle(          // Quelle
+                    0, 0,
+                    image.Width, image.Height),
+                GraphicsUnit.Pixel);
+
+
+
+            // Release the resources of the graphics:
+            g.Dispose();
+
+            // Release the resources of the origin image:
+            image.Dispose();
+
+            return bmp;
+        }
+
+        #endregion Fit2PictureBox
+
         #region Sample
 
-        // TODO : 이미지 흑백 전환 처리 메서드 "BlackConvert" 필요시 참고 (2024.07.08 jbh)
+        // TODO : 이미지 흑백 전환 + 이진화 처리 메서드 "BlackConvert" 필요시 참고 (2024.07.16 jbh)
 
         //#region BlackConvert
 
-        //// TODO : 이미지 흑백 전환 기능 구현 (2024.07.04 jbh)
+        //// TODO : 이미지 흑백 전환 + 이진화 처리 기능 구현 (2024.07.16 jbh)
         //// MS 공식 문서
         //// GetPixel 참고 URL - http://msdn.microsoft.com/ko-kr/library/system.drawing.bitmap.getpixel(v=vs.110).aspx 
         //// SetPixel 참고 URL - http://msdn.microsoft.com/ko-kr/library/system.drawing.bitmap.setpixel(v=vs.110).aspx 
@@ -288,56 +512,53 @@ namespace HTSBIM2019.Common.Managers
         //// 참고 URL - https://chatgpt.com/c/772919c6-4936-4b8d-b796-0a4b4d02e6ef
 
         ///// <summary>
-        ///// 이미지 흑백 전환 처리
+        ///// 이미지 흑백 전환 + 이진화 처리
         ///// </summary>
-        ///// <param name="parameter">pBlackConvertBmp - 흑백 전환 처리할 비트맵 객체</param>
-        //public static void BlackConvert(ref Bitmap pBlackConvertBmp)
+        ///// <param name="parameter">pConvertBmp - 흑백 전환 + 이진화 처리할 비트맵 객체</param>
+        //public static void BlackConvert(ref Bitmap pConvertBmp)
         //{
         //    int average = 0;                       // RGB 색상값 평균
         //    Color orgColor = Color.Transparent;    // 특정 픽셀의 기존 RGB 색상 (투명 초기화)
-        //    Color blackColor = Color.Transparent;     // 특정 픽셀의 흑백 전환 RGB 색상 (투명색 초기화 - Color.Transparent)
+        //    // Color blackColor = Color.Transparent;     // 특정 픽셀의 흑백 전환 RGB 색상 (투명색 초기화 - Color.Transparent)
+        //    Color binaryColor = Color.Transparent;    // 특정 픽셀의 이진화 처리 RGB 색상 (투명색 초기화 - Color.Transparent)
 
         //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
         //    try
         //    {
-        //        Logger.Information(currentMethod, "흑백 전환 작업 시작");
+        //        Logger.Information(currentMethod, "흑백 전환 + 이진화 처리 작업 시작");
 
         //        // 1. for문 돌면서 이미지 흑백 전환 처리 
-        //        // x - 흑백 전환할 비트맵 객체 pBlackConvertBmp의 너비(Width)
-        //        // y - 흑백 전환할 비트맵 객체 pBlackConvertBmp의 높이(Height)
-        //        // for(int x = 0; x < pBlackConvertBmp.Width; x++)
-        //        for (int x = 0; x < pBlackConvertBmp.Size.Width; x++)
+        //        // x - 흑백 전환할 비트맵 객체 pConvertBmp의 너비(Width)
+        //        // y - 흑백 전환할 비트맵 객체 pConvertBmp의 높이(Height)
+        //        // for(int x = 0; x < pConvertBmp.Width; x++)
+        //        for (int x = 0; x < pConvertBmp.Size.Width; x++)
         //        {
-        //            // for(int y = 0; y < pBlackConvertBmp.Height; y++)
-        //            for (int y = 0; y < pBlackConvertBmp.Size.Height; y++)
+        //            // for(int y = 0; y < pConvertBmp.Height; y++)
+        //            for (int y = 0; y < pConvertBmp.Size.Height; y++)
         //            {
-        //                // 2. 흑백 전환할 비트맵 객체 pBlackConvertBmp에 존재하는 특정 픽셀의 기존 RGB 색상을 가져오기
-        //                orgColor = pBlackConvertBmp.GetPixel(x, y);
+        //                // 2. 흑백 전환 + 이진화 처리할 비트맵 객체 pConvertBmp에 존재하는 특정 픽셀의 기존 RGB 색상을 가져오기
+        //                orgColor = pConvertBmp.GetPixel(x, y);
         //                average = (orgColor.R + orgColor.G + orgColor.B) / 3;   // orgColor의 RGB 색상값 평균 구하기 
 
-        //                // 3. 흑백 전환 RGB 색상 가져오기
+        //                // 3. 흑백 전환 + 이진화 처리 RGB 색상 가져오기
+        //                // binaryColor = (average <= HTSHelper.ThresholdValue) ? Color.Black : Color.White;
+        //                binaryColor = (average < HTSHelper.ThresholdValue) ? Color.Black : Color.White;   // 삼항 연산자 적용하여 특정 픽셀의 이진화 처리 RGB 색상 구하기
+
+        //                // 4. 흑백 전환 + 이진화 처리할 비트맵 객체 pConvertBmp의 특정 픽셀의 RGB 색상을 이진화(binaryColor) 설정 
+        //                pConvertBmp.SetPixel(x, y, binaryColor);
+
+        //                // TODO : 아래 주석친 코드 필요시 참고 (2024.07.08 jbh)
+        //                // 흑백 전환 RGB 색상 가져오기
         //                // 메서드 FromArgb 호출해서 RGB 색상을 흑백으로 바꾸는 수식 적용
-        //                blackColor = Color.FromArgb(average, average, average);
+        //                // blackColor = Color.FromArgb(average, average, average);
 
-        //                // 4. 흑백 전환할 비트맵 객체 pBlackConvertBmp의 특정 픽셀의 RGB 색상을 흑백(blackColor)으로 설정 
-        //                pBlackConvertBmp.SetPixel(x, y, blackColor);
-
-
-        //                // 2. 이진화 처리할 비트맵 객체 pBinaryConvertBmp에 존재하는 특정 픽셀의 기존 RGB 색상을 가져오기
-        //                blackColor = pBinaryConvertBmp.GetPixel(x, y);
-        //                average = (blackColor.R + blackColor.G + blackColor.B) / 3;   // blackColor의 RGB 색상값 평균 구하기 
-
-        //                // 3. 이진화 처리 RGB 색상 가져오기
-        //                // binaryColor = (average <= RevitBoxHelper.ThresholdValue) ? Color.Black : Color.White;
-        //                binaryColor = (average < RevitBoxHelper.ThresholdValue) ? Color.Black : Color.White;   // 삼항 연산자 적용하여 특정 픽셀의 이진화 처리 RGB 색상 구하기
-
-        //                // 4. 이진화 처리할 비트맵 객체 pBinaryConvertBmp의 특정 픽셀의 RGB 색상을 이진화(binaryColor) 설정 
-        //                pBinaryConvertBmp.SetPixel(x, y, binaryColor);
+        //                // 흑백 전환할 비트맵 객체 pConvertBmp의 특정 픽셀의 RGB 색상을 흑백(blackColor)으로 설정 
+        //                // pConvertBmp.SetPixel(x, y, blackColor);
         //            }
         //        }
 
-        //        Logger.Information(currentMethod, "흑백 전환 작업 종료");
+        //        Logger.Information(currentMethod, "흑백 전환 + 이진화 처리 작업 종료");
         //    }
         //    catch (Exception ex)
         //    {
@@ -390,8 +611,8 @@ namespace HTSBIM2019.Common.Managers
         //                average = (blackColor.R + blackColor.G + blackColor.B) / 3;   // blackColor의 RGB 색상값 평균 구하기 
 
         //                // 3. 이진화 처리 RGB 색상 가져오기
-        //                // binaryColor = (average <= RevitBoxHelper.ThresholdValue) ? Color.Black : Color.White;
-        //                binaryColor = (average < RevitBoxHelper.ThresholdValue) ? Color.Black : Color.White;   // 삼항 연산자 적용하여 특정 픽셀의 이진화 처리 RGB 색상 구하기
+        //                // binaryColor = (average <= HTSHelper.ThresholdValue) ? Color.Black : Color.White;
+        //                binaryColor = (average < HTSHelper.ThresholdValue) ? Color.Black : Color.White;   // 삼항 연산자 적용하여 특정 픽셀의 이진화 처리 RGB 색상 구하기
 
         //                // 4. 이진화 처리할 비트맵 객체 pBinaryConvertBmp의 특정 픽셀의 RGB 색상을 이진화(binaryColor) 설정 
         //                pBinaryConvertBmp.SetPixel(x, y, binaryColor);
@@ -410,51 +631,66 @@ namespace HTSBIM2019.Common.Managers
 
         //#endregion BinaryConvert
 
-        #region Crop
 
-        // TODO : 아래 메서드 "Crop"은 호출시 오류 메시지 "Out of memory."가 출력되어 이미지 자르기 기능이 실행이 안 되어서 주석 처리 진행 (2024.06.18 jbh)
-        /// <summary>
-        /// Crops an image according to a selection rectangle
-        /// </summary>
-        /// <param name="image">
-        /// the image to be cropped
-        /// </param>
-        /// <param name="selection">
-        /// the selection
-        /// </param>
-        /// <returns>
-        /// cropped image
-        /// </returns>
-        //public static Image Crop(this Image image, Rectangle selection)
+        // TODO : 메서드 FitImageInPictureBox 필요시 참고 (2024.07.04 jbh)
+        //#region FitImageInPictureBox
+
+        ///// <summary>
+        ///// Image 파일을 PictureBox에 맞게 사이즈 조정하기
+        ///// </summary>
+        ////public static Image FitImageInPictureBox(this Image srcImage, PictureBox picBox)
+        ////public static Image FitImageInPictureBox(this PictureBox picBox, Image srcImage)
+        //public static Image FitImageInPictureBox(this PictureBox picBox)
         //{
         //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
         //    try
         //    {
-        //        Bitmap bmp = image as Bitmap;
+        //        // Scale:
+        //        double scaleY = (double)picBox.Image.Width / picBox.Width;
+        //        double scaleX = (double)picBox.Image.Height / picBox.Height;
+        //        double scale = scaleY < scaleX ? scaleX : scaleY;
 
-        //        // Check if it is a bitmap:
-        //        if (bmp == null)
-        //            throw new ArgumentException("Kein gültiges Bild (Bitmap)");
+        //        // Create new fitImageBmp:
+        //        Bitmap fitImageBmp = new Bitmap((int)((double)picBox.Image.Width / scale),
+        //                                        (int)((double)picBox.Image.Height / scale));
 
-        //        // Bitmap 클래스 메서드 "Clone" 호출시 오류 메시지 "Out of memory." 출력
-        //        // Crop the image:
-        //        Bitmap cropBmp = bmp.Clone(selection, bmp.PixelFormat);
+        //        // Set resolution of the new fitImageBmp image:
+        //        fitImageBmp.SetResolution(
+        //                    picBox.Image.HorizontalResolution,
+        //                    picBox.Image.VerticalResolution);
 
-        //        // Release the resources:
-        //        image.Dispose();
+        //        // Create graphics:
+        //        using (Graphics gph = Graphics.FromImage(fitImageBmp))
+        //        {
+        //            // Set interpolation mode:
+        //            // TODO : 자른 이미지를 고해상도로 그리기 위해 InterpolationMode 열거형 구조체 멤버 HighQualityBicubic 사용 (2024.06.27 jbh)
+        //            // 참고 URL - https://learn.microsoft.com/ko-kr/dotnet/api/system.drawing.drawing2d.interpolationmode?view=net-8.0&viewFallbackFrom=dotnet-plat-ext-8.0
+        //            gph.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-        //        return cropBmp;
+        //            // Draw the image on the Graphics object with the new dimesions
+        //            // gph.DrawImage(sourceBitmap, new Rectangle(0, 0, pictureBoxCropImage.Width, pictureBoxCropImage.Height), RectCropArea, GraphicsUnit.Pixel);
+        //            //gph.DrawImage(sourceBitmap, new Rectangle(0, 0, RectCropArea.Width, RectCropArea.Height), RectCropArea, GraphicsUnit.Pixel);
+        //            //gph.DrawImage(sourceBitmap, new Rectangle(0, 0, cropBitmap.Width, cropBitmap.Height), RectCropArea, GraphicsUnit.Pixel);
+        //            gph.DrawImage(picBox.Image, new Rectangle(0, 0, fitImageBmp.Width, fitImageBmp.Height)
+        //                                  , new Rectangle(0, 0, picBox.Image.Width, picBox.Image.Height)
+        //                                  , GraphicsUnit.Pixel);
+        //        }   // 여기서 Graphics gph - Dispose (리소스 해제) 처리 
+
+        //        // Release the resources of the origin image:
+        //        picBox.Image.Dispose();
+
+        //        return fitImageBmp;
         //    }
         //    catch (Exception ex)
         //    {
-        //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+        //        Logger.Error(currentMethod, Logger.errorMessage + ex.Message);
         //        TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
-        //        return image as Bitmap;
+        //        return picBox.Image as Bitmap;
         //    }
         //}
 
-        #endregion Crop
+        //#endregion FitImageInPictureBox
 
         #endregion Sample
     }

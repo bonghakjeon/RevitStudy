@@ -29,277 +29,267 @@ namespace HTSBIM2019.UI.ImageEditor
         /// </summary>
         private void InitializeComponent()
         {
-            panelBtn = new DevExpress.XtraEditors.PanelControl();
-            labelOrder = new DevExpress.XtraEditors.LabelControl();
-            btnExit = new DevExpress.XtraEditors.SimpleButton();
-            btnInsertImage = new DevExpress.XtraEditors.SimpleButton();
-            btnCropImage = new DevExpress.XtraEditors.SimpleButton();
-            btnOrgImage = new DevExpress.XtraEditors.SimpleButton();
-            btnBlackConvert = new DevExpress.XtraEditors.SimpleButton();
-            btnSelectElement = new DevExpress.XtraEditors.SimpleButton();
-            btnSelectFile = new DevExpress.XtraEditors.SimpleButton();
-            panelImage = new DevExpress.XtraEditors.PanelControl();
-            splitContainerImage = new DevExpress.XtraEditors.SplitContainerControl();
-            groupBoxOrgImage = new System.Windows.Forms.GroupBox();
-            panelOrgImage = new System.Windows.Forms.Panel();
-            pictureBoxOrgImage = new System.Windows.Forms.PictureBox();
-            groupBoxEditImage = new System.Windows.Forms.GroupBox();
-            panelEditImage = new System.Windows.Forms.Panel();
-            pictureBoxEditImage = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)panelBtn).BeginInit();
-            panelBtn.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)panelImage).BeginInit();
-            panelImage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainerImage).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)splitContainerImage.Panel1).BeginInit();
-            splitContainerImage.Panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainerImage.Panel2).BeginInit();
-            splitContainerImage.Panel2.SuspendLayout();
-            splitContainerImage.SuspendLayout();
-            groupBoxOrgImage.SuspendLayout();
-            panelOrgImage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxOrgImage).BeginInit();
-            groupBoxEditImage.SuspendLayout();
-            panelEditImage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxEditImage).BeginInit();
-            SuspendLayout();
+            this.panelBtn = new DevExpress.XtraEditors.PanelControl();
+            this.labelOrder = new DevExpress.XtraEditors.LabelControl();
+            this.btnExit = new DevExpress.XtraEditors.SimpleButton();
+            this.btnInsertImage = new DevExpress.XtraEditors.SimpleButton();
+            this.btnCropImage = new DevExpress.XtraEditors.SimpleButton();
+            this.btnOrgImage = new DevExpress.XtraEditors.SimpleButton();
+            this.btnBlackConvert = new DevExpress.XtraEditors.SimpleButton();
+            this.btnSelectElement = new DevExpress.XtraEditors.SimpleButton();
+            this.btnSelectFile = new DevExpress.XtraEditors.SimpleButton();
+            this.panelImage = new DevExpress.XtraEditors.PanelControl();
+            this.splitContainerImage = new DevExpress.XtraEditors.SplitContainerControl();
+            this.groupBoxOrgImage = new System.Windows.Forms.GroupBox();
+            this.panelOrgImage = new System.Windows.Forms.Panel();
+            this.pictureBoxOrgImage = new System.Windows.Forms.PictureBox();
+            this.groupBoxEditImage = new System.Windows.Forms.GroupBox();
+            this.panelEditImage = new System.Windows.Forms.Panel();
+            this.pictureBoxEditImage = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.panelBtn)).BeginInit();
+            this.panelBtn.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelImage)).BeginInit();
+            this.panelImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerImage)).BeginInit();
+            this.splitContainerImage.SuspendLayout();
+            this.groupBoxOrgImage.SuspendLayout();
+            this.panelOrgImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOrgImage)).BeginInit();
+            this.groupBoxEditImage.SuspendLayout();
+            this.panelEditImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEditImage)).BeginInit();
+            this.SuspendLayout();
             // 
             // panelBtn
             // 
-            panelBtn.Controls.Add(labelOrder);
-            panelBtn.Controls.Add(btnExit);
-            panelBtn.Controls.Add(btnInsertImage);
-            panelBtn.Controls.Add(btnCropImage);
-            panelBtn.Controls.Add(btnOrgImage);
-            panelBtn.Controls.Add(btnBlackConvert);
-            panelBtn.Controls.Add(btnSelectElement);
-            panelBtn.Controls.Add(btnSelectFile);
-            panelBtn.Dock = System.Windows.Forms.DockStyle.Left;
-            panelBtn.Location = new System.Drawing.Point(0, 0);
-            panelBtn.Name = "panelBtn";
-            panelBtn.Size = new System.Drawing.Size(200, 608);
-            panelBtn.TabIndex = 0;
+            this.panelBtn.Controls.Add(this.labelOrder);
+            this.panelBtn.Controls.Add(this.btnExit);
+            this.panelBtn.Controls.Add(this.btnInsertImage);
+            this.panelBtn.Controls.Add(this.btnCropImage);
+            this.panelBtn.Controls.Add(this.btnOrgImage);
+            this.panelBtn.Controls.Add(this.btnBlackConvert);
+            this.panelBtn.Controls.Add(this.btnSelectElement);
+            this.panelBtn.Controls.Add(this.btnSelectFile);
+            this.panelBtn.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelBtn.Location = new System.Drawing.Point(0, 0);
+            this.panelBtn.Name = "panelBtn";
+            this.panelBtn.Size = new System.Drawing.Size(200, 608);
+            this.panelBtn.TabIndex = 0;
             // 
             // labelOrder
             // 
-            labelOrder.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            labelOrder.Appearance.Options.UseFont = true;
-            labelOrder.Location = new System.Drawing.Point(40, 366);
-            labelOrder.Name = "labelOrder";
-            labelOrder.Size = new System.Drawing.Size(124, 224);
-            labelOrder.TabIndex = 7;
-            labelOrder.Text = "*   순서   *\r\n1. 파일 선택\r\n2. 이미지 자르기\r\n   (또는 흑백 전환)\r\n3. 이미지 삽입\r\n\r\n*   설명   *\r\n* 기능 - 원본 보기\r\n   흑백 전환된 이미지의  \r\n   원래 이미지를 읽어온다.\r\n* 기능 - 종료\r\n   이미지 삽입 화면 종료\r\n\r\n* 이미지가 큰 경우\r\n   윈도우 상자 크기를 \r\n   수정하여 줌인 \r\n";
+            this.labelOrder.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelOrder.Appearance.Options.UseFont = true;
+            this.labelOrder.Location = new System.Drawing.Point(40, 366);
+            this.labelOrder.Name = "labelOrder";
+            this.labelOrder.Size = new System.Drawing.Size(124, 224);
+            this.labelOrder.TabIndex = 7;
+            this.labelOrder.Text = "*   순서   *\r\n1. 파일 선택\r\n2. 이미지 자르기\r\n   (또는 흑백 전환)\r\n3. 이미지 삽입\r\n\r\n*   설명   *\r\n* 기능 - " +
+    "원본 보기\r\n   흑백 전환된 이미지의  \r\n   원래 이미지를 읽어온다.\r\n* 기능 - 종료\r\n   이미지 삽입 화면 종료\r\n\r\n* 이미지가 " +
+    "큰 경우\r\n   윈도우 상자 크기를 \r\n   수정하여 줌인 \r\n";
             // 
             // btnExit
             // 
-            btnExit.Appearance.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            btnExit.Appearance.Options.UseFont = true;
-            btnExit.Location = new System.Drawing.Point(70, 320);
-            btnExit.Name = "btnExit";
-            btnExit.Size = new System.Drawing.Size(60, 30);
-            btnExit.TabIndex = 6;
-            btnExit.Text = "종료";
-            btnExit.Click += btnExit_Click;
+            this.btnExit.Appearance.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExit.Appearance.Options.UseFont = true;
+            this.btnExit.Location = new System.Drawing.Point(40, 320);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(120, 30);
+            this.btnExit.TabIndex = 6;
+            this.btnExit.Text = "종료";
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // btnInsertImage
             // 
-            btnInsertImage.Appearance.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            btnInsertImage.Appearance.Options.UseFont = true;
-            btnInsertImage.Location = new System.Drawing.Point(50, 270);
-            btnInsertImage.Name = "btnInsertImage";
-            btnInsertImage.Size = new System.Drawing.Size(100, 30);
-            btnInsertImage.TabIndex = 5;
-            btnInsertImage.Text = "이미지 삽입";
-            btnInsertImage.Click += btnInsertImage_Click;
+            this.btnInsertImage.Appearance.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnInsertImage.Appearance.Options.UseFont = true;
+            this.btnInsertImage.Location = new System.Drawing.Point(40, 270);
+            this.btnInsertImage.Name = "btnInsertImage";
+            this.btnInsertImage.Size = new System.Drawing.Size(120, 30);
+            this.btnInsertImage.TabIndex = 5;
+            this.btnInsertImage.Text = "이미지 삽입";
+            this.btnInsertImage.Click += new System.EventHandler(this.btnInsertImage_Click);
             // 
             // btnCropImage
             // 
-            btnCropImage.Appearance.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            btnCropImage.Appearance.Options.UseFont = true;
-            btnCropImage.Location = new System.Drawing.Point(40, 220);
-            btnCropImage.Name = "btnCropImage";
-            btnCropImage.Size = new System.Drawing.Size(120, 30);
-            btnCropImage.TabIndex = 4;
-            btnCropImage.Text = "이미지 자르기";
-            btnCropImage.Click += btnCropImage_Click;
+            this.btnCropImage.Appearance.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCropImage.Appearance.Options.UseFont = true;
+            this.btnCropImage.Location = new System.Drawing.Point(40, 220);
+            this.btnCropImage.Name = "btnCropImage";
+            this.btnCropImage.Size = new System.Drawing.Size(120, 30);
+            this.btnCropImage.TabIndex = 4;
+            this.btnCropImage.Text = "이미지 자르기";
+            this.btnCropImage.Click += new System.EventHandler(this.btnCropImage_Click);
             // 
             // btnOrgImage
             // 
-            btnOrgImage.Appearance.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            btnOrgImage.Appearance.Options.UseFont = true;
-            btnOrgImage.Location = new System.Drawing.Point(60, 170);
-            btnOrgImage.Name = "btnOrgImage";
-            btnOrgImage.Size = new System.Drawing.Size(80, 30);
-            btnOrgImage.TabIndex = 3;
-            btnOrgImage.Text = "원본 보기";
-            btnOrgImage.Click += btnOrgImage_Click;
+            this.btnOrgImage.Appearance.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOrgImage.Appearance.Options.UseFont = true;
+            this.btnOrgImage.Location = new System.Drawing.Point(40, 170);
+            this.btnOrgImage.Name = "btnOrgImage";
+            this.btnOrgImage.Size = new System.Drawing.Size(120, 30);
+            this.btnOrgImage.TabIndex = 3;
+            this.btnOrgImage.Text = "원본 보기";
+            this.btnOrgImage.Click += new System.EventHandler(this.btnOrgImage_Click);
             // 
             // btnBlackConvert
             // 
-            btnBlackConvert.Appearance.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            btnBlackConvert.Appearance.Options.UseFont = true;
-            btnBlackConvert.Location = new System.Drawing.Point(60, 120);
-            btnBlackConvert.Name = "btnBlackConvert";
-            btnBlackConvert.Size = new System.Drawing.Size(80, 30);
-            btnBlackConvert.TabIndex = 2;
-            btnBlackConvert.Text = "흑백 전환";
-            btnBlackConvert.Click += btnBlackConvert_Click;
+            this.btnBlackConvert.Appearance.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBlackConvert.Appearance.Options.UseFont = true;
+            this.btnBlackConvert.Location = new System.Drawing.Point(40, 120);
+            this.btnBlackConvert.Name = "btnBlackConvert";
+            this.btnBlackConvert.Size = new System.Drawing.Size(120, 30);
+            this.btnBlackConvert.TabIndex = 2;
+            this.btnBlackConvert.Text = "흑백 전환";
+            this.btnBlackConvert.Click += new System.EventHandler(this.btnBlackConvert_Click);
             // 
             // btnSelectElement
             // 
-            btnSelectElement.Appearance.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            btnSelectElement.Appearance.Options.UseFont = true;
-            btnSelectElement.Location = new System.Drawing.Point(60, 70);
-            btnSelectElement.Name = "btnSelectElement";
-            btnSelectElement.Size = new System.Drawing.Size(80, 30);
-            btnSelectElement.TabIndex = 1;
-            btnSelectElement.Text = "객체 선택";
-            btnSelectElement.Click += btnSelectElement_Click;
+            this.btnSelectElement.Appearance.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSelectElement.Appearance.Options.UseFont = true;
+            this.btnSelectElement.Location = new System.Drawing.Point(40, 70);
+            this.btnSelectElement.Name = "btnSelectElement";
+            this.btnSelectElement.Size = new System.Drawing.Size(120, 30);
+            this.btnSelectElement.TabIndex = 1;
+            this.btnSelectElement.Text = "객체 선택";
+            this.btnSelectElement.Click += new System.EventHandler(this.btnSelectElement_Click);
             // 
             // btnSelectFile
             // 
-            btnSelectFile.Appearance.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            btnSelectFile.Appearance.Options.UseFont = true;
-            btnSelectFile.Location = new System.Drawing.Point(60, 20);
-            btnSelectFile.Name = "btnSelectFile";
-            btnSelectFile.Size = new System.Drawing.Size(80, 30);
-            btnSelectFile.TabIndex = 0;
-            btnSelectFile.Text = "파일 선택";
-            btnSelectFile.Click += btnSelectFile_Click;
+            this.btnSelectFile.Appearance.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSelectFile.Appearance.Options.UseFont = true;
+            this.btnSelectFile.Location = new System.Drawing.Point(40, 20);
+            this.btnSelectFile.Name = "btnSelectFile";
+            this.btnSelectFile.Size = new System.Drawing.Size(120, 30);
+            this.btnSelectFile.TabIndex = 0;
+            this.btnSelectFile.Text = "파일 선택";
+            this.btnSelectFile.Click += new System.EventHandler(this.btnSelectFile_Click);
             // 
             // panelImage
             // 
-            panelImage.Controls.Add(splitContainerImage);
-            panelImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            panelImage.Location = new System.Drawing.Point(200, 0);
-            panelImage.Name = "panelImage";
-            panelImage.Size = new System.Drawing.Size(898, 608);
-            panelImage.TabIndex = 1;
+            this.panelImage.Controls.Add(this.splitContainerImage);
+            this.panelImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelImage.Location = new System.Drawing.Point(200, 0);
+            this.panelImage.Name = "panelImage";
+            this.panelImage.Size = new System.Drawing.Size(898, 608);
+            this.panelImage.TabIndex = 1;
             // 
             // splitContainerImage
             // 
-            splitContainerImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            splitContainerImage.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.None;
-            splitContainerImage.Location = new System.Drawing.Point(2, 2);
-            splitContainerImage.Name = "splitContainerImage";
-            splitContainerImage.Padding = new System.Windows.Forms.Padding(3);
-            // 
-            // splitContainerImage.Panel1
-            // 
-            splitContainerImage.Panel1.Controls.Add(groupBoxOrgImage);
-            splitContainerImage.Panel1.Text = "Panel1";
-            // 
-            // splitContainerImage.Panel2
-            // 
-            splitContainerImage.Panel2.Controls.Add(groupBoxEditImage);
-            splitContainerImage.Panel2.Text = "Panel2";
-            splitContainerImage.Size = new System.Drawing.Size(894, 604);
-            splitContainerImage.SplitterPosition = 447;
-            splitContainerImage.TabIndex = 0;
+            this.splitContainerImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerImage.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.None;
+            this.splitContainerImage.Location = new System.Drawing.Point(2, 2);
+            this.splitContainerImage.Name = "splitContainerImage";
+            this.splitContainerImage.Padding = new System.Windows.Forms.Padding(3);
+            this.splitContainerImage.Panel1.Controls.Add(this.groupBoxOrgImage);
+            this.splitContainerImage.Panel1.Text = "Panel1";
+            this.splitContainerImage.Panel2.Controls.Add(this.groupBoxEditImage);
+            this.splitContainerImage.Panel2.Text = "Panel2";
+            this.splitContainerImage.Size = new System.Drawing.Size(894, 604);
+            this.splitContainerImage.SplitterPosition = 447;
+            this.splitContainerImage.TabIndex = 0;
             // 
             // groupBoxOrgImage
             // 
-            groupBoxOrgImage.Controls.Add(panelOrgImage);
-            groupBoxOrgImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            groupBoxOrgImage.Location = new System.Drawing.Point(0, 0);
-            groupBoxOrgImage.Name = "groupBoxOrgImage";
-            groupBoxOrgImage.Padding = new System.Windows.Forms.Padding(10);
-            groupBoxOrgImage.Size = new System.Drawing.Size(447, 598);
-            groupBoxOrgImage.TabIndex = 0;
-            groupBoxOrgImage.TabStop = false;
-            groupBoxOrgImage.Text = "원본 이미지";
+            this.groupBoxOrgImage.Controls.Add(this.panelOrgImage);
+            this.groupBoxOrgImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxOrgImage.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxOrgImage.Name = "groupBoxOrgImage";
+            this.groupBoxOrgImage.Padding = new System.Windows.Forms.Padding(10);
+            this.groupBoxOrgImage.Size = new System.Drawing.Size(447, 598);
+            this.groupBoxOrgImage.TabIndex = 0;
+            this.groupBoxOrgImage.TabStop = false;
+            this.groupBoxOrgImage.Text = "원본 이미지";
             // 
             // panelOrgImage
             // 
-            panelOrgImage.AutoScroll = true;
-            panelOrgImage.Controls.Add(pictureBoxOrgImage);
-            panelOrgImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            panelOrgImage.Location = new System.Drawing.Point(10, 25);
-            panelOrgImage.Name = "panelOrgImage";
-            panelOrgImage.Size = new System.Drawing.Size(427, 563);
-            panelOrgImage.TabIndex = 0;
+            this.panelOrgImage.AutoScroll = true;
+            this.panelOrgImage.Controls.Add(this.pictureBoxOrgImage);
+            this.panelOrgImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelOrgImage.Location = new System.Drawing.Point(10, 25);
+            this.panelOrgImage.Name = "panelOrgImage";
+            this.panelOrgImage.Size = new System.Drawing.Size(427, 563);
+            this.panelOrgImage.TabIndex = 0;
             // 
             // pictureBoxOrgImage
             // 
-            pictureBoxOrgImage.Cursor = System.Windows.Forms.Cursors.Cross;
-            pictureBoxOrgImage.Location = new System.Drawing.Point(14, 15);
-            pictureBoxOrgImage.Name = "pictureBoxOrgImage";
-            pictureBoxOrgImage.Size = new System.Drawing.Size(397, 530);
-            pictureBoxOrgImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            pictureBoxOrgImage.TabIndex = 0;
-            pictureBoxOrgImage.TabStop = false;
-            pictureBoxOrgImage.Paint += pictureBoxOrgImage_Paint;
-            pictureBoxOrgImage.MouseDown += pictureBoxOrgImage_MouseDown;
-            pictureBoxOrgImage.MouseMove += pictureBoxOrgImage_MouseMove;
-            pictureBoxOrgImage.MouseUp += pictureBoxOrgImage_MouseUp;
+            this.pictureBoxOrgImage.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.pictureBoxOrgImage.Location = new System.Drawing.Point(15, 15);
+            this.pictureBoxOrgImage.Name = "pictureBoxOrgImage";
+            this.pictureBoxOrgImage.Size = new System.Drawing.Size(397, 530);
+            this.pictureBoxOrgImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBoxOrgImage.TabIndex = 0;
+            this.pictureBoxOrgImage.TabStop = false;
+            this.pictureBoxOrgImage.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBoxOrgImage_Paint);
+            this.pictureBoxOrgImage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxOrgImage_MouseDown);
+            this.pictureBoxOrgImage.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxOrgImage_MouseMove);
+            this.pictureBoxOrgImage.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBoxOrgImage_MouseUp);
+            this.pictureBoxOrgImage.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.pictureBoxOrgImage_MouseWheel);
             // 
             // groupBoxEditImage
             // 
-            groupBoxEditImage.Controls.Add(panelEditImage);
-            groupBoxEditImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            groupBoxEditImage.Location = new System.Drawing.Point(0, 0);
-            groupBoxEditImage.Name = "groupBoxEditImage";
-            groupBoxEditImage.Padding = new System.Windows.Forms.Padding(10);
-            groupBoxEditImage.Size = new System.Drawing.Size(431, 598);
-            groupBoxEditImage.TabIndex = 0;
-            groupBoxEditImage.TabStop = false;
-            groupBoxEditImage.Text = "편집 이미지";
+            this.groupBoxEditImage.Controls.Add(this.panelEditImage);
+            this.groupBoxEditImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxEditImage.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxEditImage.Name = "groupBoxEditImage";
+            this.groupBoxEditImage.Padding = new System.Windows.Forms.Padding(10);
+            this.groupBoxEditImage.Size = new System.Drawing.Size(431, 598);
+            this.groupBoxEditImage.TabIndex = 0;
+            this.groupBoxEditImage.TabStop = false;
+            this.groupBoxEditImage.Text = "편집 이미지";
             // 
             // panelEditImage
             // 
-            panelEditImage.AutoScroll = true;
-            panelEditImage.Controls.Add(pictureBoxEditImage);
-            panelEditImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            panelEditImage.Location = new System.Drawing.Point(10, 25);
-            panelEditImage.Name = "panelEditImage";
-            panelEditImage.Size = new System.Drawing.Size(411, 563);
-            panelEditImage.TabIndex = 0;
+            this.panelEditImage.AutoScroll = true;
+            this.panelEditImage.Controls.Add(this.pictureBoxEditImage);
+            this.panelEditImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelEditImage.Location = new System.Drawing.Point(10, 25);
+            this.panelEditImage.Name = "panelEditImage";
+            this.panelEditImage.Size = new System.Drawing.Size(411, 563);
+            this.panelEditImage.TabIndex = 0;
             // 
             // pictureBoxEditImage
             // 
-            pictureBoxEditImage.Location = new System.Drawing.Point(16, 15);
-            pictureBoxEditImage.Name = "pictureBoxEditImage";
-            pictureBoxEditImage.Size = new System.Drawing.Size(380, 530);
-            pictureBoxEditImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            pictureBoxEditImage.TabIndex = 0;
-            pictureBoxEditImage.TabStop = false;
+            this.pictureBoxEditImage.Location = new System.Drawing.Point(15, 15);
+            this.pictureBoxEditImage.Name = "pictureBoxEditImage";
+            this.pictureBoxEditImage.Size = new System.Drawing.Size(380, 530);
+            this.pictureBoxEditImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBoxEditImage.TabIndex = 0;
+            this.pictureBoxEditImage.TabStop = false;
             // 
-            // ImageForm
+            // ImageEditorForm
             // 
-            Appearance.Options.UseFont = true;
-            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            AutoSize = true;
-            ClientSize = new System.Drawing.Size(1098, 608);
-            Controls.Add(panelImage);
-            Controls.Add(panelBtn);
-            Font = new System.Drawing.Font("굴림", 9F);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            MinimumSize = new System.Drawing.Size(970, 530);
-            Name = "ImageForm";
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            Text = "이미지 삽입";
-            FormClosed += ImageForm_FormClosed;
-            ((System.ComponentModel.ISupportInitialize)panelBtn).EndInit();
-            panelBtn.ResumeLayout(false);
-            panelBtn.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)panelImage).EndInit();
-            panelImage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainerImage.Panel1).EndInit();
-            splitContainerImage.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainerImage.Panel2).EndInit();
-            splitContainerImage.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainerImage).EndInit();
-            splitContainerImage.ResumeLayout(false);
-            groupBoxOrgImage.ResumeLayout(false);
-            panelOrgImage.ResumeLayout(false);
-            panelOrgImage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxOrgImage).EndInit();
-            groupBoxEditImage.ResumeLayout(false);
-            panelEditImage.ResumeLayout(false);
-            panelEditImage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxEditImage).EndInit();
-            ResumeLayout(false);
+            this.Appearance.Options.UseFont = true;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1098, 608);
+            this.Controls.Add(this.panelImage);
+            this.Controls.Add(this.panelBtn);
+            this.Font = new System.Drawing.Font("굴림", 9F);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.MinimumSize = new System.Drawing.Size(970, 530);
+            this.Name = "ImageEditorForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "이미지 편집";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ImageForm_FormClosed);
+            ((System.ComponentModel.ISupportInitialize)(this.panelBtn)).EndInit();
+            this.panelBtn.ResumeLayout(false);
+            this.panelBtn.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelImage)).EndInit();
+            this.panelImage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerImage)).EndInit();
+            this.splitContainerImage.ResumeLayout(false);
+            this.groupBoxOrgImage.ResumeLayout(false);
+            this.panelOrgImage.ResumeLayout(false);
+            this.panelOrgImage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOrgImage)).EndInit();
+            this.groupBoxEditImage.ResumeLayout(false);
+            this.panelEditImage.ResumeLayout(false);
+            this.panelEditImage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEditImage)).EndInit();
+            this.ResumeLayout(false);
+
         }
 
         #endregion

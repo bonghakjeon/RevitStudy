@@ -61,6 +61,38 @@ namespace HTSBIM2019.UI.ImageEditor
 
         #endregion EnumImageType
 
+        #region EnumSizeChangeType
+
+        /// <summary>
+        /// PictureBox 컨트롤 - 이미지 Width/Height - 증가/감소/유지 여부 
+        /// </summary>
+        private enum EnumSizeChangeType : int
+        {
+            [Description("Width/Height 감소")]
+            DECREMENT = -1,
+            [Description("Width/Height 유지")]
+            MAINTENANCE = 0,
+            [Description("Width/Height 증가")]
+            INCREMENT = 1,
+        }
+
+        #endregion EnumSizeChangeType
+
+        #region EnumReSizeType
+
+        /// <summary>
+        /// PictureBox 컨트롤 - 이미지 Width/Height 변경 가능 여부 
+        /// </summary>
+        private enum EnumReSizeType : int
+        {
+            [Description("Width/Height 변경 불가")]
+            IMPOSSIBLE = 0,
+            [Description("Width/Height 변경 가능")]
+            POSSIBLE = 1
+        }
+
+        #endregion EnumReSizeType
+
         /// <summary>
         /// Modaless 폼(.Show()) 형식에 의해 발생하는 외부 요청 핸들러 프로퍼티 
         /// </summary>
@@ -78,10 +110,11 @@ namespace HTSBIM2019.UI.ImageEditor
         /// </summary>
         // private UIDocument UIDoc { get; set; }
 
+        // TODO : 필요시 프로퍼티 "RevitDoc" 사용 예정 (2024.07.22 jbh)
         /// <summary>
         /// Revit 문서 
         /// </summary>
-        private Document RevitDoc { get; set; }
+        // private Document RevitDoc { get; set; }
 
         /// <summary>
         /// 이미지 자를 영역(직사각형)
@@ -111,15 +144,25 @@ namespace HTSBIM2019.UI.ImageEditor
         private Image OrgImage { get; set; }
 
         /// <summary>
-        /// 편집 이미지(이미지 자르기, 흑백 전환)
+        /// 편집 이미지(이미지 자르기)
         /// </summary>
         private Image EditImage { get; set; }
+
+        /// <summary>
+        /// 흑백 전환 처리된 비트맵 이미지 객체 
+        /// </summary>
+        private Bitmap BlackConvertBmp { get; set; }
 
         // TODO : 프로퍼티 "CropImage" 필요시 사용 예정 (2024.07.03 jbh)
         /// <summary>
         /// 자른 이미지 
         /// </summary>
         // private Image CropImage { get; set; }
+
+        /// <summary>
+        /// 원본 이미지 Width, Height 비율
+        /// </summary>
+        private ImageRatio OrgImageRatio { get; set; }
 
         #endregion 이미지 
 
@@ -248,10 +291,13 @@ namespace HTSBIM2019.UI.ImageEditor
         #region 생성자
 
         //public ImageEditorForm(UIApplication rvUIApp)
-        public ImageEditorForm(ExternalEvent rvExEvent, ImageEditorRequestHandler pHandler, UIApplication rvUIApp)
+        //public ImageEditorForm(ImageEditorRequestHandler pHandler, ExternalEvent rvExEvent, UIApplication rvUIApp)
+        //public ImageEditorForm(ImageEditorRequestHandler pHandler, ExternalEvent rvExEvent)
+        public ImageEditorForm(ExternalEvent rvExEvent, ImageEditorRequestHandler pHandler)
         {
             InitializeComponent();
-            InitSetting(rvExEvent, pHandler, rvUIApp);   // 이미지 삽입 초기 셋팅 
+            //InitSetting(pHandler, rvExEvent, rvUIApp);   // 이미지 삽입 초기 셋팅 
+            InitSetting(pHandler, rvExEvent);   // 이미지 삽입 초기 셋팅 
         }
 
         #endregion 생성자 
@@ -261,7 +307,8 @@ namespace HTSBIM2019.UI.ImageEditor
         /// <summary>
         /// 이미지 삽입 초기 셋팅
         /// </summary>
-        private void InitSetting(ExternalEvent rvExEvent, ImageEditorRequestHandler pHandler, UIApplication rvUIApp)
+        //private void InitSetting(ImageEditorRequestHandler pHandler, ExternalEvent rvExEvent, UIApplication rvUIApp)
+        private void InitSetting(ImageEditorRequestHandler pHandler, ExternalEvent rvExEvent)
         {
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -280,18 +327,22 @@ namespace HTSBIM2019.UI.ImageEditor
                 // 3. Revit 사용자가 직접 열은 Revit 프로젝트 문서 프로퍼티 "UIDoc" 할당
                 // UIDoc = rvUIApp.ActiveUIDocument;
 
+                // TODO : 필요시 프로퍼티 "RevitDoc" 사용 예정 (2024.07.22 jbh)
                 // 4. Revit 문서 프로퍼티 "RevitDoc" 할당
-                RevitDoc = rvUIApp.ActiveUIDocument.Document;    // 활성화된 Revit 문서
+                // RevitDoc = rvUIApp.ActiveUIDocument.Document;    // 활성화된 Revit 문서
 
                 // TODO : 필요시 프로퍼티 IsDragging 초기화 코드 사용 (2024.07.05 jbh)
                 // 5. 마우스로 이미지 자르기 실행 여부 초기화
                 // IsDragging = false;
 
+                // TODO : 필요시 프로퍼티 "TaskNoticeDialog" 사용 예정 (2024.07.10 jbh)
                 // 6. 이미지 파일 경로 알림 메시지 출력 초기화
-                TaskNoticeDialog = new TaskDialog(HTSHelper.NoticeTitle);
+                // TaskNoticeDialog = new TaskDialog(HTSHelper.NoticeTitle);
 
                 // 7. 유효성 검사 오류 메시지 출력 초기화
                 TaskErrorDialog = new TaskDialog(HTSHelper.ErrorTitle);
+
+                DisplaySetting(HTSHelper.TypeOfInitSetting);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 삽입 초기 셋팅 완료");
             }
@@ -389,11 +440,19 @@ namespace HTSBIM2019.UI.ImageEditor
 
                 // "객체 선택" 완료된 경우 
                 // if(true == IsSelectedElement && false == string.IsNullOrWhiteSpace(SelectedImageFilePath)) DisplaySetting(HTSHelper.TypeOfSelectElement, SelectedImageFilePath);
-                if (true == IsSelectedElement) DisplaySetting(HTSHelper.TypeOfSelectElement, SelectedImageFilePath);
+                if (true == IsSelectedElement)
+                {
+                    DisplaySetting(HTSHelper.TypeOfSelectElement, SelectedImageFilePath);
+                    this.Activate();   // 폼 화면(ImageForm.cs) 다시 활성화
+                }
 
                 // "이미지 삽입" 완료된 경우 
                 // if (true == IsInsertedImageFile && false == string.IsNullOrWhiteSpace(InsertedImageFilePath)) DisplaySetting(HTSHelper.TypeOfInsertImage, InsertedImageFilePath);
-                if (true == IsInsertedImageFile) DisplaySetting(HTSHelper.TypeOfInsertImage, InsertedImageFilePath);
+                if (true == IsInsertedImageFile)
+                {
+                    DisplaySetting(HTSHelper.TypeOfInsertImage, InsertedImageFilePath);
+                    this.Dispose();   // 폼(ImageForm.cs) 객체 모든 리소스 해제 
+                }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 삽입 화면 메서드 WakeUp 종료");
             }
@@ -402,13 +461,14 @@ namespace HTSBIM2019.UI.ImageEditor
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
             }
-            finally
-            {
-                // TODO : 메서드 "this.Activate();" 호출해서 메시지 박스 종료(TaskDialog.Show)후
-                //        부모 폼(ImageForm.cs) 다시 활성화 구현 (2024.06.27 jbh)
-                // 참고 URL - https://chatgpt.com/c/1986f7ac-47e3-45d8-a983-c27adc21b4cb
-                this.Activate();   // 메시지 박스 종료(TaskDialog.Show)후 부모 폼(ImageForm.cs) 다시 활성화
-            }
+            // TODO : 필요시 finally문 구현 예정 (2024.07.12 jbh) 
+            // finally
+            // {
+            //     // TODO : 메서드 "this.Activate();" 호출해서 메시지 박스 종료(TaskDialog.Show)후
+            //     //        부모 폼(ImageForm.cs) 다시 활성화 구현 (2024.06.27 jbh)
+            //     // 참고 URL - https://chatgpt.com/c/1986f7ac-47e3-45d8-a983-c27adc21b4cb
+            //     this.Activate();   // 메시지 박스 종료(TaskDialog.Show)후 부모 폼(ImageForm.cs) 다시 활성화
+            // }
         }
 
         #endregion WakeUp
@@ -439,24 +499,38 @@ namespace HTSBIM2019.UI.ImageEditor
 
         /// <summary>
         /// pictureBox 컨트롤 원본 이미지(pictureBoxOrgImage) 또는 편집 이미지(pictureBoxEditImage) 출력 셋팅
+        /// Default 파라미터 - pImageFilePath
         /// </summary>
-        private void DisplaySetting(string pDisplayType, string pImageFilePath)
+        //private void DisplaySetting(string pDisplayType, string pImageFilePath)
+        private void DisplaySetting(string pDisplayType, string pImageFilePath = null)
         {
             string orgFileName = string.Empty;                   // 원본 이미지 파일 이름(파일 확장자 포함) 
             string imageFileName = string.Empty;                 // 메세지에 출력할 이미지 파일 이름 
+
+            int resizedOrgWidth = 0;                             // 사이즈 변경후 원본 이미지에 출력될  pictureBoxOrgImage의 예측 너비 
+            int resizedOrgHeight = 0;                            // 사이즈 변경후 원본 이미지에 출력될  pictureBoxOrgImage의 예측 높이 
+
+            Bitmap resizedOrgBmp = null;                         // 사이즈 변경후 원본 이미지 비트맵 객체 초기화
+
+            Bitmap convertBmp = null;                            // 이미지 흑백 전환 처리할 원본 이미지(OrgImage) 객체 초기화
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
             try
             {
                 // 기능 - "파일 선택", "객체 선택" 제외한 나머지 기능 실행시
                 // 원본 이미지 파일이 존재하지 않는 경우 
-                if (false == pDisplayType.Equals(HTSHelper.TypeOfSelectFile)
+                if (false == pDisplayType.Equals(HTSHelper.TypeOfInitSetting)
+                   && false == pDisplayType.Equals(HTSHelper.TypeOfSelectFile)
                    && false == pDisplayType.Equals(HTSHelper.TypeOfSelectElement)
                    && false == File.Exists(OrgImageFilePath))
                 {
+                    // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.07.10 jbh)
+                    // OrgImage = null;   // 유효성 검사할 때 사용할 원본 이미지 초기화 
                     orgFileName = Path.GetFileName(OrgImageFilePath);
                     TaskErrorDialog.MainInstruction = $"[{EnumImageType.ORIGINAL.ToDescription()}] - {orgFileName}\r\n파일 존재 안 함!\r\n다시 확인 바랍니다.";
-                    TaskErrorDialog.MainContent = $"* 파일 경로 *\r\n{OrgImageFilePath}";
+
+                    // TODO : 아래 주석친 코드 필요시 참고 (2024.07.10 jbh)
+                    // TaskErrorDialog.MainContent = $"* 파일 경로 *\r\n{OrgImageFilePath}";
                     TaskErrorDialog.Show();
 
                     Log.Error(Logger.GetMethodPath(currentMethod) + $"오류 - [{EnumImageType.ORIGINAL.ToDescription()}] - {orgFileName} 파일 존재 안 함! 다시 확인 바랍니다.\r\n파일 경로 - {OrgImageFilePath}");
@@ -464,16 +538,39 @@ namespace HTSBIM2019.UI.ImageEditor
                     return;   // 이벤트 메서드 "btnInsertImage_Click" 종료 
                 }
 
-                // TODO : 파일 경로 "pLoadImageFilePath"에 존재하는 이미지 불러올 때, Lock이 걸리지 않고 이미지 만들기 구현 (2024.06.24 jbh)
-                // 참고 URL - https://chunter.tistory.com/555
-                using (FileStream fileStream = new FileStream(pImageFilePath, FileMode.Open, FileAccess.Read))
-                {
-                    if (true == pDisplayType.Equals(HTSHelper.TypeOfSelectFile)
+                // 기능 "화면 초기 셋팅"이 아니고 "파일 선택", "객체 선택", "흑백 전환", "원본 보기" 중 하나인 경우 
+                if (false == pDisplayType.Equals(HTSHelper.TypeOfInitSetting)
+                   && (true == pDisplayType.Equals(HTSHelper.TypeOfSelectFile)
                        || true == pDisplayType.Equals(HTSHelper.TypeOfSelectElement)
                        || true == pDisplayType.Equals(HTSHelper.TypeOfBlackConvert)
-                       || true == pDisplayType.Equals(HTSHelper.TypeOfOrgImage))
+                       || true == pDisplayType.Equals(HTSHelper.TypeOfOrgImage)))
+                {
+                    // TODO : 파일 경로 "pLoadImageFilePath"에 존재하는 이미지 불러올 때, Lock이 걸리지 않고 이미지 만들기 구현 (2024.06.24 jbh)
+                    // 참고 URL - https://chunter.tistory.com/555
+                    using (FileStream fileStream = new FileStream(pImageFilePath, FileMode.Open, FileAccess.Read))
+                    {
                         OrgImage = Image.FromStream(fileStream);
-                }   // 여기서 Dispose (리소스 해제) 처리 
+                        OrgImageRatio = ImageManager.GetImageRatio(OrgImage);
+
+                        // 기능 "객체 선택"이 아니고 "파일 선택", "흑백 전환", "원본 보기" 중 하나인 경우 
+                        if (false == pDisplayType.Equals(HTSHelper.TypeOfSelectElement))
+                        {
+                            //resizedOrgWidth = (splitContainerImage.Width / HTSHelper.Hundreds) * HTSHelper.Hundreds;
+                            //resizedOrgHeight = (splitContainerImage.Height / HTSHelper.Hundreds) * HTSHelper.Hundreds;
+
+                            // 원본 이미지 비율 프로퍼티 "OrgImageRatio" 사용해서 splitContainerImage에 맞게 사이즈 조정하기 
+                            resizedOrgWidth = (splitContainerImage.Width / OrgImageRatio.WidthRatio) * OrgImageRatio.WidthRatio;
+                            resizedOrgHeight = (splitContainerImage.Height / OrgImageRatio.HeightRatio) * OrgImageRatio.HeightRatio;
+
+                            resizedOrgBmp = new Bitmap(OrgImage, resizedOrgWidth, resizedOrgHeight);
+
+                            resizedOrgBmp.SetResolution(OrgImage.HorizontalResolution,
+                                                        OrgImage.VerticalResolution);
+                        }
+                    }   // 여기서 Dispose (리소스 해제) 처리 
+                }
+
+
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "화면 셋팅 시작");
 
@@ -484,26 +581,63 @@ namespace HTSBIM2019.UI.ImageEditor
 
                 switch (pDisplayType)
                 {
+                    // "화면 초기 셋팅"한 경우 
+                    case HTSHelper.TypeOfInitSetting:
+                        groupBoxEditImage.Visible = false;
+
+                        // TODO : splitContainerImage 컨트롤에서 원본 이미지 picturBoxOrgImage가 출력되도록 
+                        //        속성 "PanelVisibility" 사용해서 해당 속성에 값 "SplitPanelVisibility.Panel1" 할당 (2024.07.11 jbh)
+                        // 참고 URL - https://stackoverflow.com/questions/645518/how-can-i-hide-a-panel-that-is-on-a-splitcontainer
+                        splitContainerImage.PanelVisibility = SplitPanelVisibility.Panel1;
+                        break;
+
                     // "파일 선택", "객체 선택", "원본 보기"한 경우 
                     case HTSHelper.TypeOfSelectFile:
                     case HTSHelper.TypeOfSelectElement:
                     case HTSHelper.TypeOfOrgImage:
-                        //TaskNoticeDialog.MainInstruction = $"{imageFileName} 파일 선택 완료!\r\n해당 이미지는 원본 이미지로 출력됩니다.";
+                        // TaskNoticeDialog.MainInstruction = $"{imageFileName} 파일 선택 완료!\r\n해당 이미지는 원본 이미지로 출력됩니다.";
                         // TaskNoticeDialog.MainInstruction = $"파일명 : {imageFileName}\r\n해당 이미지는 원본 이미지로 출력됩니다.";
-                        TaskNoticeDialog.MainInstruction = $"{pDisplayType} 완료!\r\n파일명 : {imageFileName}\r\n해당 이미지는 원본 이미지로 출력됩니다.";
 
-                        // 편집 이미지 속성 "Image" 데이터 존재시 null 초기화 처리
-                        if (pictureBoxEditImage.Image is not null) pictureBoxEditImage.Image = null;
+                        // TODO : 필요시 아래 주석친 코드 참고 (2024.07.10 jbh)
+                        // TaskNoticeDialog.MainInstruction = $"{pDisplayType} 완료!\r\n파일명 : {imageFileName}\r\n해당 이미지는 원본 이미지로 출력됩니다.";
+
+                        // 편집 이미지 속성 "Image", "EditImage" 데이터 존재시 null 초기화 처리
+                        if (EditImage is not null || pictureBoxEditImage.Image is not null)
+                        {
+                            EditImage = null;   // 유효성 검사할 때 사용할 편집 이미지 초기화 
+                            pictureBoxEditImage.Image = null;
+
+                            groupBoxEditImage.Visible = false;
+
+                            // TODO : splitContainerImage 컨트롤에서 원본 이미지 picturBoxOrgImage가 출력되도록 
+                            //        속성 "PanelVisibility" 사용해서 해당 속성에 값 "SplitPanelVisibility.Panel1" 할당 (2024.07.11 jbh)
+                            // 참고 URL - https://stackoverflow.com/questions/645518/how-can-i-hide-a-panel-that-is-on-a-splitcontainer
+                            splitContainerImage.PanelVisibility = SplitPanelVisibility.Panel1;
+                        }
 
                         OrgImageFilePath = string.Empty;
                         OrgImageFilePath = pImageFilePath;
 
-                        pictureBoxOrgImage.Image = OrgImage;
+                        // 기능 "객체 선택"이 아니고 "파일 선택", "흑백 전환", "원본 보기" 중 하나인 경우 
+                        if (false == pDisplayType.Equals(HTSHelper.TypeOfSelectElement)
+                            && (OrgImage.Width >= resizedOrgWidth || OrgImage.Height >= resizedOrgHeight))
+                            pictureBoxOrgImage.Image = resizedOrgBmp;
 
-                        IsBlackConverted = false;   // 흑백 전환 처리 초기화
+                        // 기능 "객체 선택"이거나 원본 이미지 Width, Height가 resizedOrgWidth, resizedOrgHeight 보다 작은 경우
+                        else pictureBoxOrgImage.Image = OrgImage;
+
+                        // 흑백 전환 처리 초기화
+                        IsBlackConverted = false;
+                        BlackConvertBmp = null;
 
                         // "객체 선택"일 경우
                         if (true == pDisplayType.Equals(HTSHelper.TypeOfSelectElement)) IsSelectedElement = false;   // 객체 선택 초기화
+
+                        // "파일 선택"일 경우 
+                        // if(true == pDisplayType.Equals(HTSHelper.TypeOfSelectFile)) 
+                        // {
+                        //     // 편집 이미지 관련 컨트롤(groupBoxEditImage, panelEditImage, pictureBoxEditImage 등등...) 비활성화 처리 
+                        // }
 
                         break;
 
@@ -524,31 +658,75 @@ namespace HTSBIM2019.UI.ImageEditor
 
                     // "흑백 전환"한 경우 
                     case HTSHelper.TypeOfBlackConvert:
-                        TaskNoticeDialog.MainInstruction = $"{imageFileName} 흑백 전환 완료!\r\n해당 이미지는 원본 이미지로 출력됩니다.";
+                        // TODO : 필요시 아래 주석친 코드 참고 (2024.07.10 jbh)
+                        // TaskNoticeDialog.MainInstruction = $"{imageFileName} 흑백 전환 완료!\r\n해당 이미지는 원본 이미지로 출력됩니다.";
 
-                        // 편집 이미지 속성 "Image" 데이터 존재시 null 초기화 처리
-                        if (pictureBoxEditImage.Image is not null) pictureBoxEditImage.Image = null;
+                        // 편집 이미지 속성 "Image", "EditImage" 데이터 존재시 null 초기화 처리
+                        if (EditImage is not null || pictureBoxEditImage.Image is not null)
+                        {
+                            EditImage = null;   // 유효성 검사할 때 사용할 편집 이미지 초기화 
+                            pictureBoxEditImage.Image = null;
 
-                        IsBlackConverted = false;   // 흑백 전환 처리 시작
+                            groupBoxEditImage.Visible = false;
 
-                        // 이미지 흑백 전환 + 이진화 처리할 원본 이미지(OrgImage) 불러오기
-                        Bitmap convertBmp = OrgImage as Bitmap;
+                            // TODO : splitContainerImage 컨트롤에서 원본 이미지 picturBoxOrgImage가 출력되도록 
+                            //        속성 "PanelVisibility" 사용해서 해당 속성에 값 "SplitPanelVisibility.Panel1" 할당 (2024.07.11 jbh)
+                            // 참고 URL - https://stackoverflow.com/questions/645518/how-can-i-hide-a-panel-that-is-on-a-splitcontainer
+                            splitContainerImage.PanelVisibility = SplitPanelVisibility.Panel1;
+                        }
 
-                        ImageManager.BlackConvert(ref convertBmp);    // 이미지 흑백 전환 + 이진화 처리 시작 
+                        // 원본 이미지 프로퍼티 "OrgImage" Width, Height 값이 사이즈 조정된 resizedOrgWidth, resizedOrgHeight 보다 크거나 같은 경우 
+                        if (OrgImage.Width >= resizedOrgWidth || OrgImage.Height >= resizedOrgHeight) convertBmp = resizedOrgBmp;
+                        // 원본 이미지 프로퍼티 "OrgImage" Width, Height 값이 사이즈 조정된 resizedOrgWidth, resizedOrgHeight 보다 작은 경우 
+                        else convertBmp = OrgImage as Bitmap;
+
+                        ImageManager.BlackConvert(ref convertBmp);    // 이미지 흑백 전환 처리 시작 
+
+                        BlackConvertBmp = convertBmp;
+
+                        pictureBoxOrgImage.Image = BlackConvertBmp;
+
+                        IsBlackConverted = true;   // 흑백 전환 처리 완료
+
+                        // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.07.22 jbh)
+                        // IsBlackConverted = false;   // 흑백 전환 처리 시작
+
+                        // 이미지 흑백 전환 처리할 원본 이미지(OrgImage) 불러오기
+                        //convertBmp = OrgImage as Bitmap;
+
+                        // 이미지 흑백 전환 처리할 사이즈 변경된 원본 이미지(resizedOrgImage) 불러오기
+                        // convertBmp = resizedOrgImage;
+                        // BlackConvertBmp = resizedOrgBmp;
+                        // convertBmp.SetResolution(OrgImage.HorizontalResolution,
+                        //                          OrgImage.VerticalResolution);
+
+                        //ImageExtension.BlackConvert(ref convertBmp);    // 이미지 흑백 전환 처리 시작 
+
+                        //BlackConvertBmp = convertBmp;
+                        // BlackConvertBmp.SetResolution(OrgImage.HorizontalResolution,
+                        //                               OrgImage.VerticalResolution);
 
                         // TODO : 추후 필요시 메서드 "ImageExtension.BinaryConvert" 다시 구현 진행 (2024.07.08 jbh)
                         // ImageExtension.BinaryConvert(ref convertBmp);   // 이미지 이진화 처리 시작 
 
-                        pictureBoxOrgImage.Image = convertBmp;
+                        //pictureBoxOrgImage.Image = convertBmp;
 
-                        IsBlackConverted = true;   // 흑백 전환 처리 완료
 
                         break;
 
                     // "이미지 자르기"한 경우 
                     case HTSHelper.TypeOfCropImage:
-                        // TaskDialog.Show(HTSHelper.NoticeTitle, "이미지 자르기 완료!\r\n해당 이미지는 편집 이미지로 출력됩니다.");
-                        TaskNoticeDialog.MainInstruction = $"{imageFileName} 이미지 자르기 완료!\r\n해당 이미지는 편집 이미지로 출력됩니다.";
+                        // TODO : 필요시 아래 주석친 코드 참고 (2024.07.12 jbh)
+                        // TaskDialog.Show(HTSHelper.NoticeTitle, "이미지 자르기 완료!\r\n편집 이미지로 출력됩니다.");
+                        // TaskNoticeDialog.MainInstruction = $"{imageFileName}\r\n이미지 자르기 완료!\r\n편집 이미지로 출력됩니다.";
+                        // TaskDialog.Show(HTSHelper.NoticeTitle, $"{imageFileName}\r\n이미지 자르기 완료!\r\n편집 이미지로 출력됩니다.");
+
+                        groupBoxEditImage.Visible = true;
+
+                        // TODO : splitContainerImage 컨트롤에서 원본/편집 이미지 picturBoxOrgImage, picturBoxEditImage가 출력되도록 
+                        //        속성 "PanelVisibility" 사용해서 해당 속성에 값 "SplitPanelVisibility.Both" 할당 (2024.07.11 jbh)
+                        // 참고 URL - https://stackoverflow.com/questions/645518/how-can-i-hide-a-panel-that-is-on-a-splitcontainer
+                        splitContainerImage.PanelVisibility = SplitPanelVisibility.Both;
 
                         // TODO : 자른 이미지 pictureBoxEditImage의 속성 "Size" (Width + Height) 값을 변경하려면 
                         //        pictureBoxEditImage 속성 "Dock" 값을 아래처럼 DockStyle.None으로 할당해야 함. (2024.07.03 jbh)
@@ -580,7 +758,8 @@ namespace HTSBIM2019.UI.ImageEditor
 
                     // "이미지 삽입"한 경우 
                     case HTSHelper.TypeOfInsertImage:
-                        TaskNoticeDialog.MainInstruction = $"{imageFileName} 이미지 삽입 완료!\r\n해당 이미지는 Revit도면에 출력됩니다.";
+                        // TaskNoticeDialog.MainInstruction = $"{imageFileName}\r\n이미지 삽입 완료!\r\nRevit 도면에 삽입된 이미지가 출력됩니다.";
+                        TaskDialog.Show(HTSHelper.NoticeTitle, $"{imageFileName}\r\n이미지 삽입 완료!\r\nRevit 도면에 이미지가 출력됩니다.");
 
                         // TODO : "이미지 삽입" 레이블 "case HTSHelper.TypeOfInsertImage:" 필요시 구현 예정 (2024.06.27 jbh)
                         // TaskDialog.Show(HTSHelper.NoticeTitle, $"이미지 {InsertedImageFileName} 삽입 완료!\r\n삽입된 이미지는 Revit도면에 출력됩니다.\r\n* 파일 경로 *\r\n{pImageFilePath}");
@@ -611,19 +790,22 @@ namespace HTSBIM2019.UI.ImageEditor
                         //    break;
                 }
 
-                // 프로퍼티 "TaskNoticeDialog" 사용 이미지 파일 경로 메시지 출력  
-                // "이미지 자르기"한 경우
-                // 편집 이미지가 아직 사용자 PC 로컬에 저장되지 않았으므로 이미지 파일 경로 메시지로 출력 안함.
-                if (pDisplayType.Equals(HTSHelper.TypeOfCropImage)) TaskNoticeDialog.MainContent = string.Empty;
-
-                // 그 외 나머지 경우 
-                // 사용자 PC 로컬에 저장된 이미지 파일 경로 메시지로 출력.
-                else TaskNoticeDialog.MainContent = $"* 파일 경로 *\r\n{pImageFilePath}";
-                TaskNoticeDialog.Show();
-
                 IsDragging = false;
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "화면 셋팅 완료");
+
+                // TODO : 아래 주석친 코드 필요시 참고 (2024.07.10 jbh)
+                // 프로퍼티 "TaskNoticeDialog" 사용 이미지 파일 경로 메시지 출력  
+                // "이미지 자르기"한 경우
+                // 편집 이미지가 아직 사용자 PC 로컬에 저장되지 않았으므로 이미지 파일 경로 메시지로 출력 안함.
+                // if(pDisplayType.Equals(HTSHelper.TypeOfCropImage)) TaskNoticeDialog.MainContent = string.Empty;
+
+                // 그 외 나머지 경우 
+                // 사용자 PC 로컬에 저장된 이미지 파일 경로 메시지로 출력.
+                // else TaskNoticeDialog.MainContent = $"* 파일 경로 *\r\n{pImageFilePath}";
+                // TaskNoticeDialog.Show();
+
+                // IsDragging = false;
 
                 // TODO : 이미지 파일(OrgImage, EditImage) 사이즈(Width, Height)가
                 //        PictureBox 컨트롤 (pictureBoxOrgImage, pictureBoxEditImage) 보다 클 때, 
@@ -660,7 +842,7 @@ namespace HTSBIM2019.UI.ImageEditor
                 // OrgImage = Image.FromFile(pLoadImageFilePath);
                 // pictureBoxOrgImage.Image = OrgImage;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 throw;   // 오류 발생시 상위 호출자 예외처리 전달 throw
@@ -668,9 +850,6 @@ namespace HTSBIM2019.UI.ImageEditor
             // TODO : 필요시 finally문 구현 예정 (2024.07.08 jbh) 
             finally
             {
-                // TODO : 메서드 "this.Activate();" 호출해서 메시지 박스 종료(TaskDialog.Show)후
-                //        부모 폼(ImageForm.cs) 다시 활성화 구현 (2024.06.27 jbh)
-                // 참고 URL - https://chatgpt.com/c/1986f7ac-47e3-45d8-a983-c27adc21b4cb
                 // this.Activate();   // 메시지 박스 종료(TaskDialog.Show)후 부모 폼(ImageForm.cs) 다시 활성화
             }
         }
@@ -743,11 +922,11 @@ namespace HTSBIM2019.UI.ImageEditor
                     openFileDialog.RestoreDirectory = true;
 
                     // OpenFileDialog 화면 출력 및 결과 저장 (버튼 "열기(O)", "취소", "X" 클릭 결과)
-                    var dialogResult = openFileDialog.ShowDialog();
+                    var selectResult = openFileDialog.ShowDialog();
 
                     // 이미지 파일 선택 후 버튼 "열기(O)"을 클릭 했을 경우 
                     if (openFileDialog.FileName.Length >= (int)EnumSelectFile.SELECT
-                       && DialogResult.OK == dialogResult)
+                       && DialogResult.OK == selectResult)
                     {
                         // 전체 경로(+ 파일명 포함)는 openFileDialog.FileName  
                         // 참고 - 선택한 파일명은 openFileDialog.SafeFileName
@@ -793,11 +972,10 @@ namespace HTSBIM2019.UI.ImageEditor
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
             }
-            // TODO : finally문 필요시 구현 예정 (2024.07.08 jbh)
-            //finally
-            //{
-            //    this.Activate();   // 메시지 박스 종료(TaskDialog.Show)후 부모 폼(ImageForm.cs) 다시 활성화
-            //}
+            finally
+            {
+                this.Activate();   // 메시지 박스 종료(TaskDialog.Show)후 부모 폼(ImageForm.cs) 다시 활성화
+            }
         }
 
         #endregion btnSelectElement_Click
@@ -819,7 +997,7 @@ namespace HTSBIM2019.UI.ImageEditor
                 if (false == IsValidator(EnumImageType.ORIGINAL))
                 {
                     TaskErrorDialog.Show();
-                    return;
+                    return;   // 흑백 전환 이벤트 메서드 "btnBlackConvert_Click" 종료
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "흑백 전환 이벤트 시작");
@@ -827,16 +1005,17 @@ namespace HTSBIM2019.UI.ImageEditor
                 // 이미 흑백 전환 처리 완료된 경우
                 if (true == IsBlackConverted)
                 {
-                    imageFileName = Path.GetFileName(OrgImageFilePath);   // 이미지 파일 이름(확장자 포함) 가져오기
-                    TaskDialog.Show(HTSHelper.NoticeTitle, $"이미지 파일 {imageFileName}\r\n흑백 전환 처리 완료.");
+                    // imageFileName = Path.GetFileName(OrgImageFilePath);   // 이미지 파일 이름(확장자 포함) 가져오기
+                    // TaskDialog.Show(HTSHelper.NoticeTitle, $"이미지 파일 {imageFileName}\r\n흑백 전환 처리 완료.");
 
                     Log.Information(Logger.GetMethodPath(currentMethod) + $"흑백 전환 이벤트 종료 - 사유 : 이미지 파일 {imageFileName} 흑백 전환 기완료.");
-                    return;
+                    return;   // 흑백 전환 이벤트 메서드 "btnBlackConvert_Click" 종료
                 }
                 // 흑백 전환 처리 안한 경우 
                 else
                 {
-                    TaskDialog.Show(HTSHelper.NoticeTitle, "흑백 전환 기능은\r\n원본 이미지만 적용됩니다!");
+                    // TODO : 아래 주석친 코드 필요시 참고 (2024.07.10 jbh)
+                    // TaskDialog.Show(HTSHelper.NoticeTitle, "흑백 전환 기능은\r\n원본 이미지만 적용됩니다!");
 
                     DisplaySetting(HTSHelper.TypeOfBlackConvert, OrgImageFilePath);
                     Log.Information(Logger.GetMethodPath(currentMethod) + "흑백 전환 이벤트 종료");
@@ -905,7 +1084,7 @@ namespace HTSBIM2019.UI.ImageEditor
                 {
                     TaskErrorDialog.Show();
 
-                    return;
+                    return;   // 원본 보기 이벤트 메서드 "btnOrgImage_Click" 종료
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "원본 보기 이벤트 시작");
@@ -943,36 +1122,42 @@ namespace HTSBIM2019.UI.ImageEditor
                 {
                     TaskErrorDialog.Show();
 
-                    return;
+                    return;   // 이미지 자르기 이벤트 메서드 "btnCropImage_Click" 종료
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 이벤트 시작");
 
-                // IsCroppedImageFile = false;   // 이미지 자르기 초기화
+                //Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 작업 시작");
 
-                // DialogResult dialogResult = MessageBox.Show("해당 이미지 자르기 진행할까요?", "이미지 자르기", MessageBoxButtons.YesNo);
+                DisplaySetting(HTSHelper.TypeOfCropImage, OrgImageFilePath);
 
-                TaskDialogResult dialogResult = TaskDialog.Show(HTSHelper.NoticeTitle, "해당 이미지 자르기 진행할까요?", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
-
-                // 이미지 자르기 작업 요청한 경우 
-                //if(DialogResult.Yes == dialogResult)
-                if (TaskDialogResult.Yes == dialogResult)
-                {
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 작업 시작");
-
-                    DisplaySetting(HTSHelper.TypeOfCropImage, OrgImageFilePath);
-
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 작업 완료");
-                }
-                // 이미지 자르기 작업 취소한 경우 
-                else
-                {
-                    Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 작업 취소");
-
-                    pictureBoxOrgImage.Refresh();
-                }
+                //Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 작업 완료");
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 이벤트 종료");
+
+                // TODO : 아래 주석친 코드 필요시 참고 (2024.07.12 jbh)
+                // IsCroppedImageFile = false;   // 이미지 자르기 초기화
+
+                // DialogResult cropResult = MessageBox.Show("해당 이미지 자르기 진행할까요?", "이미지 자르기", MessageBoxButtons.YesNo);
+                // TaskDialogResult cropResult = TaskDialog.Show(HTSHelper.NoticeTitle, "해당 이미지 자르기 진행할까요?", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
+
+                // 이미지 자르기 작업 요청한 경우 
+                // if(DialogResult.Yes == cropResult)
+                // if(TaskDialogResult.Yes == cropResult)
+                // {
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 작업 시작");
+
+                //     DisplaySetting(HTSHelper.TypeOfCropImage, OrgImageFilePath);
+
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 작업 완료");
+                // }
+                // // 이미지 자르기 작업 취소한 경우 
+                // else
+                // {
+                //     Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 자르기 작업 취소");
+
+                //     pictureBoxOrgImage.Refresh();
+                // }
             }
             catch (Exception ex)
             {
@@ -994,6 +1179,7 @@ namespace HTSBIM2019.UI.ImageEditor
         /// </summary>
         private void btnInsertImage_Click(object sender, EventArgs e)
         {
+            bool isFileExist = false;                            // 삽입할 이미지 파일(원본 이미지, 편집 이미지) 존재 여부 초기화
             string orgFileName = string.Empty;                   // 이미지 삽입 처리 하고자 하는 원본 이미지 파일 이름(파일 확장자 포함) 
             var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
@@ -1004,7 +1190,7 @@ namespace HTSBIM2019.UI.ImageEditor
                 {
                     TaskErrorDialog.Show();
 
-                    return;
+                    return;   // 이미지 삽입 이벤트 메서드 "btnInsertImage_Click" 종료
                 }
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 삽입 이벤트 시작");
@@ -1012,22 +1198,25 @@ namespace HTSBIM2019.UI.ImageEditor
                 InsertedImageFilePath = string.Empty;
                 InsertedImageFilePath = ImageManager.GetInsertImageFilePath(OrgImageFilePath);
 
-                TaskDialogResult dialogResult = TaskDialog.Show(HTSHelper.NoticeTitle, "편집 이미지로 삽입 진행할까요?\r\n버튼 예(Y) : 편집 이미지 삽입\r\n버튼 아니요(N) : 원본 이미지 삽입", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
+                TaskDialogResult InsertResult = TaskDialog.Show(HTSHelper.NoticeTitle, "편집 이미지로 삽입 진행할까요?\r\n버튼 예(Y) : 편집 이미지 삽입\r\n버튼 아니요(N) : 원본 이미지 삽입", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
 
                 // 원본 이미지 파일이 존재하지 않는 경우 
-                if (false == File.Exists(OrgImageFilePath))
+                if(false == File.Exists(OrgImageFilePath))
                 {
+                    // TODO : 아래 주석친 코드 필요시 사용 예정 (2024.07.10 jbh)
+                    // OrgImage = null;   // 유효성 검사할 때 사용할 원본 이미지 초기화 
                     orgFileName = Path.GetFileName(OrgImageFilePath);
                     TaskErrorDialog.MainInstruction = $"[{EnumImageType.ORIGINAL.ToDescription()}] - {orgFileName}\r\n파일 존재 안 함!\r\n다시 확인 바랍니다.";
-                    TaskErrorDialog.MainContent = $"* 파일 경로 *\r\n{OrgImageFilePath}";
+                    // TODO : 아래 주석친 코드 필요시 참고 (2024.07.10 jbh)
+                    // TaskErrorDialog.MainContent = $"* 파일 경로 *\r\n{OrgImageFilePath}";
                     TaskErrorDialog.Show();
 
                     Log.Error(Logger.GetMethodPath(currentMethod) + $"오류 - [{EnumImageType.ORIGINAL.ToDescription()}] - {orgFileName} 파일 존재 안 함! 다시 확인 바랍니다.\r\n파일 경로 - {OrgImageFilePath}");
 
-                    return;   // 이벤트 메서드 "btnInsertImage_Click" 종료 
+                    return;   // 이미지 삽입 이벤트 메서드 "btnInsertImage_Click" 종료 
                 }
 
-                switch (dialogResult)
+                switch(InsertResult)
                 {
                     case TaskDialogResult.Yes:   // 사용자가 자른 이미지로 이미지 삽입 요청한 경우 
                                                  // 편집 이미지(EditImage) 존재하지 않으면 이벤트 종료 
@@ -1084,13 +1273,16 @@ namespace HTSBIM2019.UI.ImageEditor
                         return;   // 이벤트 메서드 "btnInsertImage_Click" 종료 
                 }
 
-                MakeRequest(ImageEditorRequestId.InsertImage);   // 이미지 삽입 요청 
+                isFileExist = true;
+
+                // 삽입할 이미지 파일(원본 이미지, 편집 이미지) 존재할 경우 
+                if (true == isFileExist) MakeRequest(ImageEditorRequestId.InsertImage);   // 이미지 삽입 요청 
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 삽입 이벤트 종료");
 
                 // TODO : 아래 주석친 코드 필요시 참고 (2024.07.08 jbh)
                 // // 사용자가 자른 이미지로 이미지 삽입 요청한 경우 
-                // if(TaskDialogResult.Yes == dialogResult)
+                // if(TaskDialogResult.Yes == InsertResult)
                 // {
                 //     // 편집 이미지(EditImage) 존재하지 않으면 이벤트 종료 
                 //     //if(EditImage is null)
@@ -1140,11 +1332,11 @@ namespace HTSBIM2019.UI.ImageEditor
                 Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
                 TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
             }
-            // TODO : finally문 필요시 구현 예정 (2024.07.08 jbh)
-            //finally
-            //{
-            //    this.Activate();   // 메시지 박스 종료(TaskDialog.Show)후 부모 폼(ImageForm.cs) 다시 활성화
-            //}
+            finally
+            {
+                // 삽입할 이미지 파일(원본 이미지, 편집 이미지) 존재하지 않을 경우 
+                if (false == isFileExist) this.Activate();   // 메시지 박스 종료(TaskDialog.Show)후 부모 폼(ImageForm.cs) 다시 활성화
+            }
         }
 
         #endregion btnInsertImage_Click
@@ -1165,7 +1357,7 @@ namespace HTSBIM2019.UI.ImageEditor
                 TaskDialogResult exitResult = TaskDialog.Show(HTSHelper.NoticeTitle, "이미지 삽입 화면을 종료 할까요?", TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No);
 
                 // 사용자가 화면 종료 요청한 경우 (버튼 "예(Y)" 클릭)
-                if (TaskDialogResult.Yes == exitResult) this.Close();   // 폼(ImageForm.cs) 화면 종료 
+                if (TaskDialogResult.Yes == exitResult) this.Dispose();   // 폼(ImageForm.cs) 객체 모든 리소스 해제  
 
                 // 사용자가 화면 종료 요청하지 않은 경우 (버튼 "아니요(N)", 버튼 "X"(닫기) 클릭)
                 else this.Activate();   // 메시지 박스 종료(TaskDialog.Show)후 부모 폼(ImageForm.cs) 다시 활성화
@@ -1354,7 +1546,151 @@ namespace HTSBIM2019.UI.ImageEditor
 
         #endregion pictureBoxOrgImage_MouseUp
 
+        #region pictureBoxOrgImage_MouseWheel
+
+        // TODO : PictureBox 컨트롤에 출력되는 이미지를 마우스 휠을 사용해서 이미지 확대/축소 기능 구현 (2024.07.11 jbh)
+        // 참고 URL - https://cs-solution.tistory.com/m/11
+
+        // ChatGPT 참고 URL 
+        // https://chatgpt.com/c/7cc93196-4334-45ee-8fd3-9525d12c449d
+
+        // ChatGPT 참고 2 URL
+        // https://chatgpt.com/c/06d0ab64-06e8-4568-9e42-dd6b42a97460
+
+        // 유튜브 참고 URL
+        // https://youtu.be/POJBq_a1Ea4?si=A7SgcIOOaoftMxhx
+
+        /// <summary>
+        /// 원본 이미지 pictureBox - MouseWheel 이벤트 메서드 
+        /// </summary>
+        private void pictureBoxOrgImage_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int sizeChangeValue = 0;                             // 마우스 휠 이벤트가 실행된 후 .e.Delta 값에 따라 원본 이미지 Width, Height (증/감 수치 * 배율) 초기화      
+            int magnification = 0;                               // 마우스 휠 이벤트가 실행된 후 .e.Delta 값에 따라 원본 이미지 Width, Height 증/감 배율 (X10, X20 등등...) 초기화      
+            int resizedOrgWidth = 0;                             // 마우스 휠 이벤트가 실행된 후 사이즈 변경될 pictureBoxOrgImage의 예측 너비 
+            int resizedOrgHeight = 0;                            // 마우스 휠 이벤트가 실행된 후 사이즈 변경될 pictureBoxOrgImage의 예측 높이 
+
+            Bitmap resizedOrgImage = null;                       // 마우스 휠 이벤트가 실행된 후 사이즈 변경 완료된 원본 이미지 비트맵 객체 초기화
+
+            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+            try
+            {
+                // Log.Information(Logger.GetMethodPath(currentMethod) + "원본 이미지 MouseWheel 이벤트 시작");
+
+                // if(pictureBoxOrgImage.Image.Width >= 1000 || pictureBoxOrgImage.Image.Height >= 1000) magnification = 2;
+                // magnification = HTSHelper.OrgImageMagnification;   // 원본 이미지 Width, Height 증/감 수치 배율(X3) 설정
+                // else magnification = 5;
+
+                magnification = HTSHelper.OrgImageMagnification;   // 원본 이미지 Width, Height 증/감 수치 배율(X5) 설정
+
+                // e.Delta 값이 1보다 크거나 같으면 Witdh, Height 증가(EnumSizeChangeType.INCREMENT)
+                // e.Delta 값이 0이면 Witdh, Height 유지(EnumSizeChangeType.MAINTENANCE)
+                // e.Delta 값이 -1보다 작거나 같으면 Witdh, Height 감소(EnumSizeChangeType.DECREMENT) 
+
+                // 증가 
+                if (e.Delta >= (int)EnumSizeChangeType.INCREMENT) sizeChangeValue = magnification * (int)EnumSizeChangeType.INCREMENT;
+
+                // 유지
+                else if (e.Delta == (int)EnumSizeChangeType.MAINTENANCE) sizeChangeValue = (int)EnumSizeChangeType.MAINTENANCE;
+
+                // 감소 
+                else sizeChangeValue = magnification * (int)EnumSizeChangeType.DECREMENT;
+
+
+                resizedOrgWidth = pictureBoxOrgImage.Image.Width + (sizeChangeValue * OrgImageRatio.WidthRatio);
+                resizedOrgHeight = pictureBoxOrgImage.Image.Height + (sizeChangeValue * OrgImageRatio.HeightRatio);
+
+                // 마우스 휠 이벤트가 실행되어 원본 이미지 pictureBoxOrgImage 의 Width, Height 증감할 때, 
+                // 증감한 Width, Height의 예측 값이 0보다 커서
+                // Width, Height 변경 가능한 경우 
+                if (resizedOrgWidth >= (int)EnumReSizeType.POSSIBLE && resizedOrgHeight >= (int)EnumReSizeType.POSSIBLE)
+                {
+                    if (true == IsBlackConverted) resizedOrgImage = new Bitmap(BlackConvertBmp, resizedOrgWidth, resizedOrgHeight);
+
+                    else resizedOrgImage = new Bitmap(OrgImage, resizedOrgWidth, resizedOrgHeight);
+
+                    resizedOrgImage.SetResolution(OrgImage.HorizontalResolution,
+                                                  OrgImage.VerticalResolution);
+
+                    pictureBoxOrgImage.Image = resizedOrgImage;
+
+
+                    // TODO : 아래 주석친 코드 사용시 마우스 휠 이벤트 실행되면 원본 이미지 확대/축소시 화면이 깨지므로 사용 안함. (2024.07.16 jbh)
+                    // OrgImage = resizedOrgImage;
+                    // pictureBoxOrgImage.Image = OrgImage;
+                }
+
+                // TODO : 아래 주석친 코드 필요시 참고 (2024.07.12 jbh)
+                // resizedChangeType = (e.Delta > (int)EnumSizeChangeType.MAINTENANCE) ? (int)EnumSizeChangeType.INCREMENT : ((e.Delta == (int)EnumSizeChangeType.MAINTENANCE) ? 0 : -1);
+                // PictureBox pictureBoxOrg = sender as PictureBox;
+                // resizedOrgWidth = pictureBoxOrgImage.Image.Width + e.Delta;
+                // resizedOrgHeight = pictureBoxOrgImage.Image.Height + e.Delta;
+
+                // pictureBoxOrgImage.Width = resizedOrgWidth;
+                // pictureBoxOrgImage.Height = resizedOrgHeight;
+                // pictureBoxOrgImage.Width += e.Delta;
+                // pictureBoxOrgImage.Height += e.Delta;
+
+                // Log.Information(Logger.GetMethodPath(currentMethod) + "원본 이미지 MouseWheel 이벤트 종료");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+            }
+        }
+
+        #endregion pictureBoxOrgImage_MouseWheel
+
         #region Sample
+
+        // TODO : 필요시 편집 이미지 마우스 휠 이벤트 메서드 "pictureBoxEditImage_MouseWheel" 참고 (2024.07.11 jbh)
+        #region pictureBoxEditImage_MouseWheel
+
+        // TODO : PictureBox 컨트롤에 출력되는 이미지를 마우스 휠을 사용해서 이미지 확대/축소 기능 구현 (2024.07.11 jbh)
+        // 참고 URL - https://cs-solution.tistory.com/m/11
+
+        // 유튜브 참고 URL
+        // https://youtu.be/POJBq_a1Ea4?si=A7SgcIOOaoftMxhx
+
+        /// <summary>
+        /// 편집 이미지 pictureBox - MouseWheel 이벤트 메서드 
+        /// </summary>
+        //private void pictureBoxEditImage_MouseWheel(object sender, MouseEventArgs e)
+        //{
+        //    int resizeEditWidth = 0;                             // 마우스 휠 이벤트가 실행된 후 사이즈 변경될 pictureBoxEditImage의 예측 너비 
+        //    int resizeEditHeight = 0;                            // 마우스 휠 이벤트가 실행된 후 사이즈 변경될 pictureBoxEditImage의 예측 높이 
+
+        //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+
+        //    try
+        //    {
+        //        // Log.Information(Logger.GetMethodPath(currentMethod) + "편집 이미지 MouseWheel 이벤트 시작");
+
+        //        resizeEditWidth = pictureBoxEditImage.Width + e.Delta;
+        //        resizeEditHeight = pictureBoxEditImage.Height + e.Delta;
+
+        //        // 마우스 휠 이벤트가 실행되어 편집 이미지 pictureBoxEditImage 의 Width, Height 증감할 때, 
+        //        // 증감한 Width, Height의 예측 값이 0보다 커서
+        //        // Width, Height 변경 가능한 경우 
+        //        // if(resizeEditWidth > 0 && resizeEditHeight > 0)
+        //        if(resizeEditWidth >= (int)EnumReSizeType.POSSIBLE && resizeEditHeight >= (int)EnumReSizeType.POSSIBLE)
+        //        {
+        //            pictureBoxEditImage.Width += e.Delta;
+        //            pictureBoxEditImage.Height += e.Delta;
+        //        }
+
+        //        // Log.Information(Logger.GetMethodPath(currentMethod) + "편집 이미지 MouseWheel 이벤트 종료");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+        //        TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+        //    }
+        //}
+
+        #endregion pictureBoxEditImage_MouseWheel
 
         #endregion Sample
     }

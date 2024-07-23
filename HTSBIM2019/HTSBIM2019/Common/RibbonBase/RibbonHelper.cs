@@ -48,6 +48,11 @@ namespace HTSBIM2019.Common.RibbonBase
         public const string 상상진화_기술지원문의 = "2. (주)상상진화 기술지원 문의";
 
         /// <summary>
+        /// 리본 버튼 (3. 이미지 편집)
+        /// </summary>
+        public const string 이미지편집 = "3. 이미지 편집";
+
+        /// <summary>
         /// Command 명령 (기업 홈페이지) 실행 위치
         /// </summary>
         public const string path_기업홈페이지 = "HTSBIM2019.CmdCompanyHomePage";
@@ -62,6 +67,11 @@ namespace HTSBIM2019.Common.RibbonBase
         /// Command 명령 (2. (주)상상진화 기술지원 문의) 실행 위치
         /// </summary>
         public const string path_상상진화_기술지원문의 = "HTSBIM2019.CmdTechnicalSupport";
+
+        /// <summary>
+        /// Command 명령 (3. 이미지 편집) 실행 위치
+        /// </summary>
+        public const string path_이미지편집 = "HTSBIM2019.CmdImageEditor";
 
         #endregion Common
 

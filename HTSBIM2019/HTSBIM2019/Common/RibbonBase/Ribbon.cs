@@ -68,13 +68,17 @@ namespace HTSBIM2019.Common.RibbonBase
                 // 2. (주)상상진화 기술지원 문의
                 PushButtonData pbdTechnicalSupport = new PushButtonData(RibbonHelper.상상진화_기술지원문의, RibbonHelper.상상진화_기술지원문의, HTSHelper.AssemblyFilePath, RibbonHelper.path_상상진화_기술지원문의);
 
-                // 3. (주)상상진화 기업 홈페이지
+                // 3. 이미지 편집 
+                PushButtonData pbdImageEditor = new PushButtonData(RibbonHelper.이미지편집, RibbonHelper.이미지편집, HTSHelper.AssemblyFilePath, RibbonHelper.path_이미지편집);
+
+
+                // 4. (주)상상진화 기업 홈페이지
                 // PushButtonData pbdCompanyHomePage = new PushButtonData(RibbonHelper.기업홈페이지, RibbonHelper.기업홈페이지, HTSHelper.AssemblyFilePath, RibbonHelper.path_상상진화_기업홈페이지); 
 
 
                 // TODO : 추후 버튼 여러 개 구현해서 버튼 리스트 객체 "ButtonList"에 데이터 추가시 아래 주석친 코드 참고 (2024.04.05 jbh) 
                 // ButtonList.AddRange(PanelDic[RibbonHelper.panelUpdater].AddStackedItems(pbdMEPUpdater, pbdTechnicalSupport, pbdCompanyHomePage));
-                ButtonList.AddRange(PanelDic[RibbonHelper.panelUpdater].AddStackedItems(pbdMEPUpdater, pbdTechnicalSupport));
+                ButtonList.AddRange(PanelDic[RibbonHelper.panelUpdater].AddStackedItems(pbdMEPUpdater, pbdTechnicalSupport, pbdImageEditor));
 
                 // 로그 기록 "리본 메뉴 등록" 완료 기록 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "리본 메뉴 등록 완료");

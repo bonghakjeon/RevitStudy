@@ -298,7 +298,7 @@ namespace HTSBIM2019
     #region CmdImageEditor
 
     /// <summary>
-    /// 이미지 편집
+    /// 3. 이미지 편집
     /// </summary>
     [Transaction(TransactionMode.Manual)]
     class CmdImageEditor : IExternalCommand
@@ -315,6 +315,7 @@ namespace HTSBIM2019
         /// 이미지 편집 폼 객체 
         /// </summary>
         private static ImageEditorForm ImageEditorForm { get; set; }
+
 
         /// <summary>
         /// Revit UI 애플리케이션 객체
@@ -337,24 +338,26 @@ namespace HTSBIM2019
 
         #region ShowForm
 
-        // TODO : 추후 필요시 아래 메서드 "ShowForm" 참고 (2024.07.10 jbh) 
         /// <summary>
-        /// 이미지 편집 폼 화면(ImageForm) Modaless(.show()) 형식 출력 
+        /// 이미지 편집 폼 화면(ImageEditorForm) Modaless(.show()) 형식 출력 
         /// </summary>
-        //private void ShowForm(UIApplication rvUIApp)
-        //{
-        //    // Modaless 폼 객체가 null이거나 삭제된 경우 
-        //    if (ImageEditorForm is null || ImageEditorForm.IsDisposed)
-        //    {
-        //        ImageEditorRequestHandler imageEditorHandler = new ImageEditorRequestHandler();    // 이미지 편집 외부 요청 핸들러 객체 imageHandler 생성 
-        //        ExternalEvent exEvent = ExternalEvent.Create(imageEditorHandler);      // 이미지 편집 폼 객체(ImageForm)가 사용할 외부 이벤트 생성 
+        private void ShowForm(UIApplication rvUIApp)
+        {
+            // Modaless 폼 객체가 null이거나 삭제된 경우 
+            if (ImageEditorForm is null || ImageEditorForm.IsDisposed)
+            {
+                ImageEditorRequestHandler imageHandler = new ImageEditorRequestHandler();    // 이미지 편집 외부 요청 핸들러 객체 imageHandler 생성 
+                ExternalEvent exEvent = ExternalEvent.Create(imageHandler);      // 이미지 편집 폼 객체(ImageEditorForm)가 사용할 외부 이벤트 생성 
 
-        //        ImageEditorForm = new ImageEditorForm(imageEditorHandler, exEvent, rvUIApp);
+                //ImageEditorForm = new ImageEditorForm(imageHandler, exEvent, rvUIApp);
+                //ImageEditorForm = new ImageEditorForm(imageHandler, exEvent);
+                ImageEditorForm = new ImageEditorForm(exEvent, imageHandler);
 
-        //        ImageEditorForm.Show();   // Show 메서드 호출해서 화면 출력하기  
-        //                            // ImageForm.Show(System.Windows.Forms.Control.FromHandle(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle));
-        //    }
-        //}
+                ImageEditorForm.Show();   // Show 메서드 호출해서 화면 출력하기  
+                // ImageEditorForm.Show(System.Windows.Forms.Control.FromHandle(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle));
+            }
+            else ImageEditorForm.Activate();   // 이미지 편집 폼(ImageEditorForm.cs) 다시 활성화
+        }
 
         #endregion ShowForm
 
@@ -363,12 +366,12 @@ namespace HTSBIM2019
         /// <summary>
         /// 객체 선택한 이미지 파일 경로 셋팅 
         /// </summary>
-        ----- public static void SetSelectedImageFilePath(bool pIsSelectedElement, string pSelectedImageFilePath)
-        ----- {
-        -----     ImageEditorForm.IsSelectedElement = pIsSelectedElement;
-        -----     ImageEditorForm.SelectedImageFilePath = string.Empty;
-        -----     ImageEditorForm.SelectedImageFilePath = pSelectedImageFilePath;
-        ----- }
+        public static void SetSelectedImageFilePath(bool pIsSelectedElement, string pSelectedImageFilePath)
+        {
+            ImageEditorForm.IsSelectedElement = pIsSelectedElement;
+            ImageEditorForm.SelectedImageFilePath = string.Empty;
+            ImageEditorForm.SelectedImageFilePath = pSelectedImageFilePath;
+        }
 
         #endregion SetSelectedImageFilePath
 
@@ -377,10 +380,10 @@ namespace HTSBIM2019
         /// <summary>
         /// 이미지 편집 하고자 하는 이미지 파일 경로 가져오기 
         /// </summary>
-        ----- public static string GetInsertedImageFilePath()
-        ----- {
-        -----     return ImageEditorForm.InsertedImageFilePath;
-        ----- }
+        public static string GetInsertedImageFilePath()
+        {
+            return ImageEditorForm.InsertedImageFilePath;
+        }
 
         #endregion GetInsertedImageFilePath
 
@@ -389,10 +392,10 @@ namespace HTSBIM2019
         /// <summary>
         /// 이미지 편집 처리 여부 셋팅 
         /// </summary>
-        ----- public static void SetInsertedImageFile(bool pIsInsertedImageFile)
-        ----- {
-        -----     ImageEditorForm.IsInsertedImageFile = pIsInsertedImageFile;
-        ----- }
+        public static void SetInsertedImageFile(bool pIsInsertedImageFile)
+        {
+            ImageEditorForm.IsInsertedImageFile = pIsInsertedImageFile;
+        }
 
         #endregion SetInsertedImageFile
 
@@ -416,15 +419,13 @@ namespace HTSBIM2019
 
             try
             {
-                Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 편집 Command - Execute 시작");
+                Log.Information(Logger.GetMethodPath(currentMethod) + "이미지  Command - Execute 시작");
 
                 RevitUIApp = commandData.Application;
                 // UIDoc = RevitUIApp.ActiveUIDocument;
                 // RevitDoc = UIDoc.Document;
 
-                //ShowForm(RevitUIApp);
-                FormManager.ShowModalessForm(AppSetting.Default.ImageEditorBase.ImageEditorForm, RevitUIApp, typeof(ImageEditorForm));
-                // FormManager.ShowModalessForm(AppSetting.Default.UpdaterBase.MEPUpdaterForm, RevitUIApp, typeof(ImageEditorForm));
+                ShowForm(RevitUIApp);
 
                 Log.Information(Logger.GetMethodPath(currentMethod) + "이미지 편집 Command - Execute 종료");
 
@@ -438,6 +439,140 @@ namespace HTSBIM2019
             }
 
             #region Sample
+
+            // TODO : 아래 주석친 테스트 코드 필요시 참고 (2024.06.24 jbh)
+            //            uiapp = commandData.Application;
+            //            uidoc = uiapp.ActiveUIDocument;
+            //            doc = uidoc.Document;
+
+            //            TestImageEditorForm mainform = new TestImageEditorForm(uidoc);
+
+            //            TestImageEditorForm.runtype = 0;
+
+            //            DialogResult result = DialogResult.None;
+
+            //            while (true)
+            //            {
+            //                result = mainform.ShowDialog();
+
+            //                if (result == DialogResult.OK || result == DialogResult.Cancel)
+            //                {
+            //                    break;
+            //                }
+
+            //                if (result == DialogResult.Retry)
+            //                {
+            //                    try
+            //                    {
+            //                        Reference r = uidoc.Selection.PickObject(ObjectType.Element);
+
+            //                        Element element = doc.GetElement(r);
+            //#if (R2024 || R2025)
+            //                        //if (element.Category.Id == new ElementId((long)-2000560))
+            //                        if (element.Category.Id == new ElementId((long)BuiltInCategory.OST_RasterImages))
+            //                        {
+            //                            Element type = doc.GetElement(element.GetTypeId());
+            //                            Parameter pa = type.get_Parameter(BuiltInParameter.RASTER_SYMBOL_FILENAME);
+            //                            string path = pa.AsString();
+
+            //                            TestImageEditorForm.revitimagefilepath = path;
+
+            //                            TestImageEditorForm.runtype = 1;
+            //                        }
+            //#else
+            //                                    if (element.Category.Id == new ElementId(-2000560))
+            //                                    {
+            //                                        Element type = doc.GetElement(element.GetTypeId());
+            //                                        Parameter pa = type.get_Parameter(BuiltInParameter.RASTER_SYMBOL_FILENAME);
+            //                                        string path = pa.AsString();
+
+            //                                        TestImageEditorForm.revitimagefilepath = path;
+
+            //                                        TestImageEditorForm.runtype = 1;
+            //                                    }
+            //#endif
+
+            //                    }
+            //                    catch
+            //                    {
+            //                        MessageBox.Show("잘못된 객체 입니다.", "확인");
+            //                        TestImageEditorForm.runtype = 0;
+            //                    }
+            //                }
+
+            //            }
+
+            //            if (TestImageEditorForm.imagefilepath2 != null && TestImageEditorForm.okchk == true)
+            //            {
+            //                try
+            //                {
+            //#if (R2016 || R2017 || R2018 || R2019 || R2020)
+
+            //                            ImageImportOptions opt = new ImageImportOptions();
+
+            //                            Element elemet;
+            //                            using (Transaction t = new Transaction(doc))
+            //                            {
+            //                                t.Start("Start");
+
+            //                                doc.Import(ImageEditorForm.imagefilepath2, opt, doc.ActiveView, out elemet);
+
+            //                                t.Commit();
+            //                            }
+            //#endif
+
+            //#if (R2021 || R2022)
+
+
+
+            //                using (Transaction t = new Transaction(doc))
+            //                {
+            //                    t.Start("Start");
+
+            //                    ImageTypeOptions typeOptions = new ImageTypeOptions(TestImageEditorForm.imagefilepath2, true, ImageTypeSource.Import);
+            //                    ImageType imageType = ImageType.Create(doc, TestImageEditorForm.imagefilepath2);
+
+            //                    ImagePlacementOptions placementOptions = new ImagePlacementOptions();
+
+            //                    ImageInstance imageInstance = ImageInstance.Create(doc, doc.ActiveView, imageType.Id, placementOptions);
+
+            //                    t.Commit();
+            //                }
+
+            //#endif
+
+            //#if (R2021 || R2022 || R2023 || R2024 || R2025)
+
+
+
+            //                    using (Transaction t = new Transaction(doc))
+            //                    {
+            //                        t.Start("Start");
+
+            //                        ImageTypeOptions typeOptions = new ImageTypeOptions(TestImageEditorForm.imagefilepath2, false, ImageTypeSource.Import);
+
+            //                        ImageType imageType = ImageType.Create(doc, typeOptions);
+
+            //                        ImagePlacementOptions placementOptions = new ImagePlacementOptions();
+
+            //                        placementOptions.PlacementPoint = Autodesk.Revit.DB.BoxPlacement.Center;
+            //                        placementOptions.Location = new XYZ(0, 0, 0);
+
+            //                        ImageInstance imageInstance = ImageInstance.Create(doc, doc.ActiveView, imageType.Id, placementOptions);
+
+            //                        t.Commit();
+            //                    }
+
+            //#endif
+            //                }
+            //                catch (Exception ex)
+            //                {
+            //                    MessageBox.Show(ex.Message, "확인");
+            //                }
+
+
+            //            }
+            //            return Result.Succeeded;
 
             #endregion Sample
         }

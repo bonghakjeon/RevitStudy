@@ -57,7 +57,8 @@ namespace HTSBIM2019.Common.Managers
                             ImageEditorRequestHandler imageEditorHandler = new ImageEditorRequestHandler();    // 이미지 편집 외부 요청 핸들러 객체 imageHandler 생성 
                             exEvent = ExternalEvent.Create(imageEditorHandler);      // 이미지 편집 폼 객체(ImageForm)가 사용할 외부 이벤트 생성 
 
-                            pModalessForm = new ImageEditorForm(exEvent, imageEditorHandler, rvUIApp);
+                            //pModalessForm = new ImageEditorForm(exEvent, imageEditorHandler, rvUIApp);
+                            pModalessForm = new ImageEditorForm(exEvent, imageEditorHandler);
 
                             break;
 

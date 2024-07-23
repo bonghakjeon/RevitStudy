@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;R2019</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -116,12 +116,14 @@
     <Compile Include="Common\Managers\CategoryManager.cs" />
     <Compile Include="Common\Managers\DirectoryManager.cs" />
     <Compile Include="Common\Managers\FormManager.cs" />
+    <Compile Include="Common\Managers\ImageManager.cs" />
     <Compile Include="Common\Managers\ParamsManager.cs" />
     <Compile Include="Common\Managers\UpdaterManager.cs" />
     <Compile Include="Common\RequestBase\Request.cs" />
     <Compile Include="Common\RequestBase\RequestHandler.cs" />
     <Compile Include="Common\RibbonBase\Ribbon.cs" />
     <Compile Include="Common\RibbonBase\RibbonHelper.cs" />
+    <Compile Include="Common\StrBase\StrHelper.cs" />
     <Compile Include="Controls\Text\WaterMarkTextControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -141,6 +143,7 @@
     </Compile>
     <Compile Include="Settings\AppSetting.cs" />
     <Compile Include="Settings\DirectorySetting.cs" />
+    <Compile Include="Settings\ImageEditorSetting.cs" />
     <Compile Include="Settings\ImagineBuilderSetting.cs" />
     <Compile Include="Settings\LoginSetting.cs" />
     <Compile Include="Settings\UpdaterSetting.cs" />
@@ -151,6 +154,12 @@
     </Compile>
     <Compile Include="UI\CreateParams\CreateParams.Designer.cs">
       <DependentUpon>CreateParams.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ImageEditor\ImageEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ImageEditor\ImageEditorForm.Designer.cs">
+      <DependentUpon>ImageEditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\MEPUpdater\MEPUpdaterForm.cs">
       <SubType>Form</SubType>
@@ -187,9 +196,7 @@
     <None Include="Json\Updater_Parameters.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\ImageEditor\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -198,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\CreateParams\CreateParams.resx">
       <DependentUpon>CreateParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ImageEditor\ImageEditorForm.resx">
+      <DependentUpon>ImageEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MEPUpdater\MEPUpdaterForm.resx">
       <DependentUpon>MEPUpdaterForm.cs</DependentUpon>

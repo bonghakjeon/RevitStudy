@@ -333,7 +333,7 @@ namespace HTSBIM2019.Common.HTSBase
         /// <summary>
         /// 이미지 삽입 Modaless 폼 객체 이름 
         /// </summary>
-        public const string ImageEditorFormName = "ImageForm";
+        public const string ImageEditorFormName = "ImageEditorForm";
 
         // TODO : Click, Mouse, Paint 이벤트 타입 const string 객체 필요시 사용 예정 (2024.07.05 jbh)
         /// <summary>
@@ -350,6 +350,11 @@ namespace HTSBIM2019.Common.HTSBase
         /// Paint 이벤트 타입 
         /// </summary>
         // public const string MethodTypeOfPaint = "Paint";
+
+        /// <summary>
+        /// 화면 초기 셋팅
+        /// </summary>
+        public const string TypeOfInitSetting = "화면 초기 셋팅";
 
         /// <summary>
         /// 기능 - 파일 선택
@@ -381,9 +386,44 @@ namespace HTSBIM2019.Common.HTSBase
         /// </summary>
         public const string TypeOfInsertImage = "이미지 삽입";
 
-        #endregion ImageEditorForm
+        /// <summary>
+        /// 기능 - 원본 이미지 pictureBox - MouseWheel
+        /// 마우스 휠 사용시 원본 이미지 Width, Height 증/감 수치 배율 (X5)
+        /// </summary>
+        public const int OrgImageMagnification = 5;
 
-        #region ImageEditorExtension - (ImageEditor.cs)
+        /// <summary>
+        /// 기능
+        /// 메서드 GetImageRatio - 이미지 파일 - Width, Height 비율 구하기
+        /// 메서드 DisplaySetting - "파일 선택", "흑백 전환", "원본 보기"
+        /// 백의 자릿수 미만 내림 처리
+        /// </summary>
+        public const int Hundreds = 100;
+
+        /// <summary>
+        /// 기능
+        /// 메서드 GetImageRatio - 이미지 파일 - Width, Height 비율 구하기
+        /// 십의 자릿수 미만 내림 처리
+        /// </summary>
+        public const int Tens = 10;
+
+        /// <summary>
+        /// 기능
+        /// 메서드 GetImageRatio - 이미지 파일 - Width, Height 비율 구하기
+        /// 원본 이미지 최소 Width
+        /// </summary>
+        public const int MinWidth = 100;
+
+        /// <summary>
+        /// 기능
+        /// 메서드 GetImageRatio - 이미지 파일 - Width, Height 비율 구하기
+        /// 원본 이미지 최소 Height
+        /// </summary>
+        public const int MinHeight = 100;
+
+        #endregion ImageForm
+
+        #region ImageManager - (ImageManager.cs)
 
         /// <summary>
         /// 흑백 전환 후 이진화 처리 한계값(임계값)
@@ -391,11 +431,7 @@ namespace HTSBIM2019.Common.HTSBase
         //public const int ThresholdValue = 128;
         public const int ThresholdValue = 120;
 
-        #endregion ImageEditorExtension - (ImageEditor.cs)
-
-        #region Sample
-
-        #endregion Sample
+        #endregion ImageManager - (ImageManager.cs)
 
         #region Sample
 

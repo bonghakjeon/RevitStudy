@@ -82,9 +82,10 @@ namespace HTSBIM2019.Settings
             // if (_Self is null) _Self = new ImageEditorSetting();
 
             // Modaless 폼 객체가 null이거나 삭제된 경우 
-            if (_Self._ImageEditorForm is null || _Self._ImageEditorForm.IsDisposed) _Self._ImageEditorForm = new ImageEditorForm(rvExEvent, pHandler, rvUIApp);
+            //if (_Self._ImageEditorForm is null || _Self._ImageEditorForm.IsDisposed) _Self._ImageEditorForm = new ImageEditorForm(rvExEvent, pHandler, rvUIApp);
+            if (_Self._ImageEditorForm is null || _Self._ImageEditorForm.IsDisposed) _Self._ImageEditorForm = new ImageEditorForm(rvExEvent, pHandler);
 
-            
+
             return _Self._ImageEditorForm;
         }
 
