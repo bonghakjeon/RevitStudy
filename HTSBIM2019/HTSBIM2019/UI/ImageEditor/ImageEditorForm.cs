@@ -495,6 +495,7 @@ namespace HTSBIM2019.UI.ImageEditor
 
         #endregion EnableCommands
 
+
         #region DisplaySetting
 
         /// <summary>
@@ -519,7 +520,7 @@ namespace HTSBIM2019.UI.ImageEditor
             {
                 // 기능 - "파일 선택", "객체 선택" 제외한 나머지 기능 실행시
                 // 원본 이미지 파일이 존재하지 않는 경우 
-                if (false == pDisplayType.Equals(HTSHelper.TypeOfInitSetting)
+                if(false == pDisplayType.Equals(HTSHelper.TypeOfInitSetting)
                    && false == pDisplayType.Equals(HTSHelper.TypeOfSelectFile)
                    && false == pDisplayType.Equals(HTSHelper.TypeOfSelectElement)
                    && false == File.Exists(OrgImageFilePath))
@@ -533,27 +534,27 @@ namespace HTSBIM2019.UI.ImageEditor
                     // TaskErrorDialog.MainContent = $"* 파일 경로 *\r\n{OrgImageFilePath}";
                     TaskErrorDialog.Show();
 
-                    Log.Error(Logger.GetMethodPath(currentMethod) + $"오류 - [{EnumImageType.ORIGINAL.ToDescription()}] - {orgFileName} 파일 존재 안 함! 다시 확인 바랍니다.\r\n파일 경로 - {OrgImageFilePath}");
+                    Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + $"오류 - [{EnumImageType.ORIGINAL.ToDescription()}] - {orgFileName} 파일 존재 안 함! 다시 확인 바랍니다.\r\n파일 경로 - {OrgImageFilePath}");
 
                     return;   // 이벤트 메서드 "btnInsertImage_Click" 종료 
                 }
 
                 // 기능 "화면 초기 셋팅"이 아니고 "파일 선택", "객체 선택", "흑백 전환", "원본 보기" 중 하나인 경우 
-                if (false == pDisplayType.Equals(HTSHelper.TypeOfInitSetting)
+                if(false == pDisplayType.Equals(HTSHelper.TypeOfInitSetting)
                    && (true == pDisplayType.Equals(HTSHelper.TypeOfSelectFile)
                        || true == pDisplayType.Equals(HTSHelper.TypeOfSelectElement)
-                       || true == pDisplayType.Equals(HTSHelper.TypeOfBlackConvert)
-                       || true == pDisplayType.Equals(HTSHelper.TypeOfOrgImage)))
+                       || true == pDisplayType.Equals(HTSHelper.TypeOfOrgImage)
+                       || true == pDisplayType.Equals(HTSHelper.TypeOfBlackConvert)))
                 {
                     // TODO : 파일 경로 "pLoadImageFilePath"에 존재하는 이미지 불러올 때, Lock이 걸리지 않고 이미지 만들기 구현 (2024.06.24 jbh)
                     // 참고 URL - https://chunter.tistory.com/555
-                    using (FileStream fileStream = new FileStream(pImageFilePath, FileMode.Open, FileAccess.Read))
+                    using(FileStream fileStream = new FileStream(pImageFilePath, FileMode.Open, FileAccess.Read))
                     {
                         OrgImage = Image.FromStream(fileStream);
                         OrgImageRatio = ImageManager.GetImageRatio(OrgImage);
 
                         // 기능 "객체 선택"이 아니고 "파일 선택", "흑백 전환", "원본 보기" 중 하나인 경우 
-                        if (false == pDisplayType.Equals(HTSHelper.TypeOfSelectElement))
+                        if(false == pDisplayType.Equals(HTSHelper.TypeOfSelectElement))
                         {
                             //resizedOrgWidth = (splitContainerImage.Width / HTSHelper.Hundreds) * HTSHelper.Hundreds;
                             //resizedOrgHeight = (splitContainerImage.Height / HTSHelper.Hundreds) * HTSHelper.Hundreds;
@@ -568,6 +569,21 @@ namespace HTSBIM2019.UI.ImageEditor
                                                         OrgImage.VerticalResolution);
                         }
                     }   // 여기서 Dispose (리소스 해제) 처리 
+
+                    // 편집 이미지 속성 "Image", "EditImage" 데이터 존재시 null 초기화 처리
+                    //if(EditImage is not null || pictureBoxEditImage.Image is not null)
+                    if(true == IsValidator(EnumImageType.EDIT) || pictureBoxEditImage.Image is not null)
+                    {
+                        EditImage = null;   // 유효성 검사할 때 사용할 편집 이미지 초기화 
+                        pictureBoxEditImage.Image = null;
+
+                        groupBoxEditImage.Visible = false;
+
+                        // TODO : splitContainerImage 컨트롤에서 원본 이미지 picturBoxOrgImage가 출력되도록 
+                        //        속성 "PanelVisibility" 사용해서 해당 속성에 값 "SplitPanelVisibility.Panel1" 할당 (2024.07.11 jbh)
+                        // 참고 URL - https://stackoverflow.com/questions/645518/how-can-i-hide-a-panel-that-is-on-a-splitcontainer
+                        splitContainerImage.PanelVisibility = SplitPanelVisibility.Panel1;
+                    }
                 }
 
 
@@ -600,20 +616,6 @@ namespace HTSBIM2019.UI.ImageEditor
 
                         // TODO : 필요시 아래 주석친 코드 참고 (2024.07.10 jbh)
                         // TaskNoticeDialog.MainInstruction = $"{pDisplayType} 완료!\r\n파일명 : {imageFileName}\r\n해당 이미지는 원본 이미지로 출력됩니다.";
-
-                        // 편집 이미지 속성 "Image", "EditImage" 데이터 존재시 null 초기화 처리
-                        if (EditImage is not null || pictureBoxEditImage.Image is not null)
-                        {
-                            EditImage = null;   // 유효성 검사할 때 사용할 편집 이미지 초기화 
-                            pictureBoxEditImage.Image = null;
-
-                            groupBoxEditImage.Visible = false;
-
-                            // TODO : splitContainerImage 컨트롤에서 원본 이미지 picturBoxOrgImage가 출력되도록 
-                            //        속성 "PanelVisibility" 사용해서 해당 속성에 값 "SplitPanelVisibility.Panel1" 할당 (2024.07.11 jbh)
-                            // 참고 URL - https://stackoverflow.com/questions/645518/how-can-i-hide-a-panel-that-is-on-a-splitcontainer
-                            splitContainerImage.PanelVisibility = SplitPanelVisibility.Panel1;
-                        }
 
                         OrgImageFilePath = string.Empty;
                         OrgImageFilePath = pImageFilePath;
@@ -661,20 +663,6 @@ namespace HTSBIM2019.UI.ImageEditor
                         // TODO : 필요시 아래 주석친 코드 참고 (2024.07.10 jbh)
                         // TaskNoticeDialog.MainInstruction = $"{imageFileName} 흑백 전환 완료!\r\n해당 이미지는 원본 이미지로 출력됩니다.";
 
-                        // 편집 이미지 속성 "Image", "EditImage" 데이터 존재시 null 초기화 처리
-                        if (EditImage is not null || pictureBoxEditImage.Image is not null)
-                        {
-                            EditImage = null;   // 유효성 검사할 때 사용할 편집 이미지 초기화 
-                            pictureBoxEditImage.Image = null;
-
-                            groupBoxEditImage.Visible = false;
-
-                            // TODO : splitContainerImage 컨트롤에서 원본 이미지 picturBoxOrgImage가 출력되도록 
-                            //        속성 "PanelVisibility" 사용해서 해당 속성에 값 "SplitPanelVisibility.Panel1" 할당 (2024.07.11 jbh)
-                            // 참고 URL - https://stackoverflow.com/questions/645518/how-can-i-hide-a-panel-that-is-on-a-splitcontainer
-                            splitContainerImage.PanelVisibility = SplitPanelVisibility.Panel1;
-                        }
-
                         // 원본 이미지 프로퍼티 "OrgImage" Width, Height 값이 사이즈 조정된 resizedOrgWidth, resizedOrgHeight 보다 크거나 같은 경우 
                         if (OrgImage.Width >= resizedOrgWidth || OrgImage.Height >= resizedOrgHeight) convertBmp = resizedOrgBmp;
                         // 원본 이미지 프로퍼티 "OrgImage" Width, Height 값이 사이즈 조정된 resizedOrgWidth, resizedOrgHeight 보다 작은 경우 
@@ -700,14 +688,14 @@ namespace HTSBIM2019.UI.ImageEditor
                         // convertBmp.SetResolution(OrgImage.HorizontalResolution,
                         //                          OrgImage.VerticalResolution);
 
-                        //ImageExtension.BlackConvert(ref convertBmp);    // 이미지 흑백 전환 처리 시작 
+                        //ImageManager.BlackConvert(ref convertBmp);    // 이미지 흑백 전환 처리 시작 
 
                         //BlackConvertBmp = convertBmp;
                         // BlackConvertBmp.SetResolution(OrgImage.HorizontalResolution,
                         //                               OrgImage.VerticalResolution);
 
-                        // TODO : 추후 필요시 메서드 "ImageExtension.BinaryConvert" 다시 구현 진행 (2024.07.08 jbh)
-                        // ImageExtension.BinaryConvert(ref convertBmp);   // 이미지 이진화 처리 시작 
+                        // TODO : 추후 필요시 메서드 "ImageManager.BinaryConvert" 다시 구현 진행 (2024.07.08 jbh)
+                        // ImageManager.BinaryConvert(ref convertBmp);   // 이미지 이진화 처리 시작 
 
                         //pictureBoxOrgImage.Image = convertBmp;
 
@@ -1293,7 +1281,7 @@ namespace HTSBIM2019.UI.ImageEditor
                 //         return;
                 //     }
                 // 
-                //     // InsertedImageFilePath = ImageExtension.GetInsertImageFilePath(OrgImageFilePath);
+                //     // InsertedImageFilePath = ImageManager.GetInsertImageFilePath(OrgImageFilePath);
                 // 
                 //     // TODO : pictureBoxEditImage.Image.Save 메서드 사용해서 자른 이미지 파일로 저장하기 구현 (2024.06.27 jbh)
                 //     // 참고 URL - https://www.csharpstudy.com/WinForms/WinForms-picturebox.aspx

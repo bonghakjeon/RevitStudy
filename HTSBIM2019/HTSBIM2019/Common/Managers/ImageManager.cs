@@ -386,34 +386,34 @@ namespace HTSBIM2019.Common.Managers
         /// <returns>
         /// cropped image
         /// </returns>
-        public static Image Crop(this Image image, Rectangle selection)
-        {
-            var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
+        //public static Image Crop(this Image image, Rectangle selection)
+        //{
+        //    var currentMethod = MethodBase.GetCurrentMethod();   // 로그 기록시 현재 실행 중인 메서드 위치 기록
 
-            try
-            {
-                Bitmap bmp = image as Bitmap;
+        //    try
+        //    {
+        //        Bitmap bmp = image as Bitmap;
 
-                // Check if it is a bitmap:
-                if (bmp == null)
-                    throw new ArgumentException("Kein gültiges Bild (Bitmap)");
+        //        // Check if it is a bitmap:
+        //        if (bmp == null)
+        //            throw new ArgumentException("Kein gültiges Bild (Bitmap)");
 
-                // Bitmap 클래스 메서드 "Clone" 호출시 오류 메시지 "Out of memory." 출력
-                // Crop the image:
-                Bitmap cropBmp = bmp.Clone(selection, bmp.PixelFormat);
+        //        // Bitmap 클래스 메서드 "Clone" 호출시 오류 메시지 "Out of memory." 출력
+        //        // Crop the image:
+        //        Bitmap cropBmp = bmp.Clone(selection, bmp.PixelFormat);
 
-                // Release the resources:
-                image.Dispose();
+        //        // Release the resources:
+        //        image.Dispose();
 
-                return cropBmp;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
-                TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
-                return image as Bitmap;
-            }
-        }
+        //        return cropBmp;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error(Logger.GetMethodPath(currentMethod) + Logger.errorMessage + ex.Message);
+        //        TaskDialog.Show(HTSHelper.ErrorTitle, ex.Message);
+        //        return image as Bitmap;
+        //    }
+        //}
 
         #endregion Crop
 
@@ -440,53 +440,53 @@ namespace HTSBIM2019.Common.Managers
         /// AFAIK the SizeMode is designed for assigning an image to
         /// picturebox only once.
         /// </remarks>
-        public static Image Fit2PictureBox(this Image image, PictureBox picBox)
-        {
-            Bitmap bmp = null;
-            Graphics g;
+        //public static Image Fit2PictureBox(this Image image, PictureBox picBox)
+        //{
+        //    Bitmap bmp = null;
+        //    Graphics g;
 
-            // Scale:
-            double scaleY = (double)image.Width / picBox.Width;
-            double scaleX = (double)image.Height / picBox.Height;
-            double scale = scaleY < scaleX ? scaleX : scaleY;
+        //    // Scale:
+        //    double scaleY = (double)image.Width / picBox.Width;
+        //    double scaleX = (double)image.Height / picBox.Height;
+        //    double scale = scaleY < scaleX ? scaleX : scaleY;
 
-            // Create new bitmap:
-            bmp = new Bitmap(
-                (int)((double)image.Width / scale),
-                (int)((double)image.Height / scale));
+        //    // Create new bitmap:
+        //    bmp = new Bitmap(
+        //        (int)((double)image.Width / scale),
+        //        (int)((double)image.Height / scale));
 
-            // Set resolution of the new image:
-            bmp.SetResolution(
-                image.HorizontalResolution,
-                image.VerticalResolution);
+        //    // Set resolution of the new image:
+        //    bmp.SetResolution(
+        //        image.HorizontalResolution,
+        //        image.VerticalResolution);
 
-            // Create graphics:
-            g = Graphics.FromImage(bmp);
+        //    // Create graphics:
+        //    g = Graphics.FromImage(bmp);
 
-            // Set interpolation mode:
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        //    // Set interpolation mode:
+        //    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-            // Draw the new image:
-            g.DrawImage(
-                image,
-                new System.Drawing.Rectangle(          // Ziel
-                    0, 0,
-                    bmp.Width, bmp.Height),
-                new System.Drawing.Rectangle(          // Quelle
-                    0, 0,
-                    image.Width, image.Height),
-                GraphicsUnit.Pixel);
+        //    // Draw the new image:
+        //    g.DrawImage(
+        //        image,
+        //        new System.Drawing.Rectangle(          // Ziel
+        //            0, 0,
+        //            bmp.Width, bmp.Height),
+        //        new System.Drawing.Rectangle(          // Quelle
+        //            0, 0,
+        //            image.Width, image.Height),
+        //        GraphicsUnit.Pixel);
 
 
 
-            // Release the resources of the graphics:
-            g.Dispose();
+        //    // Release the resources of the graphics:
+        //    g.Dispose();
 
-            // Release the resources of the origin image:
-            image.Dispose();
+        //    // Release the resources of the origin image:
+        //    image.Dispose();
 
-            return bmp;
-        }
+        //    return bmp;
+        //}
 
         #endregion Fit2PictureBox
 
