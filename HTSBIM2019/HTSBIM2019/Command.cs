@@ -24,7 +24,9 @@ namespace HTSBIM2019
 {
     #region Command
 
-    [Transaction(TransactionMode.Manual)]
+    // TODO : TransactionAttribute - TransactionMode.Manual 설정 구현 (2024.08.09 jbh)
+    // 참고 URL - https://manzoo.tistory.com/107
+    [Transaction(TransactionMode.Manual)]       // Transaction 사용이 필요한 경우 (Document 내에서 수정/삭제/추가 등의 작업이 필요한 경우)
     [Regeneration(RegenerationOption.Manual)]
     /// <summary>
     /// Test Command
@@ -38,7 +40,9 @@ namespace HTSBIM2019
 
     #region CmdCompanyHomePage
 
-    [Transaction(TransactionMode.Manual)]
+    // TODO : TransactionAttribute - TransactionMode.Manual 설정 구현 (2024.08.09 jbh)
+    // 참고 URL - https://manzoo.tistory.com/107
+    [Transaction(TransactionMode.Manual)]       // Transaction 사용이 필요한 경우 (Document 내에서 수정/삭제/추가 등의 작업이 필요한 경우)
     [Regeneration(RegenerationOption.Manual)]
     /// <summary>
     /// (주)상상진화 기업 홈페이지 Command - 상상플렉스 커뮤니티
@@ -113,7 +117,9 @@ namespace HTSBIM2019
     // 접근 제한자 internal - internal 로 선언한 변수 또는 클래스는 CmdMEPUpdater 프로젝트 내에서만 접근이 가능하고, 외부에선 접근이 불가능
     // 참고 URL - https://slaner.tistory.com/69
 
-    [Transaction(TransactionMode.Manual)]
+    // TODO : TransactionAttribute - TransactionMode.Manual 설정 구현 (2024.08.09 jbh)
+    // 참고 URL - https://manzoo.tistory.com/107
+    [Transaction(TransactionMode.Manual)]       // Transaction 사용이 필요한 경우 (Document 내에서 수정/삭제/추가 등의 작업이 필요한 경우)
     [Regeneration(RegenerationOption.Manual)]
     /// <summary>
     /// 1. MEP 사용 기록 관리 Command
@@ -235,7 +241,9 @@ namespace HTSBIM2019
 
     #region CmdTechnicalSupport
 
-    [Transaction(TransactionMode.Manual)]
+    // TODO : TransactionAttribute - TransactionMode.Manual 설정 구현 (2024.08.09 jbh)
+    // 참고 URL - https://manzoo.tistory.com/107
+    [Transaction(TransactionMode.Manual)]       // Transaction 사용이 필요한 경우 (Document 내에서 수정/삭제/추가 등의 작업이 필요한 경우)
     [Regeneration(RegenerationOption.Manual)]
     /// <summary>
     /// 2. (주)상상진화 기술지원 문의 Command - 상상플렉스 커뮤니티
@@ -297,10 +305,14 @@ namespace HTSBIM2019
 
     #region CmdImageEditor
 
+
+    // TODO : TransactionAttribute - TransactionMode.Manual 설정 구현 (2024.08.09 jbh)
+    // 참고 URL - https://manzoo.tistory.com/107
+    [Transaction(TransactionMode.Manual)]       // Transaction 사용이 필요한 경우 (Document 내에서 수정/삭제/추가 등의 작업이 필요한 경우)
+    [Regeneration(RegenerationOption.Manual)]
     /// <summary>
     /// 3. 이미지 편집
     /// </summary>
-    [Transaction(TransactionMode.Manual)]
     class CmdImageEditor : IExternalCommand
     {
         #region 프로퍼티
